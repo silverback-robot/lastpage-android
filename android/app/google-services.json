@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "891013314139",
+    "project_id": "lastpage-docscanner2-poc",
+    "storage_bucket": "lastpage-docscanner2-poc.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:891013314139:android:b21f040ea39247f5aa717e",
+        "android_client_info": {
+          "package_name": "app.lastpage.lastpage"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "891013314139-sah4icrl2h9951l59rd44segh4l2ta89.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBLlStNa-K-gg6nr3mdQxm8KawRH4tPpJA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "891013314139-sah4icrl2h9951l59rd44segh4l2ta89.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
