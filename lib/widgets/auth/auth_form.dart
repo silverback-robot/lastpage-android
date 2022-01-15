@@ -85,6 +85,9 @@ class _AuthFormState extends State<AuthForm> {
                       }
                       return null;
                     },
+                    onSaved: (value) {
+                      _userPassword = value!;
+                    },
                   ),
                   if (_signUp)
                     TextFormField(
@@ -98,9 +101,6 @@ class _AuthFormState extends State<AuthForm> {
                           return "Passwords do not match";
                         }
                         return null;
-                      },
-                      onSaved: (value) {
-                        _userPassword = value!;
                       },
                     ),
                   const SizedBox(
