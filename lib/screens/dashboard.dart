@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+import '../models/user_profile.dart';
 import './create_profile.dart';
 
 class UserDashboard extends StatelessWidget {
@@ -19,7 +20,7 @@ class UserDashboard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: checkProfile(),
+      future: UserProfile.profileExists(),
       builder: (context, userProfileStatus) {
         if (userProfileStatus.hasData) {
           if (userProfileStatus.data == true) {
@@ -36,11 +37,12 @@ class UserDashboard extends StatelessWidget {
                 ],
               ),
               body: const Center(
-                child: Text("Authenticated and Profile Exists!"),
+                // child: Text("Authenticated and Profile Exists!"),
+                child: Text("Dashboard"),
               ),
             );
           } else {
-            return const CreateProfile();
+            return CreateProfile();
           }
         }
         return const Scaffold(
