@@ -43,15 +43,17 @@ class UserProfile {
         'avatar': avatar,
       };
 
+  static final FirebaseAuth _fa = FirebaseAuth.instance;
+
   static Future<bool> profileExists() async {
-    var _uid = FirebaseAuth.instance.currentUser!.uid;
+    var _uid = _fa.currentUser!.uid;
     var _profileRef = FirebaseFirestore.instance.collection('users').doc(_uid);
     var _profile = await _profileRef.get();
     return _profile.exists;
   }
 
   static Future<UserProfile> fetchProfile() async {
-    var _uid = FirebaseAuth.instance.currentUser!.uid;
+    var _uid = _fa.currentUser!.uid;
     var _profileRef = FirebaseFirestore.instance.collection('users').doc(_uid);
     var _profile = await _profileRef.get();
     return UserProfile.fromJson(_profile.data()!);

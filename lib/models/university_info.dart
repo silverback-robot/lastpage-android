@@ -7,7 +7,8 @@ class UniversityInfo {
   int postcode;
   String website;
   String? syllabusVersion;
-  List<String> departments;
+  List<dynamic>
+      departments; //TODO: Convert List<dynamic> to List<String> (maybe a getter??)
   String? customField1;
   String? customField2;
   String? customField3;
