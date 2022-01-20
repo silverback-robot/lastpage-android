@@ -7,8 +7,7 @@ class UniversityInfo {
   int postcode;
   String website;
   String? syllabusVersion;
-  List<dynamic>
-      departments; //TODO: Convert List<dynamic> to List<String> (maybe a getter??)
+  List<String> departments;
   String? customField1;
   String? customField2;
   String? customField3;
@@ -35,7 +34,7 @@ class UniversityInfo {
         state = json['state'],
         postcode = json['postcode'],
         website = json['website'],
-        departments = json['departments'],
+        departments = json['departments'].cast<String>(),
         syllabusVersion = json['syllabusVersion'],
         customField1 = json['customField1'],
         customField2 = json['customField2'],
