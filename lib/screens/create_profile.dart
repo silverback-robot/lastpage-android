@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:image_picker/image_picker.dart';
+import 'dart:io';
 
 import '../models/user_profile.dart';
 import '../models/university_info.dart';
@@ -17,6 +18,7 @@ class _CreateProfileState extends State<CreateProfile> {
   List<String>? _allDept;
   String? _selectedUniv;
   String? _selectedDept;
+  File? _avatar;
 
   // final user = UserProfile(
   //   name: "Harish",
@@ -39,6 +41,22 @@ class _CreateProfileState extends State<CreateProfile> {
         )
         .toList();
     return dropDownItems;
+  }
+
+  void _pickAvatar() async {
+    var picker = ImagePicker();
+    try {
+      var pickedImage = await picker.pickImage(
+        source: ImageSource.camera,
+        imageQuality: 60,
+        maxWidth: 120,
+      );
+      setState(() {
+        _avatar = File(pickedImage!.path);
+      });
+    } catch (err) {
+      print(err.toString());
+    }
   }
 
   @override
@@ -68,6 +86,16 @@ class _CreateProfileState extends State<CreateProfile> {
                     child: Form(
                       child: Column(
                         children: [
+                          CircleAvatar(
+                            radius: 60,
+                            backgroundImage:
+                                _avatar != null ? FileImage(_avatar!) : null,
+                          ),
+                          TextButton.icon(
+                            onPressed: _pickAvatar,
+                            icon: const Icon(Icons.camera),
+                            label: const Text("Add Photo"),
+                          ),
                           TextFormField(
                             key: const ValueKey("name"),
                             decoration: const InputDecoration(
