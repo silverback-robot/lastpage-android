@@ -6,6 +6,7 @@ class UniversityInfo {
   String state;
   int postcode;
   String website;
+  String documentId;
   String? syllabusVersion;
   List<String> departments;
   String? customField1;
@@ -14,19 +15,19 @@ class UniversityInfo {
   String? customField4;
   String? customField5;
 
-  UniversityInfo(
-      {required this.univName,
-      required this.city,
-      required this.state,
-      required this.postcode,
-      required this.website,
-      required this.departments,
-      this.syllabusVersion,
-      this.customField1,
-      this.customField2,
-      this.customField3,
-      this.customField4,
-      this.customField5});
+  // UniversityInfo(
+  //     {required this.univName,
+  //     required this.city,
+  //     required this.state,
+  //     required this.postcode,
+  //     required this.website,
+  //     required this.departments,
+  //     this.syllabusVersion,
+  //     this.customField1,
+  //     this.customField2,
+  //     this.customField3,
+  //     this.customField4,
+  //     this.customField5});
 
   UniversityInfo.fromJson(Map<String, dynamic> json)
       : univName = json['univName'],
@@ -35,6 +36,7 @@ class UniversityInfo {
         postcode = json['postcode'],
         website = json['website'],
         departments = json['departments'].cast<String>(),
+        documentId = json['documentId'],
         syllabusVersion = json['syllabusVersion'],
         customField1 = json['customField1'],
         customField2 = json['customField2'],
@@ -47,7 +49,10 @@ class UniversityInfo {
   static Future<List<UniversityInfo>> fetchAllUnivs() async {
     var _univCollection = await _fs.collection('universities').get();
     var allUnivs = _univCollection.docs
-        .map((e) => UniversityInfo.fromJson(e.data()))
+        .map((e) => UniversityInfo.fromJson({
+              ...e.data(),
+              'documentId': e.id,
+            }))
         .toList();
     return allUnivs;
   }
