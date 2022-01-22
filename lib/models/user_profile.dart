@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/material.dart';
 
 class UserProfile {
   final String? name;
@@ -61,7 +62,7 @@ class UserProfile {
     return UserProfile.fromJson(_profile.data()!);
   }
 
-  Future<String?> uploadAvatar(File avatarPath) async {
+  Future<String?> uploadAvatar(File avatarPath, BuildContext ctx) async {
     var _uid = FirebaseAuth.instance.currentUser!.uid;
     FirebaseStorage avatarBucket = FirebaseStorage.instance;
     Reference ref =
@@ -69,24 +70,46 @@ class UserProfile {
     var uploadTask = ref.putFile(avatarPath);
 
     try {
-      TaskSnapshot uploadTaskSnapshot = await uploadTask;
+      await uploadTask;
       avatar = await ref.getDownloadURL();
       return avatar;
     } on FirebaseException catch (e) {
-      // TODO: Display upload errors in snackbar
-      print(e);
+      var errMsg = "Something went wrong";
+      if (e.message != null) {
+        errMsg = e.message!;
+      }
+      ScaffoldMessenger.of(ctx).showSnackBar(
+        SnackBar(
+          content: Text(
+            errMsg,
+          ),
+        ),
+      );
     } catch (err) {
-      print(err);
+      var errMsg = "Something went wrong";
+      ScaffoldMessenger.of(ctx).showSnackBar(
+        SnackBar(
+          content: Text(
+            errMsg,
+          ),
+        ),
+      );
     }
   }
 
-  void saveProfile() async {
+  void saveProfile(BuildContext ctx) async {
     var data = toJson();
     try {
       await _db.collection('users').doc(_uid).set(data);
     } catch (err) {
-      // TODO: Display profile creation errors in snackbar
-      print(err);
+      var errMsg = "Something went wrong";
+      ScaffoldMessenger.of(ctx).showSnackBar(
+        SnackBar(
+          content: Text(
+            errMsg,
+          ),
+        ),
+      );
     }
   }
 }

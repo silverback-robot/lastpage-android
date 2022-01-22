@@ -25,8 +25,6 @@ class _CreateProfileState extends State<CreateProfile> {
 
   Future<List<DropdownMenuItem<String>>> _populateUnivsDropDown() async {
     _allUnivs = await UniversityInfo.fetchAllUnivs();
-    // _selectedUniv = _allUnivs[0].documentId;
-    // _selectedDept = _allUnivs[0].departments[0];
     var dropDownItems = _allUnivs
         .map(
           (e) => DropdownMenuItem(
@@ -55,7 +53,7 @@ class _CreateProfileState extends State<CreateProfile> {
     }
   }
 
-  void _submitForm() async {
+  void _submitForm(BuildContext context) async {
     final validForm = _formKey.currentState!.validate();
     String? avatarUrl;
 
@@ -70,10 +68,10 @@ class _CreateProfileState extends State<CreateProfile> {
       );
       try {
         if (_avatar != null) {
-          avatarUrl = await user.uploadAvatar(_avatar!);
+          avatarUrl = await user.uploadAvatar(_avatar!, context);
           user.avatar = avatarUrl;
         }
-        user.saveProfile();
+        user.saveProfile(context);
       } catch (err) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -133,8 +131,8 @@ class _CreateProfileState extends State<CreateProfile> {
                             validator: (val) {
                               if (val == null ||
                                   val.length < 4 ||
-                                  val.length > 12) {
-                                return "Name must be 4 to 12 characters long";
+                                  val.length > 15) {
+                                return "Name must be 4 to 15 characters long";
                               }
                               return null;
                             },
@@ -143,6 +141,7 @@ class _CreateProfileState extends State<CreateProfile> {
                             },
                           ),
                           DropdownButtonFormField(
+                            hint: const Text("University"),
                             value: _selectedUniv,
                             items: dropDownItems.data,
                             onChanged: (String? selection) {
@@ -166,6 +165,7 @@ class _CreateProfileState extends State<CreateProfile> {
                             },
                           ),
                           DropdownButtonFormField(
+                            hint: const Text("Department"),
                             value: _selectedDept,
                             items: _allDept
                                 ?.map(
@@ -188,7 +188,9 @@ class _CreateProfileState extends State<CreateProfile> {
                             },
                           ),
                           ElevatedButton(
-                            onPressed: _submitForm,
+                            onPressed: () {
+                              _submitForm(context);
+                            },
                             child: const Text("Save Profile"),
                           ),
                         ],
