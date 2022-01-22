@@ -7,7 +7,7 @@ import '../models/user_profile.dart';
 import '../models/university_info.dart';
 
 class CreateProfile extends StatefulWidget {
-  CreateProfile({Key? key}) : super(key: key);
+  const CreateProfile({Key? key}) : super(key: key);
 
   @override
   State<CreateProfile> createState() => _CreateProfileState();
@@ -16,16 +16,12 @@ class CreateProfile extends StatefulWidget {
 class _CreateProfileState extends State<CreateProfile> {
   late List<UniversityInfo> _allUnivs;
   List<String>? _allDept;
+  late String _name;
   String? _selectedUniv;
   String? _selectedDept;
   File? _avatar;
 
-  // final user = UserProfile(
-  //   name: "Harish",
-  //   university: "Anna University, Chennai",
-  //   department: "EEE",
-  //   avatar: "No Avatar",
-  // );
+  final _formKey = GlobalKey<FormState>();
 
   Future<List<DropdownMenuItem<String>>> _populateUnivsDropDown() async {
     _allUnivs = await UniversityInfo.fetchAllUnivs();
@@ -55,7 +51,38 @@ class _CreateProfileState extends State<CreateProfile> {
         _avatar = File(pickedImage!.path);
       });
     } catch (err) {
-      print(err.toString());
+      print(err);
+    }
+  }
+
+  void _submitForm() async {
+    final validForm = _formKey.currentState!.validate();
+    String? avatarUrl;
+
+    if (validForm) {
+      _formKey.currentState!.save();
+
+      var user = UserProfile(
+        name: _name,
+        university: _selectedUniv,
+        department: _selectedDept,
+        // avatar: avatarUrl
+      );
+      try {
+        if (_avatar != null) {
+          avatarUrl = await user.uploadAvatar(_avatar!);
+          user.avatar = avatarUrl;
+        }
+        user.saveProfile();
+      } catch (err) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              err.toString(),
+            ),
+          ),
+        );
+      }
     }
   }
 
@@ -84,6 +111,7 @@ class _CreateProfileState extends State<CreateProfile> {
                   child: Padding(
                     padding: const EdgeInsets.all(16),
                     child: Form(
+                      key: _formKey,
                       child: Column(
                         children: [
                           CircleAvatar(
@@ -102,17 +130,17 @@ class _CreateProfileState extends State<CreateProfile> {
                               labelText: "Name",
                             ),
                             keyboardType: TextInputType.name,
-                            validator: (value) {
-                              if (value == null ||
-                                  value.length < 4 ||
-                                  value.length > 12) {
+                            validator: (val) {
+                              if (val == null ||
+                                  val.length < 4 ||
+                                  val.length > 12) {
                                 return "Name must be 4 to 12 characters long";
                               }
                               return null;
                             },
-                            // onSaved: (value) {
-                            //   _userEmail = value!;
-                            // },
+                            onSaved: (val) {
+                              _name = val!;
+                            },
                           ),
                           DropdownButtonFormField(
                             value: _selectedUniv,
@@ -130,6 +158,12 @@ class _CreateProfileState extends State<CreateProfile> {
                                     .departments;
                               });
                             },
+                            validator: (val) {
+                              if (val == null) {
+                                return "Please select your university";
+                              }
+                              return null;
+                            },
                           ),
                           DropdownButtonFormField(
                             value: _selectedDept,
@@ -146,6 +180,16 @@ class _CreateProfileState extends State<CreateProfile> {
                                 _selectedDept = selection;
                               });
                             },
+                            validator: (val) {
+                              if (val == null) {
+                                return "Please select your department";
+                              }
+                              return null;
+                            },
+                          ),
+                          ElevatedButton(
+                            onPressed: _submitForm,
+                            child: const Text("Save Profile"),
                           ),
                         ],
                       ),

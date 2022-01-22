@@ -42,7 +42,7 @@ class UserDashboard extends StatelessWidget {
               ),
             );
           } else {
-            return CreateProfile();
+            return const CreateProfile();
           }
         }
         return const Scaffold(

@@ -1,11 +1,14 @@
+import 'dart:io';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 class UserProfile {
   final String? name;
   final String? university;
   final String? department;
-  final String? avatar;
+  String? avatar;
 
   final _auth = FirebaseAuth.instance;
   final _db = FirebaseFirestore.instance;
@@ -20,7 +23,6 @@ class UserProfile {
     this.name,
     this.university,
     this.department,
-    this.avatar,
   }) {
     uid = _uid;
     email = _email;
@@ -59,11 +61,31 @@ class UserProfile {
     return UserProfile.fromJson(_profile.data()!);
   }
 
+  Future<String?> uploadAvatar(File avatarPath) async {
+    var _uid = FirebaseAuth.instance.currentUser!.uid;
+    FirebaseStorage avatarBucket = FirebaseStorage.instance;
+    Reference ref =
+        avatarBucket.ref().child('users').child('avatar_images').child(_uid);
+    var uploadTask = ref.putFile(avatarPath);
+
+    try {
+      TaskSnapshot uploadTaskSnapshot = await uploadTask;
+      avatar = await ref.getDownloadURL();
+      return avatar;
+    } on FirebaseException catch (e) {
+      // TODO: Display upload errors in snackbar
+      print(e);
+    } catch (err) {
+      print(err);
+    }
+  }
+
   void saveProfile() async {
     var data = toJson();
     try {
       await _db.collection('users').doc(_uid).set(data);
     } catch (err) {
+      // TODO: Display profile creation errors in snackbar
       print(err);
     }
   }
