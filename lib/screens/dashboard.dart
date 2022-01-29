@@ -22,7 +22,7 @@ class UserDashboard extends StatelessWidget {
                     title: "Capture a Note",
                     description:
                         "Use your phone's camera to click and upload a note.",
-                    onTapAction: () {},
+                    onTapAction: () => Navigator.pushNamed(context, '/scanDoc'),
                   ),
                   DashboardCard(
                     icon: Icons.upload_file_rounded,

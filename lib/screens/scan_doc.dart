@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class ScanDoc extends StatelessWidget {
@@ -5,9 +6,18 @@ class ScanDoc extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(
-        child: Text("DocScanner goes here!"),
+    return Scaffold(
+      body: const Center(
+        child: Text(
+          "DocScanner goes here!",
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        // TEMPORARY - Remove after DocScanner integration
+        onPressed: () => Navigator.pop(context),
+        child: const Icon(
+          Icons.arrow_back_outlined,
+        ),
       ),
     );
   }

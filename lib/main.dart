@@ -31,10 +31,10 @@ class MyApp extends StatelessWidget {
       initialRoute: '/',
       routes: {
         '/': (context) => AuthRedirect(),
-        'createProfile': (context) => const CreateProfile(),
-        'dashboard': (context) => const UserDashboard(),
-        'auth': (context) => const AuthScreen(),
-        'scanDoc': (context) => const ScanDoc(),
+        '/createProfile': (context) => const CreateProfile(),
+        '/dashboard': (context) => const UserDashboard(),
+        '/auth': (context) => const AuthScreen(),
+        '/scanDoc': (context) => const ScanDoc(),
       },
     );
   }

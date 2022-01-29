@@ -4,7 +4,7 @@ class DashboardCard extends StatelessWidget {
   final IconData icon;
   final String title;
   final String description;
-  final Function onTapAction;
+  final VoidCallback onTapAction;
 
   const DashboardCard({
     required this.icon,
@@ -26,7 +26,7 @@ class DashboardCard extends StatelessWidget {
         ),
         child: InkWell(
           borderRadius: BorderRadius.circular(8),
-          onTap: () {},
+          onTap: onTapAction,
           child: Padding(
             padding: const EdgeInsets.all(12.0),
             child: Column(
