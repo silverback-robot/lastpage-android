@@ -4,7 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'firebase_options.dart';
 
 import './screens/auth.dart';
-import './screens/dashboard.dart';
+import './widgets/dashboard/profile_redirect.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -31,7 +31,7 @@ class MyApp extends StatelessWidget {
         stream: _auth.authStateChanges(),
         builder: (ctx, userSnapshot) {
           if (userSnapshot.hasData) {
-            return UserDashboard();
+            return ProfileRedirect();
           }
           return const AuthScreen();
         },
