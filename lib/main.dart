@@ -1,23 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:lastpage/screens/auth.dart';
+import 'package:lastpage/screens/dashboard.dart';
+import 'package:lastpage/screens/scan_doc.dart';
+import 'package:lastpage/screens/user_profile.dart';
 import 'firebase_options.dart';
 
-import './screens/auth.dart';
-import './widgets/dashboard/profile_redirect.dart';
+import './widgets/auth/auth_redirect.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  MyApp({Key? key}) : super(key: key);
-
-  final _auth = FirebaseAuth.instance;
+  const MyApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -27,15 +27,15 @@ class MyApp extends StatelessWidget {
         // TODO: Setup a theme based on lastpage color palette
         primarySwatch: Colors.blueGrey,
       ),
-      home: StreamBuilder(
-        stream: _auth.authStateChanges(),
-        builder: (ctx, userSnapshot) {
-          if (userSnapshot.hasData) {
-            return ProfileRedirect();
-          }
-          return const AuthScreen();
-        },
-      ),
+      // home: AuthRedirect(),
+      initialRoute: '/',
+      routes: {
+        '/': (context) => AuthRedirect(),
+        'createProfile': (context) => const CreateProfile(),
+        'dashboard': (context) => const UserDashboard(),
+        'auth': (context) => const AuthScreen(),
+        'scanDoc': (context) => const ScanDoc(),
+      },
     );
   }
 }
