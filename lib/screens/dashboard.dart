@@ -13,38 +13,30 @@ class UserDashboard extends StatelessWidget {
         child: GridView.count(
           crossAxisCount: 2,
           children: [
-            GridTile(
-              child: DashboardCard(
-                icon: Icons.document_scanner_rounded,
-                title: "Capture a Note",
-                description:
-                    "Use your phone's camera to click and upload a note.",
-                onTapAction: () {},
-              ),
+            DashboardCard(
+              icon: Icons.document_scanner_rounded,
+              title: "Capture a Note",
+              description:
+                  "Use your phone's camera to click and upload a note.",
+              onTapAction: () {},
             ),
-            GridTile(
-              child: DashboardCard(
-                icon: Icons.upload_file_rounded,
-                title: "Upload Notes",
-                description: "Upload files from your phone to your account.",
-                onTapAction: () {},
-              ),
+            DashboardCard(
+              icon: Icons.upload_file_rounded,
+              title: "Upload Notes",
+              description: "Upload files from your phone to your account.",
+              onTapAction: () {},
             ),
-            GridTile(
-              child: DashboardCard(
-                icon: Icons.file_copy_sharp,
-                title: "My Notes",
-                description: "View notes saved in your lastpage account.",
-                onTapAction: () {},
-              ),
+            DashboardCard(
+              icon: Icons.file_copy_sharp,
+              title: "My Notes",
+              description: "View notes saved in your lastpage account.",
+              onTapAction: () {},
             ),
-            GridTile(
-              child: DashboardCard(
-                icon: Icons.school,
-                title: "My Syllabus",
-                description: "A quick view of your course syllabus.",
-                onTapAction: () {},
-              ),
+            DashboardCard(
+              icon: Icons.school,
+              title: "My Syllabus",
+              description: "A quick view of your course syllabus.",
+              onTapAction: () {},
             ),
           ],
         ),
