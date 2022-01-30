@@ -2,6 +2,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
+import '../models/notes.dart';
+
 class ScanDoc extends StatefulWidget {
   const ScanDoc({Key? key}) : super(key: key);
 
@@ -10,7 +12,9 @@ class ScanDoc extends StatefulWidget {
 }
 
 class _ScanDocState extends State<ScanDoc> {
-  final List<File> _capturedDocs = [];
+  var _notes = Notes();
+
+  List<File> _capturedDocs = [];
 
   void _captureDoc() async {
     var picker = ImagePicker();
@@ -39,7 +43,12 @@ class _ScanDocState extends State<ScanDoc> {
                     : const Text("Click a picture of the note to be saved."),
               ),
               ElevatedButton.icon(
-                onPressed: _captureDoc,
+                onPressed: () async {
+                  await _notes.capturePage();
+                  setState(() {
+                    _capturedDocs = _notes.allPages;
+                  });
+                },
                 icon: const Icon(
                   Icons.document_scanner,
                 ),
