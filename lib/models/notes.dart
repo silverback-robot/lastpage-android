@@ -34,6 +34,7 @@ class Notes {
 
     var uri = Uri.parse(_docScannerUrl + _docScannerEndPoint);
     var request = http.MultipartRequest('POST', uri)
+      ..headers[{HttpHeaders.authorizationHeader: _authToken}]
       ..files.add(await http.MultipartFile.fromPath('file', camImg));
     var response = await request.send();
 
