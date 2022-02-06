@@ -5,6 +5,7 @@ import 'package:flutter/widgets.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
+import 'package:image/image.dart' as img;
 
 class Page {
 // TODO: [ENHANCE] Fetch scanner URL and endpoint from DB
@@ -16,12 +17,17 @@ class Page {
   File? scannedPage;
 
   capturePage() async {
+    // Separate try-catch blocks for camera and DocScanner to allow displaying
+    // camera image in case DocScanner API call fails
     try {
       originalPage = await _camCapture();
-      scannedPage = await _docScanner(originalPage!.path);
     } catch (err) {
-      // TODO: Send error message to UI (toast or SnackBar)
-      print(err);
+      rethrow;
+    }
+    try {
+      scannedPage = await _docScanner(originalPage!.path);
+    } catch (e) {
+      rethrow;
     }
   }
 
@@ -49,8 +55,8 @@ class Page {
   }
 
   Future<File> _docScanner(String originalImgPath) async {
+    // Set auth headers and send POST request
     final String _authToken = await _auth.currentUser!.getIdToken();
-
     var uri = Uri.parse(_docScannerUrl + _docScannerEndPoint);
 
     var request = http.MultipartRequest('POST', uri);
@@ -65,9 +71,30 @@ class Page {
     //   print('DocScanner2 API returned status: ${response.statusCode}');
     // }
 
-    final Uint8List _scannedDocRaw = await response.stream.toBytes();
+    // Handle API response and post-processing
+
     final _scannedDoc = await _tempFile;
-    _scannedDoc.writeAsBytes(_scannedDocRaw);
+    final Uint8List _scannedDocRaw = await response.stream.toBytes();
+
+    // Convert byte-data into image
+
+    img.Image? _receivedImg = img.decodeImage(_scannedDocRaw);
+    if (_receivedImg != null) {
+      // Reorient image based on EXIF tags (if available) on decoded image
+
+      _receivedImg = img.bakeOrientation(_receivedImg);
+
+      // Assuming image is always a portrait (paper), rotate image by 90 degrees
+      // if height is less than width and write image to temporary file (cache)
+      // TODO: [ENHANCE] Allow user to rotate and flip image
+
+      if (_receivedImg.height < _receivedImg.width) {
+        _receivedImg = img.copyRotate(_receivedImg, 90);
+      }
+      _scannedDoc.writeAsBytes(img.encodePng(_receivedImg));
+    } else {
+      _scannedDoc.writeAsBytes(_scannedDocRaw);
+    }
     return _scannedDoc;
   }
 }
