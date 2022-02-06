@@ -15,6 +15,7 @@ class _ScanDocState extends State<ScanDoc> {
   var _notes = Notes();
 
   List<File> _capturedDocs = [];
+  File? _scannedDoc;
 
   void _captureDoc() async {
     var picker = ImagePicker();
@@ -39,7 +40,9 @@ class _ScanDocState extends State<ScanDoc> {
                   8,
                 ),
                 child: _capturedDocs.isNotEmpty
-                    ? Image.file(_capturedDocs.first)
+                    ? Image.file(_scannedDoc != null
+                        ? _scannedDoc as File
+                        : _capturedDocs.first)
                     : const Text("Click a picture of the note to be saved."),
               ),
               ElevatedButton.icon(
@@ -47,6 +50,7 @@ class _ScanDocState extends State<ScanDoc> {
                   await _notes.capturePage();
                   setState(() {
                     _capturedDocs = _notes.allPages;
+                    _scannedDoc = _notes.scannedPages;
                   });
                 },
                 icon: const Icon(
