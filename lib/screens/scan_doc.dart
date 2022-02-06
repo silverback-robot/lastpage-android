@@ -1,8 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 
-import '../models/notes.dart';
+import '../models/page.dart' as page;
 
 class ScanDoc extends StatefulWidget {
   const ScanDoc({Key? key}) : super(key: key);
@@ -12,21 +11,10 @@ class ScanDoc extends StatefulWidget {
 }
 
 class _ScanDocState extends State<ScanDoc> {
-  var _notes = Notes();
+  final _page = page.Page();
 
-  List<File> _capturedDocs = [];
+  File? _capturedDocs;
   File? _scannedDoc;
-
-  void _captureDoc() async {
-    var picker = ImagePicker();
-    var capturedDoc = await picker.pickImage(
-        source: ImageSource.camera,
-        maxHeight: 1080,
-        preferredCameraDevice: CameraDevice.rear);
-    setState(() {
-      _capturedDocs.add(File(capturedDoc!.path));
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,18 +27,18 @@ class _ScanDocState extends State<ScanDoc> {
                 padding: const EdgeInsets.all(
                   8,
                 ),
-                child: _capturedDocs.isNotEmpty
+                child: _capturedDocs != null
                     ? Image.file(_scannedDoc != null
                         ? _scannedDoc as File
-                        : _capturedDocs.first)
+                        : _capturedDocs as File)
                     : const Text("Click a picture of the note to be saved."),
               ),
               ElevatedButton.icon(
                 onPressed: () async {
-                  await _notes.capturePage();
+                  await _page.capturePage();
                   setState(() {
-                    _capturedDocs = _notes.allPages;
-                    _scannedDoc = _notes.scannedPages;
+                    _capturedDocs = _page.originalPage;
+                    _scannedDoc = _page.scannedPage;
                   });
                 },
                 icon: const Icon(
