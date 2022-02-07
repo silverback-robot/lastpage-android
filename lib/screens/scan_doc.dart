@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 
-import '../models/page.dart' as page;
+import '../models/pages.dart' as pg;
 
 class ScanDoc extends StatefulWidget {
   const ScanDoc({Key? key}) : super(key: key);
@@ -11,7 +11,7 @@ class ScanDoc extends StatefulWidget {
 }
 
 class _ScanDocState extends State<ScanDoc> {
-  final _page = page.Page();
+  final _pages = pg.Pages();
 
   File? _capturedDocs;
   File? _scannedDoc;
@@ -27,19 +27,18 @@ class _ScanDocState extends State<ScanDoc> {
                 padding: const EdgeInsets.all(
                   8,
                 ),
-                child: _capturedDocs != null
-                    ? Image.file(_scannedDoc != null
-                        ? _scannedDoc as File
-                        : _capturedDocs as File)
+                child: _pages.allPages.isNotEmpty
+                    ? Image.file(
+                        _pages.allPages.first.processed != null
+                            ? _pages.allPages.first.processed as File
+                            : _pages.allPages.first.original,
+                      )
                     : const Text("Click a picture of the note to be saved."),
               ),
               ElevatedButton.icon(
                 onPressed: () async {
-                  await _page.capturePage();
-                  setState(() {
-                    _capturedDocs = _page.originalPage;
-                    _scannedDoc = _page.scannedPage;
-                  });
+                  await _pages.capturePage();
+                  setState(() {});
                 },
                 icon: const Icon(
                   Icons.document_scanner,
