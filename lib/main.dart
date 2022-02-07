@@ -4,16 +4,23 @@ import 'package:lastpage/screens/auth.dart';
 import 'package:lastpage/screens/dashboard.dart';
 import 'package:lastpage/screens/scan_doc.dart';
 import 'package:lastpage/screens/user_profile.dart';
+import 'package:provider/provider.dart';
 import 'firebase_options.dart';
 
 import './widgets/auth/auth_redirect.dart';
+import './models/pages.dart' as pg;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  runApp(const MyApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => pg.Pages(),
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {

@@ -9,7 +9,7 @@ import 'package:image/image.dart' as img;
 
 import './page.dart' as page;
 
-class Pages {
+class Pages with ChangeNotifier {
 // TODO: [ENHANCE] Fetch scanner URL and endpoint from DB
   final String _docScannerUrl =
       'https://lastpage-docscanner2-poc-drsfalheva-km.a.run.app';
@@ -35,6 +35,7 @@ class Pages {
       rethrow;
     } finally {
       allPages.add(newPage);
+      notifyListeners();
     }
   }
 
