@@ -25,16 +25,18 @@ class Pages with ChangeNotifier {
     try {
       originalPage = await _camCapture();
       newPage = page.Page(original: originalPage);
+      await newPage.cropImage();
+      allPages.add(newPage);
+      notifyListeners();
     } catch (err) {
       rethrow;
     }
     try {
-      var scannedPage = await _docScanner(originalPage.path);
+      var scannedPage = await _docScanner(newPage.original.path);
       newPage.processed = scannedPage;
     } catch (e) {
       rethrow;
     } finally {
-      allPages.add(newPage);
       notifyListeners();
     }
   }
@@ -59,6 +61,7 @@ class Pages with ChangeNotifier {
         source: ImageSource.camera,
         maxHeight: 720,
         preferredCameraDevice: CameraDevice.rear);
+    // TODO: Change orientation of image if height < width
     return File(capturedPage!.path);
   }
 
