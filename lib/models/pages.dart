@@ -10,6 +10,10 @@ import 'package:image/image.dart' as img;
 import './page.dart' as page;
 
 class Pages with ChangeNotifier {
+  // Acts as a container for Page objects. Pages class creates Page objects from
+  // device camera and stores them in a list which is made available through
+  // Provider. Page class stores the actual and enhanced images.
+
 // TODO: [ENHANCE] Fetch scanner URL and endpoint from DB
   final String _docScannerUrl =
       'https://lastpage-docscanner2-poc-drsfalheva-km.a.run.app';
@@ -24,7 +28,7 @@ class Pages with ChangeNotifier {
     page.Page newPage;
     try {
       originalPage = await _camCapture();
-      newPage = page.Page(original: originalPage);
+      newPage = page.Page(original: originalPage, key: UniqueKey());
       await newPage.cropImage();
       allPages.add(newPage);
       notifyListeners();
@@ -32,8 +36,9 @@ class Pages with ChangeNotifier {
       rethrow;
     }
     try {
-      var scannedPage = await _docScanner(newPage.original.path);
-      newPage.processed = scannedPage;
+      // var scannedPage = await _docScanner(newPage.original.path);
+      // newPage.processed = scannedPage;
+      await newPage.processImg();
     } catch (e) {
       rethrow;
     } finally {
@@ -58,9 +63,11 @@ class Pages with ChangeNotifier {
     var picker = ImagePicker();
 
     var capturedPage = await picker.pickImage(
-        source: ImageSource.camera,
-        maxHeight: 720,
-        preferredCameraDevice: CameraDevice.rear);
+      source: ImageSource.camera,
+      maxHeight: 720,
+      preferredCameraDevice: CameraDevice.rear,
+      imageQuality: 75,
+    );
     // TODO: Change orientation of image if height < width
     return File(capturedPage!.path);
   }
