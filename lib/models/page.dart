@@ -31,7 +31,7 @@ class Page {
     return File('$path/$uniqueFileName.img');
   }
 
-  Future<void> cropImage() async {
+  Future<bool> cropImage() async {
     File? croppedImg = await ImageCropper.cropImage(
       sourcePath: original.path,
       aspectRatioPresets: [
@@ -42,14 +42,18 @@ class Page {
         CropAspectRatioPreset.ratio16x9
       ],
       androidUiSettings: const AndroidUiSettings(
-          toolbarTitle: 'Cropper',
-          toolbarColor: Colors.black87,
-          toolbarWidgetColor: Colors.blue,
-          initAspectRatio: CropAspectRatioPreset.original,
-          lockAspectRatio: false),
+        toolbarTitle: 'Crop & Align Page',
+        toolbarColor: Colors.black87,
+        toolbarWidgetColor: Colors.blue,
+        initAspectRatio: CropAspectRatioPreset.original,
+        lockAspectRatio: false,
+      ),
     );
     if (croppedImg != null) {
       original = croppedImg;
+      return true;
+    } else {
+      return false;
     }
   }
 

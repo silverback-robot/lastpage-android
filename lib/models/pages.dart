@@ -19,9 +19,13 @@ class Pages with ChangeNotifier {
     try {
       originalPage = await _camCapture();
       newPage = page.Page(original: originalPage, key: UniqueKey());
-      await newPage.cropImage();
-      allPages.add(newPage);
-      notifyListeners();
+      var capAndCropStatus = await newPage.cropImage();
+      if (capAndCropStatus) {
+        allPages.add(newPage);
+        notifyListeners();
+      } else {
+        return;
+      }
     } catch (err) {
       rethrow;
     }
