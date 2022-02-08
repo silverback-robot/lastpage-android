@@ -9,7 +9,9 @@ class Pages with ChangeNotifier {
   // device camera and stores them in a list which is made available through
   // Provider. Page class stores the actual and enhanced images.
 
-  List<page.Page> allPages = [];
+  final List<page.Page> _allPages = [];
+
+  List<page.Page> get allPages => _allPages;
 
   capturePage() async {
     // Separate try-catch blocks for camera and image processing to allow displaying
@@ -21,7 +23,7 @@ class Pages with ChangeNotifier {
       newPage = page.Page(original: originalPage, key: UniqueKey());
       var capAndCropStatus = await newPage.cropImage();
       if (capAndCropStatus) {
-        allPages.add(newPage);
+        _allPages.add(newPage);
         notifyListeners();
       } else {
         return;
@@ -48,5 +50,9 @@ class Pages with ChangeNotifier {
       imageQuality: 75,
     );
     return File(capturedPage!.path);
+  }
+
+  void deletePage(Key pageKey) {
+    _allPages.removeWhere((page) => page.key == pageKey);
   }
 }
