@@ -61,6 +61,17 @@ class _PageFrameState extends State<PageFrame> {
               icon: const Icon(Icons.delete),
               label: const Text("Delete Page"),
             ),
+            const SizedBox(
+              width: 8,
+            ),
+            ElevatedButton.icon(
+              onPressed: () async {
+                await widget.page.cropImage();
+                await widget.page.processImg();
+              },
+              icon: const Icon(Icons.edit),
+              label: const Text("Edit"),
+            ),
           ]),
         ],
       );

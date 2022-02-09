@@ -11,11 +11,13 @@ class Page {
   File original;
   File? processed;
   Key key;
+  Function onChangeCallback;
 
   Page({
     required this.original,
     this.processed,
     required this.key,
+    required this.onChangeCallback,
   });
 
   Future<String> get _tempPath async {
@@ -51,6 +53,7 @@ class Page {
     );
     if (croppedImg != null) {
       original = croppedImg;
+      onChangeCallback();
       return true;
     } else {
       return false;
@@ -67,8 +70,9 @@ class Page {
       img.grayscale(decodedImg);
       img.contrast(decodedImg, 120);
       var sepiaImg = img.sepia(decodedImg, amount: 0.2);
-      _processedImg.writeAsBytes(img.encodePng(sepiaImg, level: 4));
+      await _processedImg.writeAsBytes(img.encodePng(sepiaImg, level: 4));
       processed = _processedImg;
+      onChangeCallback();
     }
   }
 
