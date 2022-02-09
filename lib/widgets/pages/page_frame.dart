@@ -3,9 +3,15 @@ import 'package:flutter/material.dart';
 import '../../models/page.dart' as pg;
 
 class PageFrame extends StatefulWidget {
-  const PageFrame({required this.page});
+  const PageFrame({
+    required this.page,
+    required this.deleteCallback,
+    required this.frameKey,
+  }) : super(key: frameKey);
 
   final pg.Page page;
+  final Function deleteCallback;
+  final Key frameKey;
 
   @override
   State<PageFrame> createState() => _PageFrameState();
@@ -37,7 +43,7 @@ class _PageFrameState extends State<PageFrame> {
           const SizedBox(
             height: 20,
           ),
-          Row(children: [
+          Row(mainAxisAlignment: MainAxisAlignment.center, children: [
             ElevatedButton.icon(
               onPressed: _toggleSelection,
               icon: Icon(
@@ -46,7 +52,15 @@ class _PageFrameState extends State<PageFrame> {
               label: Text(
                 _selectEnhanced ? "Enhanced" : "Original",
               ),
-            )
+            ),
+            const SizedBox(
+              width: 8,
+            ),
+            ElevatedButton.icon(
+              onPressed: () => widget.deleteCallback(widget.page.key),
+              icon: const Icon(Icons.delete),
+              label: const Text("Delete Page"),
+            ),
           ]),
         ],
       );

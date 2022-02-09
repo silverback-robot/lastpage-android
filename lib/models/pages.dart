@@ -54,5 +54,6 @@ class Pages with ChangeNotifier {
 
   void deletePage(Key pageKey) {
     _allPages.removeWhere((page) => page.key == pageKey);
+    notifyListeners();
   }
 }
