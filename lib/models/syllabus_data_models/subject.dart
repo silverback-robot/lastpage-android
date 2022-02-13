@@ -1,4 +1,6 @@
 import 'package:lastpage/models/syllabus_data_models/subject_unit.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:lastpage/models/user_profile.dart';
 
 class Subject {
   late String subjectCode;
@@ -25,5 +27,17 @@ class Subject {
         .toList();
   }
 
-  Subject.fetchData(String subjectCode) {}
+  static Future<Subject> fetchData(String subjectCode) async {
+    final _db = FirebaseFirestore.instance;
+    var userProfile = await UserProfile.fetchProfile();
+    var subjectDataRaw = await _db
+        .collection("universities")
+        .doc(userProfile.university)
+        .collection("subjects")
+        .where("courseCode", isEqualTo: subjectCode)
+        .limit(1)
+        .get();
+    var subjectData = subjectDataRaw.docs.first.data();
+    return Subject.fromJson(subjectData);
+  }
 }

@@ -1,4 +1,6 @@
 import 'package:lastpage/models/syllabus_data_models/semester.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:lastpage/models/user_profile.dart';
 
 class Course {
   late String courseName;
@@ -17,5 +19,21 @@ class Course {
         Semester.fromJson(key as int, value),
       );
     });
+  }
+
+  static Future<Course> fetch() async {
+    final _db = FirebaseFirestore.instance;
+    var userProfile = await UserProfile.fetchProfile();
+    var userCourseRaw = await _db
+        .collection("universities")
+        .doc(userProfile.university)
+        .collection("departments")
+        .where("deptName", isEqualTo: userProfile.department!.toUpperCase())
+        .limit(1)
+        .get();
+
+    var userCourse = userCourseRaw.docs.first.data();
+    var courseData = Course.fromJson(userCourse);
+    return courseData;
   }
 }
