@@ -46,7 +46,8 @@ class UserDashboard extends StatelessWidget {
                     icon: Icons.school,
                     title: "My Syllabus",
                     description: "A quick view of your course syllabus.",
-                    onTapAction: () {},
+                    onTapAction: () =>
+                        Navigator.pushNamed(context, '/syllabus'),
                   ),
                 ],
               ),

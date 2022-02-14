@@ -4,6 +4,7 @@ import 'package:lastpage/screens/auth.dart';
 import 'package:lastpage/screens/dashboard.dart';
 import 'package:lastpage/screens/scan_doc.dart';
 import 'package:lastpage/screens/user_profile.dart';
+import 'package:lastpage/screens/syllabus.dart';
 import 'package:provider/provider.dart';
 import 'firebase_options.dart';
 
@@ -16,8 +17,10 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   runApp(
-    ChangeNotifierProvider(
-      create: (context) => pg.Pages(),
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider<pg.Pages>(create: (context) => pg.Pages()),
+      ],
       child: const MyApp(),
     ),
   );
@@ -42,6 +45,7 @@ class MyApp extends StatelessWidget {
         '/dashboard': (context) => const UserDashboard(),
         '/auth': (context) => const AuthScreen(),
         '/scanDoc': (context) => const ScanDoc(),
+        '/syllabus': (context) => const ViewSyllabus(),
       },
     );
   }
