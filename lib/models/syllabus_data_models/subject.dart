@@ -16,13 +16,13 @@ class Subject {
     subjectTitle = json['courseTitle'];
     subjectType = json['courseType'];
     category = json['category'];
-    credits = json['credits'] as int;
+    credits = int.parse(json['credits']);
     syllabusVersion = json['syllabusVersion'];
 
     Map<String, dynamic> unitsJson = json['units'];
     units = unitsJson.entries
         .map(
-          (e) => SubjectUnit.fromJson(e.key as int, e.value),
+          (e) => SubjectUnit.fromJson(int.parse(e.key), e.value),
         )
         .toList();
   }

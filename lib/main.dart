@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:lastpage/models/syllabus_data_models/syllabus_wrapper.dart';
 import 'package:lastpage/screens/auth.dart';
 import 'package:lastpage/screens/dashboard.dart';
 import 'package:lastpage/screens/scan_doc.dart';
@@ -20,6 +21,8 @@ void main() async {
     MultiProvider(
       providers: [
         ChangeNotifierProvider<pg.Pages>(create: (context) => pg.Pages()),
+        ChangeNotifierProvider<SyallabusWrapper>(
+            create: (context) => SyallabusWrapper()),
       ],
       child: const MyApp(),
     ),

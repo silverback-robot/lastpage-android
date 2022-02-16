@@ -6,6 +6,6 @@ class SubjectUnit {
   SubjectUnit.fromJson(int unitNo, Map<String, dynamic> json) {
     unitNumber = unitNo;
     title = json['title'];
-    unitContents = json['contents'] as List<String>;
+    unitContents = (json['contents'] as List).map((e) => e as String).toList();
   }
 }
