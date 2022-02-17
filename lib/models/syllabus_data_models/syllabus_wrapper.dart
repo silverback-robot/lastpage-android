@@ -3,6 +3,9 @@ import 'package:lastpage/models/syllabus_data_models/course.dart';
 import 'package:lastpage/models/syllabus_data_models/subject.dart';
 
 class SyallabusWrapper extends ChangeNotifier {
+  SyallabusWrapper() {
+    fetchSyllabus();
+  }
   Course? _course;
   final List<Subject> _subjects = [];
 

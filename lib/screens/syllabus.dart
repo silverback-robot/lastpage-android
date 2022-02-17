@@ -8,20 +8,15 @@ class ViewSyllabus extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: ElevatedButton.icon(
-          onPressed: () async {
-            await Provider.of<SyallabusWrapper>(context, listen: false)
-                .fetchSyllabus();
-            var subjects =
-                Provider.of<SyallabusWrapper>(context, listen: false).subjects;
-            print(
-                "${subjects.first.subjectCode}, ${subjects.first.subjectTitle}");
-          }, // TODO: Add SyllabusWrapper to MultiProvider in runApp and call data fetch method on tap to test SyllabusWrapper
-          icon: const Icon(Icons.download),
-          label: const Text("Fetch Syllabus"),
-        ),
-      ),
+      body: ListView.builder(
+          itemCount: Provider.of<SyallabusWrapper>(context).subjects.length,
+          itemBuilder: (context, index) {
+            return ListTile(
+              title: Text(Provider.of<SyallabusWrapper>(context)
+                  .subjects[index]
+                  .subjectTitle),
+            );
+          }),
     );
   }
 }
