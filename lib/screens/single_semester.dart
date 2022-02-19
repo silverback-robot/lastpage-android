@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:lastpage/models/syllabus_data_models/subject.dart';
 
-class ViewSyllabus extends StatelessWidget {
-  const ViewSyllabus({Key? key}) : super(key: key);
+class SingleSemester extends StatelessWidget {
+  const SingleSemester({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -17,6 +17,8 @@ class ViewSyllabus extends StatelessWidget {
                 child: ListTile(
                   title: Text(args[index].subjectTitle),
                   subtitle: Text(args[index].subjectCode),
+                  onTap: () => Navigator.pushNamed(context, '/single_subject',
+                      arguments: args[index]),
                 ),
               );
             }),

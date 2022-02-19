@@ -42,7 +42,7 @@ class AllSemesters extends StatelessWidget {
                       Text("Semester ${userCourse.semesterNumber.toString()}"),
                   subtitle: Text(
                       "${userCourse.semesterSubjectCodes.length.toString()} subjects"),
-                  onTap: () => Navigator.pushNamed(context, '/syllabus',
+                  onTap: () => Navigator.pushNamed(context, '/single_semester',
                       arguments: userCourse.semesterSubjects),
                 ),
               );

@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:lastpage/models/syllabus_data_models/semester.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:lastpage/models/user_profile.dart';
