@@ -4,6 +4,7 @@ import 'package:lastpage/models/syllabus_data_models/syllabus_wrapper.dart';
 import 'package:lastpage/screens/auth.dart';
 import 'package:lastpage/screens/dashboard.dart';
 import 'package:lastpage/screens/scan_doc.dart';
+import 'package:lastpage/screens/semesters.dart';
 import 'package:lastpage/screens/user_profile.dart';
 import 'package:lastpage/screens/syllabus.dart';
 import 'package:provider/provider.dart';
@@ -49,6 +50,7 @@ class MyApp extends StatelessWidget {
         '/auth': (context) => const AuthScreen(),
         '/scanDoc': (context) => const ScanDoc(),
         '/syllabus': (context) => const ViewSyllabus(),
+        '/all_semesters': (context) => const AllSemesters(),
       },
     );
   }
