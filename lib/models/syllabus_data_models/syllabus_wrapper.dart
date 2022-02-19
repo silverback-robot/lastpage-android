@@ -20,7 +20,9 @@ class SyallabusWrapper extends ChangeNotifier {
   Future<void> _populateSubjects() async {
     for (var sem in _course!.allSemesters) {
       for (var subCodes in sem.semesterSubjectCodes) {
-        _subjects.add(await Subject.fetchData(subCodes));
+        var subjectData = await Subject.fetchData(subCodes);
+        _subjects.add(subjectData);
+        sem.semesterSubjects.add(subjectData);
       }
     }
     notifyListeners();
