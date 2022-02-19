@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import '../models/syllabus_data_models/syllabus_wrapper.dart';
 import 'package:lastpage/models/syllabus_data_models/subject.dart';
 
 class ViewSyllabus extends StatelessWidget {

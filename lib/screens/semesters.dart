@@ -7,6 +7,23 @@ class AllSemesters extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final _dataState =
+        Provider.of<SyallabusWrapper>(context).subjects.isNotEmpty;
+    if (!_dataState) {
+      return Scaffold(
+        body: Center(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: const [
+              CircularProgressIndicator(),
+              SizedBox(height: 12),
+              Text("Turning pages..."),
+            ],
+          ),
+        ),
+      );
+    }
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(8.0),
