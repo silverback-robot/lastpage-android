@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:lastpage/models/storage.dart';
 import 'package:lastpage/models/syllabus_data_models/syllabus_wrapper.dart';
 import 'package:lastpage/screens/auth.dart';
 import 'package:lastpage/screens/dashboard.dart';
@@ -25,6 +26,7 @@ void main() async {
         ChangeNotifierProvider<pg.Pages>(create: (context) => pg.Pages()),
         ChangeNotifierProvider<SyallabusWrapper>(
             create: (context) => SyallabusWrapper()),
+        ChangeNotifierProvider<Storage>(create: (context) => Storage()),
       ],
       child: const MyApp(),
     ),

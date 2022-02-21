@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lastpage/models/storage.dart';
 import 'package:provider/provider.dart';
 
 import '../models/pages.dart' as pg;
@@ -60,9 +61,14 @@ class _ScanDocState extends State<ScanDoc> {
       ),
       floatingActionButton: FloatingActionButton(
         // TEMPORARY - Remove after DocScanner integration
-        onPressed: () => Navigator.pop(context),
+        onPressed: () async {
+          var downloadUrls = await Provider.of<Storage>(context, listen: false)
+              .uploadPages(
+                  Provider.of<pg.Pages>(context, listen: false).allPages);
+          print(downloadUrls.toString());
+        },
         child: const Icon(
-          Icons.arrow_back_outlined,
+          Icons.cloud_upload,
         ),
       ),
     );
