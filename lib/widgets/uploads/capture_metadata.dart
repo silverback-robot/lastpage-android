@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lastpage/models/syllabus_data_models/syllabus_wrapper.dart';
+import 'package:lastpage/models/pages_upload_metadata.dart';
 import 'package:provider/provider.dart';
 
 class CaptureMetadata extends StatefulWidget {
@@ -11,6 +12,7 @@ class CaptureMetadata extends StatefulWidget {
 }
 
 class _CaptureMetadataState extends State<CaptureMetadata> {
+  late PagesUploadMetadata pagesMetaData;
   bool isSemSelected = false;
   bool isSubjectSelected = false;
   bool isUnitSelected = false;
@@ -25,12 +27,12 @@ class _CaptureMetadataState extends State<CaptureMetadata> {
     return userCourse != null
         ? Dialog(
             child: Container(
-              padding: const EdgeInsets.all(25),
+              padding: const EdgeInsets.all(20),
               width: double.infinity,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   const Text(
                     "Where should this go?",
@@ -86,6 +88,7 @@ class _CaptureMetadataState extends State<CaptureMetadata> {
                   DropdownButton<int>(
                       isExpanded: true,
                       hint: const Text("Select Unit"),
+                      value: selectedUnitNo,
                       items: isSubjectSelected
                           ? userCourse.allSemesters
                               .firstWhere((element) =>
@@ -109,6 +112,24 @@ class _CaptureMetadataState extends State<CaptureMetadata> {
                           isUnitSelected = true;
                         });
                       }),
+                  const SizedBox(
+                    height: 15,
+                  ),
+                  ElevatedButton.icon(
+                      onPressed:
+                          isSemSelected && isSubjectSelected && isUnitSelected
+                              ? () {
+                                  setState(() {
+                                    pagesMetaData = PagesUploadMetadata(
+                                        semesterNo: selectedSem!,
+                                        subjectCode: selectedSubCode!,
+                                        unitNo: selectedUnitNo!);
+                                  });
+                                  Navigator.pop(context, pagesMetaData);
+                                }
+                              : null,
+                      icon: const Icon(Icons.cloud_upload_outlined),
+                      label: const Text("Upload Notes"))
                 ],
               ),
             ),

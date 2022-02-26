@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lastpage/models/storage.dart';
+import 'package:lastpage/models/pages_upload_metadata.dart';
 import 'package:lastpage/widgets/uploads/capture_metadata.dart';
 import 'package:provider/provider.dart';
 
@@ -63,18 +64,21 @@ class _ScanDocState extends State<ScanDoc> {
       floatingActionButton: FloatingActionButton(
         // TEMPORARY - Remove after DocScanner integration
         onPressed: () async {
-          // var downloadUrls = await Provider.of<Storage>(context, listen: false)
-          //     .uploadPages(
-          //         Provider.of<pg.Pages>(context, listen: false).allPages);
-          // print(downloadUrls.toString());
-          var _selection = await showDialog(
+          var _notesMetadata = await showDialog<PagesUploadMetadata>(
               context: context,
               builder: (BuildContext context) {
                 return CaptureMetadata(context: context);
               });
+          if (_notesMetadata != null) {
+            var downloadUrls =
+                await Provider.of<Storage>(context, listen: false).uploadPages(
+                    Provider.of<pg.Pages>(context, listen: false).allPages,
+                    _notesMetadata);
+            print(downloadUrls.toString());
+          }
         },
         child: const Icon(
-          Icons.cloud_upload,
+          Icons.save,
         ),
       ),
     );
