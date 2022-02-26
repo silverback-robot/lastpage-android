@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:lastpage/models/syllabus_data_models/semester.dart';
 import 'package:lastpage/models/syllabus_data_models/syllabus_wrapper.dart';
 import 'package:provider/provider.dart';
 
@@ -12,62 +11,115 @@ class CaptureMetadata extends StatefulWidget {
 }
 
 class _CaptureMetadataState extends State<CaptureMetadata> {
-  int selectedSem = 1;
   bool isSemSelected = false;
+  bool isSubjectSelected = false;
+  bool isUnitSelected = false;
+
+  int? selectedSem;
+  String? selectedSubCode;
+  int? selectedUnitNo;
+
   @override
   Widget build(BuildContext context) {
     final userCourse = Provider.of<SyallabusWrapper>(context).course;
     return userCourse != null
-        ? SimpleDialog(
-            title: const Text("Where do you want to put these?"),
-            children: [
-                Row(
-                  children: [
-                    const Text("Semester"),
-                    const SizedBox(
-                      width: 12,
+        ? Dialog(
+            child: Container(
+              padding: const EdgeInsets.all(25),
+              width: double.infinity,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    "Where should this go?",
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
                     ),
-                    DropdownButton<int>(
-                      onChanged: (value) {
+                  ),
+                  const SizedBox(
+                    height: 15,
+                  ),
+                  DropdownButton<int>(
+                    isExpanded: true,
+                    hint: const Text("Semester"),
+                    onChanged: (value) {
+                      setState(() {
+                        selectedSem = value!;
+                        isSemSelected = true;
+                      });
+                    },
+                    value: selectedSem,
+                    items: userCourse.allSemesters
+                        .map((e) => DropdownMenuItem(
+                              child: Text("Semester ${e.semesterNumber}"),
+                              value: e.semesterNumber,
+                            ))
+                        .toList(),
+                  ),
+                  DropdownButton<String>(
+                      hint: const Text("Subject"),
+                      isExpanded: true,
+                      value: selectedSubCode,
+                      items: isSemSelected
+                          ? userCourse.allSemesters
+                              .firstWhere((element) =>
+                                  element.semesterNumber == selectedSem)
+                              .semesterSubjects
+                              .map(
+                                (e) => DropdownMenuItem(
+                                  child: Text(e.subjectTitle,
+                                      overflow: TextOverflow.ellipsis),
+                                  value: e.subjectCode,
+                                ),
+                              )
+                              .toList()
+                          : null,
+                      onChanged: (val) {
                         setState(() {
-                          selectedSem = value!;
-                          isSemSelected = true;
+                          selectedSubCode = val;
+                          isSubjectSelected = true;
                         });
-                      },
-                      value: selectedSem,
-                      items: userCourse.allSemesters
-                          .map((e) => DropdownMenuItem(
-                                child: Text(e.semesterNumber.toString()),
-                                value: e.semesterNumber,
-                              ))
-                          .toList(),
-                    ),
-                  ],
-                ),
-                Row(
-                  children: [
-                    const Text("Subject"),
-                    DropdownButton(
-                        items: userCourse.allSemesters
-                            .firstWhere((element) =>
-                                element.semesterNumber == selectedSem)
-                            .semesterSubjects
-                            .map(
-                              (e) => DropdownMenuItem(
-                                child: Text(e.subjectTitle,
-                                    overflow: TextOverflow.ellipsis),
-                                value: e.subjectCode,
-                              ),
-                            )
-                            .toList(),
-                        onChanged: (val) {
-                          print(val);
-                        })
-                  ],
-                )
-              ])
-        : const SimpleDialog(
-            children: [CircularProgressIndicator(), Text("Getting data...")],
+                      }),
+                  DropdownButton<int>(
+                      isExpanded: true,
+                      hint: const Text("Select Unit"),
+                      items: isSubjectSelected
+                          ? userCourse.allSemesters
+                              .firstWhere((element) =>
+                                  element.semesterNumber == selectedSem)
+                              .semesterSubjects
+                              .firstWhere((element) =>
+                                  element.subjectCode == selectedSubCode)
+                              .units
+                              .map(
+                                (e) => DropdownMenuItem(
+                                  child: Text(e.unitNumber.toString(),
+                                      overflow: TextOverflow.ellipsis),
+                                  value: e.unitNumber,
+                                ),
+                              )
+                              .toList()
+                          : null,
+                      onChanged: (val) {
+                        setState(() {
+                          selectedUnitNo = val;
+                          isUnitSelected = true;
+                        });
+                      }),
+                ],
+              ),
+            ),
+          )
+        : Dialog(
+            child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: const [
+                  CircularProgressIndicator(),
+                  Text("Getting data...")
+                ]),
           );
   }
 }
