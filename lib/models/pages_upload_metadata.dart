@@ -4,8 +4,9 @@ class PagesUploadMetadata {
   int semesterNo;
   String subjectCode;
   int unitNo;
-  List<String> tags = [];
+  List<String> downloadUrls = [];
   String setId = UniqueKey().toString();
+  int createdDateTime = DateTime.now().millisecondsSinceEpoch;
 
   PagesUploadMetadata(
       {required this.semesterNo,

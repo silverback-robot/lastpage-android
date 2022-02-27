@@ -17,6 +17,7 @@ class ScanDoc extends StatefulWidget {
 class _ScanDocState extends State<ScanDoc> {
   @override
   Widget build(BuildContext context) {
+    final pagesRef = Provider.of<pg.Pages>(context, listen: false);
     return Scaffold(
       body: Center(
         child: SingleChildScrollView(
@@ -45,8 +46,7 @@ class _ScanDocState extends State<ScanDoc> {
               ),
               ElevatedButton.icon(
                 onPressed: () async {
-                  await Provider.of<pg.Pages>(context, listen: false)
-                      .capturePage();
+                  await pagesRef.capturePage();
                 },
                 icon: const Icon(
                   Icons.document_scanner,
@@ -61,26 +61,36 @@ class _ScanDocState extends State<ScanDoc> {
           ),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        // TEMPORARY - Remove after DocScanner integration
-        onPressed: () async {
-          var _notesMetadata = await showDialog<PagesUploadMetadata>(
-              context: context,
-              builder: (BuildContext context) {
-                return CaptureMetadata(context: context);
-              });
-          if (_notesMetadata != null) {
-            var downloadUrls =
-                await Provider.of<Storage>(context, listen: false).uploadPages(
-                    Provider.of<pg.Pages>(context, listen: false).allPages,
-                    _notesMetadata);
-            print(downloadUrls.toString());
-          }
-        },
-        child: const Icon(
-          Icons.save,
-        ),
-      ),
+      floatingActionButton: pagesRef.allPages.isNotEmpty
+          ? FloatingActionButton(
+              // TEMPORARY - Remove after DocScanner integration
+              onPressed: () async {
+                var _notesMetadata = await showDialog<PagesUploadMetadata>(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return CaptureMetadata(context: context);
+                    });
+                if (_notesMetadata != null) {
+                  try {
+                    var downloadUrls =
+                        await Provider.of<Storage>(context, listen: false)
+                            .uploadPages(pagesRef.allPages, _notesMetadata);
+                    _notesMetadata.downloadUrls = downloadUrls;
+
+                    pagesRef.clearAllPages();
+                  } catch (err) {
+                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                      content: Text("Something went wrong!"),
+                      backgroundColor: Colors.red,
+                    ));
+                  } finally {}
+                }
+              },
+              child: const Icon(
+                Icons.save,
+              ),
+            )
+          : null,
     );
   }
 }
