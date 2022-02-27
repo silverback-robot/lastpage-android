@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:lastpage/models/storage.dart';
-import 'package:lastpage/models/pages_upload_metadata.dart';
+import 'package:lastpage/models/cloud_storage_models/storage.dart';
+import 'package:lastpage/models/docscanner_models/pages_upload_metadata.dart';
+import 'package:lastpage/models/cloud_storage_models/user_storage.dart';
 import 'package:lastpage/widgets/uploads/capture_metadata.dart';
 import 'package:provider/provider.dart';
 
-import '../models/pages.dart' as pg;
+import '../models/docscanner_models/pages.dart' as pg;
 import '../widgets/pages/page_frame.dart';
 
 class ScanDoc extends StatefulWidget {
@@ -76,7 +77,8 @@ class _ScanDocState extends State<ScanDoc> {
                         await Provider.of<Storage>(context, listen: false)
                             .uploadPages(pagesRef.allPages, _notesMetadata);
                     _notesMetadata.downloadUrls = downloadUrls;
-
+                    await Provider.of<UserStorage>(context, listen: false)
+                        .saveCurrentUpload(_notesMetadata);
                     pagesRef.clearAllPages();
                   } catch (err) {
                     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(

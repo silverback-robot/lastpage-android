@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../models/page.dart' as pg;
+import '../../models/docscanner_models/page.dart' as pg;
 
 class PageFrame extends StatefulWidget {
   const PageFrame({

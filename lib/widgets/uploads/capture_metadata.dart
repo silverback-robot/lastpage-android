@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lastpage/models/syllabus_data_models/syllabus_wrapper.dart';
-import 'package:lastpage/models/pages_upload_metadata.dart';
+import 'package:lastpage/models/docscanner_models/pages_upload_metadata.dart';
 import 'package:provider/provider.dart';
 
 class CaptureMetadata extends StatefulWidget {

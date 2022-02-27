@@ -2,7 +2,7 @@ import 'dart:io';
 import 'package:flutter/widgets.dart';
 import 'package:image_picker/image_picker.dart';
 
-import './page.dart' as page;
+import 'page.dart' as page;
 
 class Pages with ChangeNotifier {
   // Acts as a container for Page objects. Pages class creates Page objects from

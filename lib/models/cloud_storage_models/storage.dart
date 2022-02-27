@@ -2,8 +2,8 @@ import 'dart:io';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
-import 'package:lastpage/models/page.dart';
-import 'package:lastpage/models/pages_upload_metadata.dart';
+import 'package:lastpage/models/docscanner_models/page.dart' as pg;
+import 'package:lastpage/models/docscanner_models/pages_upload_metadata.dart';
 
 class Storage extends ChangeNotifier {
   final _uid = FirebaseAuth.instance.currentUser!.uid;
@@ -12,7 +12,7 @@ class Storage extends ChangeNotifier {
       firebase_storage.FirebaseStorage.instance;
 
   Future<List<String>> uploadPages(
-      List<Page> currentSet, PagesUploadMetadata meta) async {
+      List<pg.Page> currentSet, PagesUploadMetadata meta) async {
     var metaString = meta.stringKeyVals();
     metaString.addAll({'uid': _uid});
 

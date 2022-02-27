@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:lastpage/models/storage.dart';
+import 'package:lastpage/models/cloud_storage_models/storage.dart';
 import 'package:lastpage/models/syllabus_data_models/syllabus_wrapper.dart';
+import 'package:lastpage/models/cloud_storage_models/user_storage.dart';
 import 'package:lastpage/screens/auth.dart';
 import 'package:lastpage/screens/dashboard.dart';
 import 'package:lastpage/screens/scan_doc.dart';
@@ -13,7 +14,7 @@ import 'package:provider/provider.dart';
 import 'firebase_options.dart';
 
 import './widgets/auth/auth_redirect.dart';
-import './models/pages.dart' as pg;
+import 'models/docscanner_models/pages.dart' as pg;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -27,6 +28,7 @@ void main() async {
         ChangeNotifierProvider<SyallabusWrapper>(
             create: (context) => SyallabusWrapper()),
         ChangeNotifierProvider<Storage>(create: (context) => Storage()),
+        ChangeNotifierProvider<UserStorage>(create: (context) => UserStorage()),
       ],
       child: const MyApp(),
     ),
