@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'dart:convert';
 
 class PagesUploadMetadata {
-  int semesterNo;
-  String subjectCode;
-  int unitNo;
+  late int semesterNo;
+  late String subjectCode;
+  late int unitNo;
   List<String> downloadUrls = [];
   String setId = UniqueKey().toString();
   int createdDateTime = DateTime.now().millisecondsSinceEpoch;
@@ -15,13 +14,15 @@ class PagesUploadMetadata {
     required this.unitNo,
   });
 
-  PagesUploadMetadata.fromJson(Map<String, dynamic> json)
-      : semesterNo = json['semesterNo'],
-        subjectCode = json['subjectCode'],
-        unitNo = json['unitNo'],
-        createdDateTime = int.parse(json['createdDateTime']),
-        setId = json['setId'],
-        downloadUrls = jsonDecode(json['downloadUrls']);
+  PagesUploadMetadata.fromJson(Map<String, dynamic> json) {
+    semesterNo = json['semesterNo'];
+    subjectCode = json['subjectCode'];
+    unitNo = json['unitNo'];
+    createdDateTime = int.parse(json['createdDateTime']);
+    setId = json['setId'];
+    downloadUrls =
+        (json['downloadUrls'] as List).map((url) => url as String).toList();
+  }
 
   Map<String, dynamic> toJson() => {
         'setId': setId,

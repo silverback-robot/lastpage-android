@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../widgets/dashboard/dashboard_cards.dart';
@@ -40,7 +41,8 @@ class UserDashboard extends StatelessWidget {
                     icon: Icons.file_copy_sharp,
                     title: "My Notes",
                     description: "View notes saved in your lastpage account.",
-                    onTapAction: () {},
+                    onTapAction: () =>
+                        Navigator.pushNamed(context, '/my_notes'),
                   ),
                   DashboardCard(
                     icon: Icons.school,
