@@ -4,6 +4,7 @@ class PagesUploadMetadata {
   late int semesterNo;
   late String subjectCode;
   late int unitNo;
+  late String title;
   List<String> downloadUrls = [];
   String setId = UniqueKey().toString();
   int createdDateTime = DateTime.now().millisecondsSinceEpoch;
@@ -12,9 +13,11 @@ class PagesUploadMetadata {
     required this.semesterNo,
     required this.subjectCode,
     required this.unitNo,
+    this.title = "No title",
   });
 
   PagesUploadMetadata.fromJson(Map<String, dynamic> json) {
+    title = json['title'] ?? "No title";
     semesterNo = json['semesterNo'];
     subjectCode = json['subjectCode'];
     unitNo = json['unitNo'];
@@ -29,6 +32,7 @@ class PagesUploadMetadata {
         'semesterNo': semesterNo,
         'subjectCode': subjectCode,
         'unitNo': unitNo,
+        'title': title,
         'createdDateTime': createdDateTime.toString(),
         'downloadUrls': downloadUrls,
       };

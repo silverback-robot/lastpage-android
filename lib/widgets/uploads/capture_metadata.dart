@@ -20,6 +20,7 @@ class _CaptureMetadataState extends State<CaptureMetadata> {
   int? selectedSem;
   String? selectedSubCode;
   int? selectedUnitNo;
+  String title = "No title";
 
   @override
   Widget build(BuildContext context) {
@@ -112,6 +113,26 @@ class _CaptureMetadataState extends State<CaptureMetadata> {
                           isUnitSelected = true;
                         });
                       }),
+                  TextField(
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(5),
+                        ),
+                        enabled: true,
+                        hintText: "Title",
+                      ),
+                      autocorrect: true,
+                      enabled: true,
+                      enableSuggestions: true,
+                      keyboardType: TextInputType.text,
+                      expands: false,
+                      onChanged: (val) {
+                        if (val.isNotEmpty) {
+                          setState(() {
+                            title = val;
+                          });
+                        }
+                      }),
                   const SizedBox(
                     height: 15,
                   ),
@@ -121,9 +142,11 @@ class _CaptureMetadataState extends State<CaptureMetadata> {
                               ? () {
                                   setState(() {
                                     pagesMetaData = PagesUploadMetadata(
-                                        semesterNo: selectedSem!,
-                                        subjectCode: selectedSubCode!,
-                                        unitNo: selectedUnitNo!);
+                                      semesterNo: selectedSem!,
+                                      subjectCode: selectedSubCode!,
+                                      unitNo: selectedUnitNo!,
+                                      title: title,
+                                    );
                                   });
                                   Navigator.pop(context, pagesMetaData);
                                 }
