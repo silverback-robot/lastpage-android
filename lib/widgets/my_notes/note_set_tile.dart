@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -40,8 +38,8 @@ class NotesetTile extends StatelessWidget {
                 : diff == 1
                     ? "Yesterday"
                     : formatted,
-            style:
-                TextStyle(color: Colors.black54, fontStyle: FontStyle.italic)),
+            style: const TextStyle(
+                color: Colors.black54, fontStyle: FontStyle.italic)),
       ),
     );
   }
