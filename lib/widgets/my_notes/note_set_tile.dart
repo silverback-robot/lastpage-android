@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -28,20 +26,28 @@ class NotesetTile extends StatelessWidget {
     final today = DateTime(todayTmp.year, todayTmp.month, todayTmp.day);
     final diff = today.difference(createdDay).inDays;
 
-    return Card(
-      elevation: 1,
-      child: ListTile(
-        contentPadding: const EdgeInsets.all(5),
-        title: Text(title),
-        subtitle: Text("$noOfPages ${noOfPages > 1 ? "pages" : "page"}"),
-        trailing: Text(
-            diff == 0
-                ? "Today"
-                : diff == 1
-                    ? "Yesterday"
-                    : formatted,
-            style:
-                TextStyle(color: Colors.black54, fontStyle: FontStyle.italic)),
+    return GestureDetector(
+      onTap: () {
+        downloadUrls.isNotEmpty
+            ? Navigator.pushNamed(context, '/fullscreen_notes',
+                arguments: downloadUrls)
+            : null;
+      },
+      child: Card(
+        elevation: 1,
+        child: ListTile(
+          contentPadding: const EdgeInsets.all(5),
+          title: Text(title),
+          subtitle: Text("$noOfPages ${noOfPages > 1 ? "pages" : "page"}"),
+          trailing: Text(
+              diff == 0
+                  ? "Today"
+                  : diff == 1
+                      ? "Yesterday"
+                      : formatted,
+              style: const TextStyle(
+                  color: Colors.black54, fontStyle: FontStyle.italic)),
+        ),
       ),
     );
   }

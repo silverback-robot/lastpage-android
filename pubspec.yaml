@@ -1,5 +1,5 @@
 name: lastpage
-description: astpage app for Android.
+description: lastpage app for Android.
 
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
@@ -31,6 +31,7 @@ dependencies:
   image: ^3.1.1
   provider: ^6.0.2
   image_cropper: ^1.4.1
+  photo_view: ^0.13.0
 
 dev_dependencies:
   flutter_test:
