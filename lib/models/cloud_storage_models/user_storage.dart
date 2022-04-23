@@ -14,6 +14,19 @@ class UserStorage extends ChangeNotifier {
   final _uid = FirebaseAuth.instance.currentUser!.uid;
   final _db = FirebaseFirestore.instance;
 
+  Stream<List<PagesUploadMetadata>> get userUploads {
+    return _db
+        .collection('users')
+        .doc(_uid)
+        .collection('uploads')
+        .snapshots()
+        .map((QuerySnapshot querySnapshot) => querySnapshot.docs
+            .map((DocumentSnapshot documentSnapshot) =>
+                PagesUploadMetadata.fromJson(
+                    documentSnapshot.data() as Map<String, dynamic>))
+            .toList());
+  }
+
   Future<void> fetchUserStorage() async {
     try {
       var userStorageQS =
