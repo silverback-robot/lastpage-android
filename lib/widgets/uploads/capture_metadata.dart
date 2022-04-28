@@ -139,40 +139,44 @@ class _CaptureMetadataState extends State<CaptureMetadata> {
                       height: 15,
                     ),
                     ElevatedButton.icon(
-                        onPressed:
-                            isSemSelected && isSubjectSelected && isUnitSelected
-                                ? () {
-                                    setState(() {
-                                      pagesMetaData = PagesUploadMetadata(
-                                        semesterNo: selectedSem!,
-                                        subjectCode: selectedSubCode!,
-                                        unitNo: selectedUnitNo!,
-                                        title: title,
-                                      );
-                                    });
-                                    Navigator.pop(context, pagesMetaData);
-                                  }
-                                : null,
-                        icon: const Icon(Icons.cloud_upload_outlined),
-                        label: const Text("Upload Notes"))
+                      onPressed:
+                          isSemSelected && isSubjectSelected && isUnitSelected
+                              ? () {
+                                  setState(() {
+                                    pagesMetaData = PagesUploadMetadata(
+                                      semesterNo: selectedSem!,
+                                      subjectCode: selectedSubCode!,
+                                      unitNo: selectedUnitNo!,
+                                      title: title,
+                                    );
+                                  });
+                                  Navigator.pop(context, pagesMetaData);
+                                }
+                              : null,
+                      icon: const Icon(Icons.cloud_upload_outlined),
+                      label: const Text("Save & Upload"),
+                    )
                   ],
                 ),
               ),
             ),
           )
         : Dialog(
-            child: Center(
-              child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: const [
-                    CircularProgressIndicator(),
-                    SizedBox(
-                      height: 15,
-                    ),
-                    Text("Turning pages...")
-                  ]),
+            child: SingleChildScrollView(
+              child: Container(
+                padding: const EdgeInsets.all(20),
+                child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: const [
+                      CircularProgressIndicator(),
+                      SizedBox(
+                        height: 15,
+                      ),
+                      Text("Turning pages...")
+                    ]),
+              ),
             ),
           );
   }

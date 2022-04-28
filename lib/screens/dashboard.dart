@@ -26,11 +26,11 @@ class UserDashboard extends StatelessWidget {
                     onTapAction: () => Navigator.pushNamed(context, '/scanDoc'),
                   ),
                   DashboardCard(
-                    icon: Icons.upload_file_rounded,
-                    title: "Upload Notes",
+                    icon: Icons.groups,
+                    title: "Groups",
                     description:
                         "Upload files from your phone to your account.",
-                    onTapAction: () {},
+                    onTapAction: () => Navigator.pushNamed(context, '/groups'),
                   ),
                 ],
               ),
