@@ -137,7 +137,7 @@ class _CreateNewGroupState extends State<CreateNewGroup> {
                           });
                         }),
                   ElevatedButton.icon(
-                    onPressed: () {
+                    onPressed: () async {
                       if (_formKey.currentState!.validate()) {
                         // If the form is valid, display a snackbar. In the real world,
                         // you'd often call a server or save the information in a database.
@@ -147,7 +147,14 @@ class _CreateNewGroupState extends State<CreateNewGroup> {
                             owner: owner,
                             subjectGroup: subjectGroup,
                             subject: subject);
-
+                        try {
+                          await newGroup.createNewGroup();
+                        } catch (err) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text(err.toString())),
+                          );
+                          Navigator.pop(context, newGroup);
+                        }
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(content: Text('Creating your group')),
                         );
