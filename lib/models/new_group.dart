@@ -1,19 +1,31 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:lastpage/models/syllabus_data_models/subject.dart';
 
-class NewGroup {
+class UserGroup {
   String groupName;
   DateTime createdDateTime = DateTime.now();
   String owner;
+  List<String> admins = [];
+  List<String?> members = [];
   bool subjectGroup;
   Subject? subject;
-  List<String?> members = [];
+  String? subjectCode;
+  String? subjectTitle;
 
-  NewGroup(
+  UserGroup(
       {required this.groupName,
       required this.owner,
       required this.subjectGroup,
       this.subject});
+
+  UserGroup.fromJson(Map<String, dynamic> json)
+      : groupName = json['groupName'],
+        owner = json['owner'],
+        admins = (json['admins'] as List<dynamic>).cast<String>(),
+        members = (json['members'] as List<dynamic>).cast<String>(),
+        subjectGroup = json['subjectGroup'],
+        subjectCode = json['subjectCode'],
+        subjectTitle = json['subjectTitle'];
 
   Map<String, dynamic> toJson() => {
         'groupName': groupName,
@@ -25,7 +37,7 @@ class NewGroup {
         ],
         'subjectGroup': subjectGroup,
         'subjectCode': subjectGroup ? subject?.subjectCode : null,
-        'subject': subjectGroup ? subject?.subjectTitle : null,
+        'subjectTitle': subjectGroup ? subject?.subjectTitle : null,
       };
 
   Future<void> createNewGroup() async {

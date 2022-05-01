@@ -17,7 +17,7 @@ class CreateNewGroup extends StatefulWidget {
 
 class _CreateNewGroupState extends State<CreateNewGroup> {
   late String groupName;
-  late NewGroup newGroup;
+  late UserGroup newGroup;
   String owner = FirebaseAuth.instance.currentUser!.uid;
   bool subjectGroup = false;
 
@@ -142,7 +142,7 @@ class _CreateNewGroupState extends State<CreateNewGroup> {
                         // If the form is valid, display a snackbar. In the real world,
                         // you'd often call a server or save the information in a database.
 
-                        newGroup = NewGroup(
+                        newGroup = UserGroup(
                             groupName: groupName,
                             owner: owner,
                             subjectGroup: subjectGroup,
