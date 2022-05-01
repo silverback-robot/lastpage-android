@@ -13,13 +13,15 @@ class AllGroups extends ChangeNotifier {
         .where('members', arrayContains: _uid)
         .snapshots()
         .map(
-          (event) => event.docs
-              .map(
-                (e) => UserGroup.fromJson(
-                  e.data(),
-                ),
-              )
-              .toList(),
+          (event) => event.docs.map(
+            (e) {
+              var userGroup = UserGroup.fromJson(
+                e.data(),
+              );
+              userGroup.docId = e.id;
+              return userGroup;
+            },
+          ).toList(),
         );
   }
 }

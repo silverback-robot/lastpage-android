@@ -11,6 +11,7 @@ class UserGroup {
   Subject? subject;
   String? subjectCode;
   String? subjectTitle;
+  String? docId;
 
   UserGroup(
       {required this.groupName,

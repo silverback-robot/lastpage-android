@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:lastpage/models/all_groups.dart';
 import 'package:lastpage/models/new_group.dart';
 import 'package:lastpage/widgets/groups/create_new_group.dart';
+import 'package:lastpage/widgets/groups/group_tile.dart';
 import 'package:provider/provider.dart';
 
 class Groups extends StatelessWidget {
@@ -34,10 +35,15 @@ class Groups extends StatelessWidget {
                   child: Text("Oops! Something went wrong..."),
                 );
               } else if (snapshot.hasData) {
-                return const Center(
-                  child: Text("Got Group Data!"),
+                var participatingGroups = snapshot.data as List<UserGroup>;
+                var groupTiles =
+                    participatingGroups.map((e) => GroupTile(info: e)).toList();
+                return ListView(
+                  children: ListTile.divideTiles(
+                    context: context,
+                    tiles: groupTiles,
+                  ).toList(),
                 );
-                // TODO: Render Group Tiles
               } else {
                 return Center(
                   child: Column(
