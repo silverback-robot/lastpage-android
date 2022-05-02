@@ -16,7 +16,8 @@ class GroupTile extends StatelessWidget {
               : "Generic group",
           overflow: TextOverflow.ellipsis),
       trailing: const Icon(Icons.keyboard_arrow_right),
-      onTap: () {},
+      onTap: () =>
+          Navigator.pushNamed(context, '/group_activity', arguments: info),
     );
   }
 }
