@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:lastpage/models/all_groups.dart';
-import 'package:lastpage/models/new_group.dart';
+import 'package:lastpage/models/groups/all_groups.dart';
+import 'package:lastpage/models/groups/new_group.dart';
 import 'package:lastpage/widgets/groups/create_new_group.dart';
 import 'package:lastpage/widgets/groups/group_tile.dart';
 import 'package:provider/provider.dart';

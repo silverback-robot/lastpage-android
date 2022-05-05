@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:lastpage/models/all_groups.dart';
+import 'package:lastpage/models/groups/all_groups.dart';
 import 'package:lastpage/models/cloud_storage_models/storage.dart';
 import 'package:lastpage/models/syllabus_data_models/syllabus_wrapper.dart';
 import 'package:lastpage/models/cloud_storage_models/user_storage.dart';

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:lastpage/models/new_group.dart';
+import 'package:lastpage/models/groups/new_group.dart';
 
 class GroupTile extends StatelessWidget {
   const GroupTile({required this.info, Key? key}) : super(key: key);

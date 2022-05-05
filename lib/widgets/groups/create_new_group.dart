@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:lastpage/models/new_group.dart';
+import 'package:lastpage/models/groups/new_group.dart';
 import 'package:lastpage/models/syllabus_data_models/subject.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
