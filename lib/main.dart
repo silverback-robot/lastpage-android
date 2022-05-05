@@ -7,7 +7,7 @@ import 'package:lastpage/models/cloud_storage_models/user_storage.dart';
 import 'package:lastpage/screens/auth.dart';
 import 'package:lastpage/screens/dashboard.dart';
 import 'package:lastpage/screens/fullscreen_notes.dart';
-import 'package:lastpage/screens/group_activity.dart';
+import 'package:lastpage/screens/view_group_activity.dart';
 import 'package:lastpage/screens/groups.dart';
 import 'package:lastpage/screens/my_notes.dart';
 import 'package:lastpage/screens/scan_doc.dart';
@@ -66,7 +66,7 @@ class MyApp extends StatelessWidget {
         '/my_notes': (context) => const MyNotes(),
         '/fullscreen_notes': (context) => const FullScreenNotes(),
         '/groups': (context) => const Groups(),
-        '/group_activity': (context) => const GroupActivity(),
+        '/group_activity': (context) => const ViewGroupActivity(),
       },
     );
   }

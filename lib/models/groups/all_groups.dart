@@ -1,10 +1,9 @@
-import 'dart:convert';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:lastpage/models/groups/group_activity.dart';
 import 'package:lastpage/models/groups/new_group.dart';
+import 'group_activity.dart';
 
 class AllGroups extends ChangeNotifier {
   final _uid = FirebaseAuth.instance.currentUser!.uid;
@@ -37,14 +36,24 @@ class AllGroups extends ChangeNotifier {
         .map(
           (event) => event.docs.map(
             (e) {
-              //TODO: Receive and process Group Activity documents
               var groupActivity = GroupActivity.fromJson(
                 e.data(),
               );
               groupActivity.activityId = e.id;
+              groupActivity.groupId = groupId;
               return groupActivity;
             },
           ).toList(),
         );
+  }
+
+  Future<void> participate(GroupActivity activity) async {
+    if (activity.activityType == ActivityType.messagePublish) {
+      await _db
+          .collection('groups')
+          .doc(activity.groupId)
+          .collection('activity')
+          .add(activity.toJson());
+    }
   }
 }

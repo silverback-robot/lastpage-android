@@ -14,6 +14,7 @@ class GroupActivity {
   String? commentAddedText;
   String? userAddedName;
   String? activityId;
+  String? groupId;
 
   GroupActivity.fromJson(Map<String, dynamic> json)
       : activityType = ActivityType.values.byName(json['activityType']),
@@ -32,6 +33,15 @@ class GroupActivity {
             json.containsKey('userAddedName') ? json['userAddedName'] : null;
 
   Map<String, dynamic> toJson() {
-    return {};
+    return {
+      "activityType": activityType.name,
+      "activityOwner": activityOwner,
+      "activityDateTime": activityDateTime,
+      if (messagePublishText != null) "messagePublishText": messagePublishText,
+      if (fileUploadUrl != null) "fileUploadUrl": fileUploadUrl,
+      if (commentAddedText != null) "commentAddedText": commentAddedText,
+      if (userAddedName != null) "userAddedName": userAddedName,
+      if (commentAddedText != null) "commentAddedText": commentAddedText,
+    };
   }
 }

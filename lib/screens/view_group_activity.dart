@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:lastpage/models/groups/all_groups.dart';
 import 'package:lastpage/models/groups/new_group.dart';
@@ -9,8 +7,8 @@ import 'package:lastpage/widgets/groups/group_activity/action_button.dart';
 import 'package:lastpage/widgets/groups/group_activity/expandable_fab.dart';
 import 'package:provider/provider.dart';
 
-class GroupActivity extends StatelessWidget {
-  const GroupActivity({Key? key}) : super(key: key);
+class ViewGroupActivity extends StatelessWidget {
+  const ViewGroupActivity({Key? key}) : super(key: key);
 
   static const _actionTitles = [
     'Post a message',
@@ -56,10 +54,15 @@ class GroupActivity extends StatelessWidget {
               );
             } else if (snapshot.hasData) {
               List<ga.GroupActivity> allActivity = snapshot.data;
-              return ListView(
-                children:
-                    allActivity.map((e) => Text(e.activityOwner)).toList(),
-              );
+              return allActivity.isNotEmpty
+                  ? ListView(
+                      children: allActivity
+                          .map((e) => Text(e.activityOwner))
+                          .toList(),
+                    )
+                  : const Center(
+                      child: Text("No activity here..."),
+                    );
             } else {
               return const Center(
                 child: Text("No activity here..."),
