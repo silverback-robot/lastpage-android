@@ -20,7 +20,7 @@ class AllGroups extends ChangeNotifier {
               var userGroup = UserGroup.fromJson(
                 e.data(),
               );
-              userGroup.docId = e.id;
+              userGroup.docId = e.reference.id;
               return userGroup;
             },
           ).toList(),
@@ -49,11 +49,16 @@ class AllGroups extends ChangeNotifier {
 
   Future<void> participate(GroupActivity activity) async {
     if (activity.activityType == ActivityType.messagePublish) {
-      await _db
-          .collection('groups')
-          .doc(activity.groupId)
-          .collection('activity')
-          .add(activity.toJson());
+      try {
+        await _db
+            .collection('userGroups')
+            .doc(activity.groupId)
+            .collection('activity')
+            .add(activity.toJson())
+            .then((value) => print(value.path));
+      } catch (err) {
+        rethrow;
+      }
     }
   }
 }

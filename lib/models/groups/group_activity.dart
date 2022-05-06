@@ -16,6 +16,13 @@ class GroupActivity {
   String? activityId;
   String? groupId;
 
+  GroupActivity({
+    required this.activityType,
+    required this.activityOwner,
+    required this.activityDateTime,
+    this.groupId,
+  });
+
   GroupActivity.fromJson(Map<String, dynamic> json)
       : activityType = ActivityType.values.byName(json['activityType']),
         activityOwner = json['activityOwner'],

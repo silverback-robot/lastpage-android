@@ -16,19 +16,69 @@ class ViewGroupActivity extends StatelessWidget {
     'Invite Friends'
   ];
 
-  void _showAction(BuildContext context, int index) {
+  void _showAction(
+      BuildContext context, ga.ActivityType actionType, String groupId) {
+    final _formKey = GlobalKey<FormState>();
     showDialog<void>(
       context: context,
       builder: (context) {
-        return AlertDialog(
-          content: Text(_actionTitles[index]),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: const Text('CLOSE'),
+        if (actionType == ga.ActivityType.messagePublish) {
+          return AlertDialog(
+            content: Form(
+              key: _formKey,
+              child: TextFormField(
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return "Please type a message or hit tap 'CLOSE'";
+                  }
+                  return null;
+                },
+                keyboardType: TextInputType.multiline,
+                maxLines: 3,
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(),
+                  hintText: "Type your message",
+                ),
+              ),
             ),
-          ],
-        );
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: const Text('CLOSE'),
+              ),
+              ElevatedButton(
+                  onPressed: () {
+                    if (_formKey.currentState!.validate()) {
+                      var activity = ga.GroupActivity(
+                        activityType: actionType,
+                        activityDateTime: DateTime.now(),
+                        activityOwner: "harish",
+                        groupId: groupId,
+                      );
+                      activity.activityDateTime = DateTime.now();
+                      try {
+                        Provider.of<AllGroups>(context, listen: false)
+                            .participate(activity);
+                        Navigator.of(context).pop();
+                      } catch (err) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(
+                              err.toString(),
+                            ),
+                          ),
+                        );
+                      }
+                    }
+                  },
+                  child: const Text("POST"))
+            ],
+          );
+        } else {
+          return const AlertDialog(
+            content: Text("No valid actions"),
+          );
+        }
       },
     );
   }
@@ -38,6 +88,7 @@ class ViewGroupActivity extends StatelessWidget {
     final args = ModalRoute.of(context)!.settings.arguments as UserGroup;
     final groupActivity = Provider.of<AllGroups>(context, listen: false)
         .groupActivity(args.docId!);
+    // final participate = Provider.of(context)
     return Scaffold(
       body: StreamBuilder(
         stream: groupActivity,
@@ -82,16 +133,28 @@ class ViewGroupActivity extends StatelessWidget {
         distance: 112.0,
         children: [
           ActionButton(
-            onPressed: () => _showAction(context, 0),
-            icon: const Icon(Icons.format_size),
+            onPressed: () => _showAction(
+                context, ga.ActivityType.messagePublish, args.docId as String),
+            icon: const Icon(
+              Icons.message_outlined,
+              color: Colors.white,
+            ),
           ),
           ActionButton(
-            onPressed: () => _showAction(context, 1),
-            icon: const Icon(Icons.insert_photo),
+            onPressed: () => _showAction(
+                context, ga.ActivityType.fileUpload, args.docId as String),
+            icon: const Icon(
+              Icons.note_add_rounded,
+              color: Colors.white,
+            ),
           ),
           ActionButton(
-            onPressed: () => _showAction(context, 2),
-            icon: const Icon(Icons.videocam),
+            onPressed: () => _showAction(
+                context, ga.ActivityType.userAdded, args.docId as String),
+            icon: const Icon(
+              Icons.person_add_alt_outlined,
+              color: Colors.white,
+            ),
           ),
         ],
       ),
