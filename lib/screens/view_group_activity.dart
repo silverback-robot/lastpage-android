@@ -5,9 +5,10 @@ import 'package:lastpage/models/groups/group_activity.dart' as ga;
 
 import 'package:lastpage/widgets/groups/group_activity/action_button.dart';
 import 'package:lastpage/widgets/groups/group_activity/expandable_fab.dart';
+import 'package:lastpage/widgets/groups/group_activity/new_post.dart';
 import 'package:provider/provider.dart';
 
-class ViewGroupActivity extends StatelessWidget {
+class ViewGroupActivity extends StatefulWidget {
   const ViewGroupActivity({Key? key}) : super(key: key);
 
   static const _actionTitles = [
@@ -16,6 +17,12 @@ class ViewGroupActivity extends StatelessWidget {
     'Invite Friends'
   ];
 
+  @override
+  State<ViewGroupActivity> createState() => _ViewGroupActivityState();
+}
+
+class _ViewGroupActivityState extends State<ViewGroupActivity> {
+  String? publishText;
   void _showAction(
       BuildContext context, ga.ActivityType actionType, String groupId) {
     final _formKey = GlobalKey<FormState>();
@@ -29,7 +36,7 @@ class ViewGroupActivity extends StatelessWidget {
               child: TextFormField(
                 validator: (value) {
                   if (value!.isEmpty) {
-                    return "Please type a message or hit tap 'CLOSE'";
+                    return "Please type a message or tap 'CLOSE'";
                   }
                   return null;
                 },
@@ -39,6 +46,11 @@ class ViewGroupActivity extends StatelessWidget {
                   border: OutlineInputBorder(),
                   hintText: "Type your message",
                 ),
+                onChanged: (val) {
+                  setState(() {
+                    publishText = val;
+                  });
+                },
               ),
             ),
             actions: [
@@ -54,6 +66,7 @@ class ViewGroupActivity extends StatelessWidget {
                         activityDateTime: DateTime.now(),
                         activityOwner: "harish",
                         groupId: groupId,
+                        messagePublishText: publishText,
                       );
                       activity.activityDateTime = DateTime.now();
                       try {
@@ -108,9 +121,10 @@ class ViewGroupActivity extends StatelessWidget {
               return allActivity.isNotEmpty
                   ? ListView(
                       children: allActivity
-                          .map((e) => Text(e.activityOwner))
-                          .toList(),
-                    )
+                          // Create widgets to display specific user actions
+                          .map((e) =>
+                              NewPost(messageText: e.messagePublishText!))
+                          .toList())
                   : const Center(
                       child: Text("No activity here..."),
                     );

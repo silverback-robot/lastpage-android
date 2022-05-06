@@ -21,6 +21,9 @@ class GroupActivity {
     required this.activityOwner,
     required this.activityDateTime,
     this.groupId,
+    this.messagePublishText,
+    this.fileUploadUrl,
+    this.userAddedName,
   });
 
   GroupActivity.fromJson(Map<String, dynamic> json)
