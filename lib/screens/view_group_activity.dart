@@ -86,8 +86,8 @@ class ViewGroupActivity extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final args = ModalRoute.of(context)!.settings.arguments as UserGroup;
-    final groupActivity = Provider.of<AllGroups>(context, listen: false)
-        .groupActivity(args.docId!);
+    final groupActivity =
+        Provider.of<AllGroups>(context).groupActivity(args.docId!);
     // final participate = Provider.of(context)
     return Scaffold(
       body: StreamBuilder(

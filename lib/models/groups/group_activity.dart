@@ -43,7 +43,7 @@ class GroupActivity {
     return {
       "activityType": activityType.name,
       "activityOwner": activityOwner,
-      "activityDateTime": activityDateTime,
+      "activityDateTime": activityDateTime.millisecondsSinceEpoch,
       if (messagePublishText != null) "messagePublishText": messagePublishText,
       if (fileUploadUrl != null) "fileUploadUrl": fileUploadUrl,
       if (commentAddedText != null) "commentAddedText": commentAddedText,
