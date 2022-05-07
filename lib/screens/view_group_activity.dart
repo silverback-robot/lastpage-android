@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:lastpage/models/groups/all_groups.dart';
 import 'package:lastpage/models/groups/new_group.dart';
 import 'package:lastpage/models/groups/group_activity.dart' as ga;
+import 'package:lastpage/models/user_profile.dart';
 
 import 'package:lastpage/widgets/groups/group_activity/action_button.dart';
 import 'package:lastpage/widgets/groups/group_activity/expandable_fab.dart';
@@ -23,14 +24,19 @@ class ViewGroupActivity extends StatefulWidget {
 
 class _ViewGroupActivityState extends State<ViewGroupActivity> {
   String? publishText;
+
   void _showAction(
       BuildContext context, ga.ActivityType actionType, String groupId) {
+    final myUid = Provider.of<UserProfile>(context, listen: false).uid;
     final _formKey = GlobalKey<FormState>();
     showDialog<void>(
       context: context,
       builder: (context) {
         if (actionType == ga.ActivityType.messagePublish) {
           return AlertDialog(
+            title: const Text("Post a message"),
+            shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(8))),
             content: Form(
               key: _formKey,
               child: TextFormField(
@@ -43,13 +49,12 @@ class _ViewGroupActivityState extends State<ViewGroupActivity> {
                 keyboardType: TextInputType.multiline,
                 maxLines: 3,
                 decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(8))),
                   hintText: "Type your message",
                 ),
                 onChanged: (val) {
-                  setState(() {
-                    publishText = val;
-                  });
+                  publishText = val;
                 },
               ),
             ),
@@ -64,7 +69,7 @@ class _ViewGroupActivityState extends State<ViewGroupActivity> {
                       var activity = ga.GroupActivity(
                         activityType: actionType,
                         activityDateTime: DateTime.now(),
-                        activityOwner: "harish",
+                        activityOwner: myUid,
                         groupId: groupId,
                         messagePublishText: publishText,
                       );
@@ -122,9 +127,13 @@ class _ViewGroupActivityState extends State<ViewGroupActivity> {
                   ? ListView(
                       children: allActivity
                           // Create widgets to display specific user actions
-                          .map((e) =>
-                              NewPost(messageText: e.messagePublishText!))
-                          .toList())
+                          .map(
+                      (e) {
+                        return NewPost(
+                          groupActivity: e,
+                        );
+                      },
+                    ).toList())
                   : const Center(
                       child: Text("No activity here..."),
                     );

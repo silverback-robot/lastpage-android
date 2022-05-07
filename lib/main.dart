@@ -4,6 +4,7 @@ import 'package:lastpage/models/groups/all_groups.dart';
 import 'package:lastpage/models/cloud_storage_models/storage.dart';
 import 'package:lastpage/models/syllabus_data_models/syllabus_wrapper.dart';
 import 'package:lastpage/models/cloud_storage_models/user_storage.dart';
+import 'package:lastpage/models/user_profile.dart';
 import 'package:lastpage/screens/auth.dart';
 import 'package:lastpage/screens/dashboard.dart';
 import 'package:lastpage/screens/fullscreen_notes.dart';
@@ -35,6 +36,7 @@ void main() async {
         ChangeNotifierProvider<Storage>(create: (context) => Storage()),
         ChangeNotifierProvider<UserStorage>(create: (context) => UserStorage()),
         ChangeNotifierProvider<AllGroups>(create: (context) => AllGroups()),
+        ChangeNotifierProvider<UserProfile>(create: (context) => UserProfile()),
       ],
       child: const MyApp(),
     ),

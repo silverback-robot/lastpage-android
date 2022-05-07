@@ -5,7 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 
-class UserProfile {
+class UserProfile extends ChangeNotifier {
   final String? name;
   final String? university;
   final String? department;
@@ -110,6 +110,15 @@ class UserProfile {
           ),
         ),
       );
+    }
+  }
+
+  Future<UserProfile?> fetchUserProfile(String? uid) async {
+    var fetchId = uid ?? _uid;
+    var profileDoc = await _db.collection('users').doc(fetchId).get();
+    if (profileDoc.exists) {
+      var userProfile = UserProfile.fromJson(profileDoc.data()!);
+      return userProfile;
     }
   }
 }
