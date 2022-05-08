@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:lastpage/models/cloud_storage_models/user_storage.dart';
+import 'package:lastpage/models/docscanner_models/pages_upload_metadata.dart';
 import 'package:lastpage/models/groups/all_groups.dart';
 import 'package:lastpage/models/groups/new_group.dart';
 import 'package:lastpage/models/groups/group_activity.dart' as ga;
@@ -7,7 +9,9 @@ import 'package:lastpage/models/user_profile.dart';
 import 'package:lastpage/widgets/groups/group_activity/action_button.dart';
 import 'package:lastpage/widgets/groups/group_activity/expandable_fab.dart';
 import 'package:lastpage/widgets/groups/group_activity/new_post.dart';
+import 'package:lastpage/widgets/groups/group_activity/share_notes_dialog.dart';
 import 'package:provider/provider.dart';
+import 'package:intl/intl.dart';
 
 class ViewGroupActivity extends StatefulWidget {
   const ViewGroupActivity({Key? key}) : super(key: key);
@@ -25,18 +29,32 @@ class ViewGroupActivity extends StatefulWidget {
 class _ViewGroupActivityState extends State<ViewGroupActivity> {
   String? publishText;
 
+  final _dialogBorder = const RoundedRectangleBorder(
+    borderRadius: BorderRadius.all(
+      Radius.circular(8),
+    ),
+  );
+
   void _showAction(
       BuildContext context, ga.ActivityType actionType, String groupId) {
     final myUid = Provider.of<UserProfile>(context, listen: false).uid;
     final _formKey = GlobalKey<FormState>();
+
+    final todayTmp = DateTime.now();
+    final DateFormat formattedTime = DateFormat('hh:mm a');
+    final DateFormat formattedDate = DateFormat('d MMMM');
+    // final String formatted =
+    //     formattedDate.format(groupActivity.activityDateTime);
+    // final today = DateTime(todayTmp.year, todayTmp.month, todayTmp.day);
+    // final diff = today.difference(groupActivity.activityDateTime).inDays;
+
     showDialog<void>(
       context: context,
       builder: (context) {
         if (actionType == ga.ActivityType.messagePublish) {
           return AlertDialog(
             title: const Text("Post a message"),
-            shape: const RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(8))),
+            shape: _dialogBorder,
             content: Form(
               key: _formKey,
               child: TextFormField(
@@ -92,6 +110,8 @@ class _ViewGroupActivityState extends State<ViewGroupActivity> {
                   child: const Text("POST"))
             ],
           );
+        } else if (actionType == ga.ActivityType.fileUpload) {
+          return const ShareNotesDialog();
         } else {
           return const AlertDialog(
             content: Text("No valid actions"),
