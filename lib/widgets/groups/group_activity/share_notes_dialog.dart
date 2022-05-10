@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:lastpage/models/cloud_storage_models/user_storage.dart';
 import 'package:lastpage/models/docscanner_models/pages_upload_metadata.dart';
+import 'package:lastpage/models/groups/share_note.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
+
+enum ShareNoteWizard { selectNotes, addMessage }
 
 class ShareNotesDialog extends StatefulWidget {
   const ShareNotesDialog({Key? key}) : super(key: key);
@@ -15,74 +18,107 @@ class _ShareNotesDialogState extends State<ShareNotesDialog> {
   final todayTmp = DateTime.now();
   final DateFormat formattedTime = DateFormat('hh:mm a');
   final DateFormat formattedDate = DateFormat('d MMMM');
-  List<PagesUploadMetadata> selectedNotes = [];
+  ShareNoteWizard currentScreen = ShareNoteWizard.selectNotes;
+  PagesUploadMetadata? selectedNote;
+  String? publishMessage;
 
   @override
   Widget build(BuildContext context) {
     var userStorageDocs = Provider.of<UserStorage>(context).userStorageDocs;
-    return AlertDialog(
-      title: const Text("Share notes with group"),
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.all(
-          Radius.circular(8),
+    var _selected = false;
+    final _formKey = GlobalKey<FormState>();
+    return Form(
+      key: _formKey,
+      child: AlertDialog(
+        title: const Text("Share notes with group"),
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(
+            Radius.circular(8),
+          ),
         ),
-      ),
-      content: ListView(
-        shrinkWrap: true,
-        children: userStorageDocs.map((note) {
-          final createdDttm =
-              DateTime.fromMillisecondsSinceEpoch(note.createdDateTime);
-          final diff = todayTmp.difference(createdDttm).inDays;
-          return ListTile(
-            title: Text(
-              note.title,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-            ),
-            subtitle: Text(
-              diff == 0
-                  ? "Today, ${formattedTime.format(createdDttm)}"
-                  : diff == 1
-                      ? "Yesterday"
-                      : formattedDate.format(createdDttm),
-            ),
-            trailing: Checkbox(
-                value:
-                    selectedNotes.any((element) => element.setId == note.setId),
-                onChanged: (bool? value) {
-                  if (value!) {
-                    if (!selectedNotes
-                        .any((element) => element.setId == note.setId)) {
+        content: currentScreen == ShareNoteWizard.selectNotes
+            ? ListView(
+                shrinkWrap: true,
+                children: userStorageDocs.map((note) {
+                  final createdDttm =
+                      DateTime.fromMillisecondsSinceEpoch(note.createdDateTime);
+                  final diff = todayTmp.difference(createdDttm).inDays;
+                  return ListTile(
+                    title: Text(
+                      note.title,
+                      // maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    subtitle: Text(
+                      diff == 0
+                          ? "Today, ${formattedTime.format(createdDttm)}"
+                          : diff == 1
+                              ? "Yesterday"
+                              : formattedDate.format(createdDttm),
+                    ),
+                    selected: _selected,
+                    selectedTileColor: Colors.grey[400],
+                    onTap: () {
+                      setState(
+                        () {
+                          _selected = !_selected;
+                          selectedNote = note;
+                        },
+                      );
+                    },
+                  );
+                }).toList(),
+              )
+            : TextFormField(
+                autocorrect: true,
+                maxLines: 3,
+                keyboardType: TextInputType.multiline,
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(8))),
+                  hintText: "Add a message (optional).",
+                ),
+                onChanged: (val) {
+                  publishMessage = val;
+                },
+              ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              selectedNote = null;
+              _selected = false;
+              if (currentScreen == ShareNoteWizard.selectNotes) {
+                Navigator.of(context).pop();
+              } else {
+                setState(() {
+                  currentScreen = ShareNoteWizard.selectNotes;
+                });
+              }
+            },
+            child: Text(currentScreen == ShareNoteWizard.selectNotes
+                ? "CLOSE"
+                : "BACK"),
+          ),
+          ElevatedButton(
+            onPressed: selectedNote != null
+                ? () {
+                    if (currentScreen == ShareNoteWizard.selectNotes) {
                       setState(() {
-                        selectedNotes.add(note);
+                        currentScreen = ShareNoteWizard.addMessage;
                       });
-                    }
-                  } else {
-                    if (selectedNotes
-                        .any((element) => element.setId == note.setId)) {
-                      setState(() {
-                        selectedNotes.removeWhere(
-                            (PagesUploadMetadata currentNote) =>
-                                currentNote.setId == note.setId);
-                      });
+                    } else if (selectedNote != null) {
+                      // Push to 'groups/xxx/activity' collection
+                      // Pop out of wizard
+                      Navigator.of(context).pop();
                     }
                   }
-                }),
-          );
-        }).toList(),
+                : null,
+            child: Text(currentScreen == ShareNoteWizard.selectNotes
+                ? "NEXT"
+                : "SHARE"),
+          ),
+        ],
       ),
-      actions: [
-        TextButton(
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-          child: const Text("CLOSE"),
-        ),
-        ElevatedButton(
-          onPressed: () {},
-          child: const Text("SHARE"),
-        ),
-      ],
     );
   }
 }
