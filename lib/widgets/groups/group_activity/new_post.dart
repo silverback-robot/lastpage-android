@@ -26,65 +26,75 @@ class NewPost extends StatelessWidget {
           .fetchUserProfile(groupActivity.activityOwner)
           .then((value) => senderProfile = value!),
       builder: (context, snapshot) {
-        return Card(
-          margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
-          elevation: 2,
-          child: Container(
-            color: Colors.grey[200],
-            width: double.infinity * 0.8,
-            child:
-                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              senderProfile != null
-                  ? ListTile(
-                      dense: true,
-                      leading: senderProfile!.avatar != null
-                          ? CircleAvatar(
-                              // radius: 20.0,
-                              backgroundImage:
-                                  NetworkImage(senderProfile!.avatar!),
-                              backgroundColor: Colors.transparent,
-                            )
-                          : const Icon(Icons.account_circle),
-                      title: Row(
-                        children: [
-                          Text(
-                            senderProfile!.name!,
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.grey[700]),
-                          ),
-                          Text(
-                            " posted a message",
-                            style: TextStyle(color: Colors.grey[700]),
-                          ),
-                        ],
-                      ),
-                      subtitle: Text(diff == 0
-                          ? "Today, ${formattedTime.format(groupActivity.activityDateTime)}"
-                          : diff == 1
-                              ? "Yesterday"
-                              : formatted),
-                      trailing: IconButton(
-                          icon: const Icon(Icons.more_vert), onPressed: () {}),
-                    )
-                  : const SizedBox(),
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.all(10),
-                decoration: const BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.only(
-                      bottomLeft: Radius.circular(10),
-                      bottomRight: Radius.circular(10),
-                    )),
-                child: Text(groupActivity.messagePublishText!,
-                    style: const TextStyle(fontSize: 18)),
-              ),
-            ]),
-          ),
-        );
+        if (groupActivity.activityType == ActivityType.messagePublish) {
+          return Card(
+            margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0)),
+            elevation: 2,
+            child: Container(
+              color: Colors.grey[200],
+              width: double.infinity * 0.8,
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    senderProfile != null
+                        ? ListTile(
+                            dense: true,
+                            leading: senderProfile!.avatar != null
+                                ? CircleAvatar(
+                                    // radius: 20.0,
+                                    backgroundImage:
+                                        NetworkImage(senderProfile!.avatar!),
+                                    backgroundColor: Colors.transparent,
+                                  )
+                                : const Icon(Icons.account_circle),
+                            title: Row(
+                              children: [
+                                Text(
+                                  senderProfile!.name!,
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.grey[700]),
+                                ),
+                                Text(
+                                  " posted a message",
+                                  style: TextStyle(color: Colors.grey[700]),
+                                ),
+                              ],
+                            ),
+                            subtitle: Text(diff == 0
+                                ? "Today, ${formattedTime.format(groupActivity.activityDateTime)}"
+                                : diff == 1
+                                    ? "Yesterday"
+                                    : formatted),
+                            trailing: IconButton(
+                                icon: const Icon(Icons.more_vert),
+                                onPressed: () {}),
+                          )
+                        : const SizedBox(),
+                    Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.all(10),
+                      decoration: const BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.only(
+                            bottomLeft: Radius.circular(10),
+                            bottomRight: Radius.circular(10),
+                          )),
+                      child: Text(groupActivity.messagePublishText!,
+                          style: const TextStyle(fontSize: 18)),
+                    ),
+                  ]),
+            ),
+          );
+        }
+        //TODO: Handle other ActivityType
+        else {
+          return Center(
+            child: Text(groupActivity.activityType.name),
+          );
+        }
       },
     );
   }

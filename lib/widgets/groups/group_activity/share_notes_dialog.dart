@@ -8,7 +8,8 @@ import 'package:intl/intl.dart';
 enum ShareNoteWizard { selectNotes, addMessage }
 
 class ShareNotesDialog extends StatefulWidget {
-  const ShareNotesDialog({Key? key}) : super(key: key);
+  const ShareNotesDialog({required this.groupId, Key? key}) : super(key: key);
+  final String groupId;
 
   @override
   State<ShareNotesDialog> createState() => _ShareNotesDialogState();
@@ -101,13 +102,16 @@ class _ShareNotesDialogState extends State<ShareNotesDialog> {
           ),
           ElevatedButton(
             onPressed: selectedNote != null
-                ? () {
+                ? () async {
                     if (currentScreen == ShareNoteWizard.selectNotes) {
                       setState(() {
                         currentScreen = ShareNoteWizard.addMessage;
                       });
                     } else if (selectedNote != null) {
                       // Push to 'groups/xxx/activity' collection
+                      var shareNote = ShareNote(
+                          uploadData: selectedNote!, message: publishMessage);
+                      shareNote.postInGroup(widget.groupId);
                       // Pop out of wizard
                       Navigator.of(context).pop();
                     }

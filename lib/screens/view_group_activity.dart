@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:lastpage/models/cloud_storage_models/user_storage.dart';
-import 'package:lastpage/models/docscanner_models/pages_upload_metadata.dart';
 import 'package:lastpage/models/groups/all_groups.dart';
 import 'package:lastpage/models/groups/new_group.dart';
 import 'package:lastpage/models/groups/group_activity.dart' as ga;
@@ -15,12 +13,6 @@ import 'package:intl/intl.dart';
 
 class ViewGroupActivity extends StatefulWidget {
   const ViewGroupActivity({Key? key}) : super(key: key);
-
-  static const _actionTitles = [
-    'Post a message',
-    'Share Notes',
-    'Invite Friends'
-  ];
 
   @override
   State<ViewGroupActivity> createState() => _ViewGroupActivityState();
@@ -40,9 +32,9 @@ class _ViewGroupActivityState extends State<ViewGroupActivity> {
     final myUid = Provider.of<UserProfile>(context, listen: false).uid;
     final _formKey = GlobalKey<FormState>();
 
-    final todayTmp = DateTime.now();
-    final DateFormat formattedTime = DateFormat('hh:mm a');
-    final DateFormat formattedDate = DateFormat('d MMMM');
+    // final todayTmp = DateTime.now();
+    // final DateFormat formattedTime = DateFormat('hh:mm a');
+    // final DateFormat formattedDate = DateFormat('d MMMM');
     // final String formatted =
     //     formattedDate.format(groupActivity.activityDateTime);
     // final today = DateTime(todayTmp.year, todayTmp.month, todayTmp.day);
@@ -111,7 +103,9 @@ class _ViewGroupActivityState extends State<ViewGroupActivity> {
             ],
           );
         } else if (actionType == ga.ActivityType.fileUpload) {
-          return const ShareNotesDialog();
+          return ShareNotesDialog(
+            groupId: groupId,
+          );
         } else {
           return const AlertDialog(
             content: Text("No valid actions"),

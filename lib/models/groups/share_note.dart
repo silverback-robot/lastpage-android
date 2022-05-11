@@ -37,12 +37,11 @@ class ShareNote extends ChangeNotifier {
     try {
       var data = _toFirestore();
       await _db
-          .collection('groups')
+          .collection('userGroups')
           .doc(groupId)
           .collection('activity')
           .add(data);
     } catch (err) {
-      print(err);
       rethrow;
     }
   }
