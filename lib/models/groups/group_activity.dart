@@ -10,11 +10,15 @@ class GroupActivity {
   late String activityOwner;
   late DateTime activityDateTime;
   String? messagePublishText;
-  String? fileUploadUrl;
+  List<String>? fileUploadUrl;
   String? commentAddedText;
   String? userAddedName;
   String? activityId;
   String? groupId;
+  int? semesterNo;
+  String? subjectCode;
+  int? unitNo;
+  String? title;
 
   GroupActivity({
     required this.activityType,
@@ -24,6 +28,10 @@ class GroupActivity {
     this.messagePublishText,
     this.fileUploadUrl,
     this.userAddedName,
+    this.semesterNo,
+    this.subjectCode,
+    this.unitNo,
+    this.title,
   });
 
   GroupActivity.fromJson(Map<String, dynamic> json)
@@ -34,13 +42,19 @@ class GroupActivity {
         messagePublishText = json.containsKey('messagePublishText')
             ? json['messagePublishText']
             : null,
-        fileUploadUrl =
-            json.containsKey('fileUploadUrl') ? json['fileUploadUrl'] : null,
+        fileUploadUrl = json.containsKey('fileUploadUrl')
+            ? json['fileUploadUrl'].cast<String>()
+            : null,
         commentAddedText = json.containsKey('commentAddedText')
             ? json['commentAddedText']
             : null,
         userAddedName =
-            json.containsKey('userAddedName') ? json['userAddedName'] : null;
+            json.containsKey('userAddedName') ? json['userAddedName'] : null,
+        semesterNo = json.containsKey('semesterNo') ? json['semesterNo'] : null,
+        subjectCode =
+            json.containsKey('subjectCode') ? json['subjectCode'] : null,
+        unitNo = json.containsKey('unitNo') ? json['unitNo'] : null,
+        title = json.containsKey('title') ? json['title'] : null;
 
   Map<String, dynamic> toJson() {
     return {

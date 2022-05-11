@@ -22,14 +22,14 @@ class ShareNote extends ChangeNotifier {
     return {
       "activityOwner": _uid,
       "activityDateTime": activityDateTime,
-      "downloadUrls": uploadData.downloadUrls,
+      "fileUploadUrl": uploadData.downloadUrls,
       "title": uploadData.title,
       "subjectCode": uploadData.subjectCode,
       "unitNo": uploadData.unitNo,
       "semesterNo": uploadData.semesterNo,
       "setId": uploadData.setId,
       "activityType": activityType.name,
-      if (message != null) "message": message,
+      if (message != null) "messagePublishText": message,
     };
   }
 
