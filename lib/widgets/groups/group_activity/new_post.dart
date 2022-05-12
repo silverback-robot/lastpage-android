@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:lastpage/models/cloud_storage_models/user_storage.dart';
+import 'package:lastpage/models/docscanner_models/pages_upload_metadata.dart';
 import 'package:lastpage/models/groups/group_activity.dart';
+import 'package:lastpage/models/syllabus_data_models/syllabus_wrapper.dart';
 import 'package:lastpage/models/user_profile.dart';
+import 'package:lastpage/widgets/uploads/capture_metadata.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 
@@ -92,6 +96,11 @@ class NewPost extends StatelessWidget {
         //TODO: Handle other ActivityType
         else if (groupActivity.activityType == ActivityType.fileUpload) {
           //TODO: Refactor into seperate widget for just the note preview (share top-half of card)
+          //TODO: This has to be a LOT SMARTER !!!!!!!!!!
+          var subjectInfo = Provider.of<SyallabusWrapper>(context)
+              .subjects
+              .firstWhere((subject) =>
+                  subject.subjectCode == groupActivity.subjectCode);
           return Card(
             margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
             shape: RoundedRectangleBorder(
@@ -148,44 +157,134 @@ class NewPost extends StatelessWidget {
                               bottomRight: Radius.circular(10),
                             )),
                         child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
-                              groupActivity.title ?? "[No title]",
-                              style: const TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            const SizedBox(
-                              height: 6,
-                            ),
-                            Row(
+                            Column(
                               children: [
-                                Text(
-                                  groupActivity.subjectCode ?? "",
-                                  style: const TextStyle(
-                                    fontSize: 14,
-                                    // fontWeight: FontWeight.bold,
+                                Row(
+                                  children: [
+                                    Image.network(
+                                      groupActivity.fileUploadUrl![0],
+                                      height: 150,
+                                      fit: BoxFit.fitHeight,
+                                    ),
+                                    Expanded(
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                groupActivity.title ??
+                                                    "[No title]",
+                                                maxLines: 3,
+                                                // softWrap: true,
+                                                overflow: TextOverflow.ellipsis,
+                                                style: const TextStyle(
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                              const SizedBox(
+                                                height: 4,
+                                              ),
+                                              Text(
+                                                groupActivity
+                                                        .messagePublishText ??
+                                                    "${groupActivity.fileUploadUrl!.length} pages",
+                                              ),
+                                              const SizedBox(
+                                                height: 40,
+                                              ),
+                                              groupActivity.unitNo != null
+                                                  ? Text(
+                                                      "Unit ${groupActivity.unitNo.toString()}",
+                                                      style: const TextStyle(
+                                                        fontSize: 14,
+                                                        // fontWeight: FontWeight.bold,
+                                                      ),
+                                                    )
+                                                  : const SizedBox(),
+                                              const SizedBox(
+                                                height: 6,
+                                              ),
+                                              if (groupActivity.subjectCode !=
+                                                  null)
+                                                Text(
+                                                  "${subjectInfo.subjectCode} | ${subjectInfo.subjectTitle}",
+                                                  style: const TextStyle(
+                                                    fontSize: 14,
+                                                    // fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                              const SizedBox(
+                                                height: 6,
+                                              ),
+                                            ]),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 8.0, vertical: 4.0),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      OutlinedButton.icon(
+                                        onPressed: () => Navigator.pushNamed(
+                                            context, '/fullscreen_notes',
+                                            arguments:
+                                                groupActivity.fileUploadUrl),
+                                        icon: const Icon(
+                                            Icons.fullscreen_rounded),
+                                        label: const Text("EXPAND"),
+                                      ),
+                                      OutlinedButton.icon(
+                                        onPressed: () async {
+                                          var _notesMetadata = await showDialog<
+                                                  PagesUploadMetadata>(
+                                              context: context,
+                                              builder: (BuildContext context) {
+                                                return CaptureMetadata(
+                                                    context: context);
+                                              });
+                                          if (_notesMetadata != null) {
+                                            try {
+                                              // var downloadUrls =
+                                              //     await Provider.of<Storage>(
+                                              //             context,
+                                              //             listen: false)
+                                              //         .uploadPages(
+                                              //             pagesRef.allPages,
+                                              //             _notesMetadata);
+                                              var downloadUrls =
+                                                  groupActivity.fileUploadUrl;
+                                              _notesMetadata.downloadUrls =
+                                                  downloadUrls!;
+                                              await Provider.of<UserStorage>(
+                                                      context,
+                                                      listen: false)
+                                                  .saveCurrentUpload(
+                                                      _notesMetadata);
+                                            } catch (err) {
+                                              ScaffoldMessenger.of(context)
+                                                  .showSnackBar(const SnackBar(
+                                                content: Text(
+                                                    "Something went wrong!"),
+                                                backgroundColor: Colors.red,
+                                              ));
+                                            } finally {}
+                                          }
+                                        },
+                                        icon: const Icon(Icons.save),
+                                        label: const Text("SAVE"),
+                                      ),
+                                    ],
                                   ),
-                                ),
-                                const SizedBox(
-                                  width: 20,
-                                ),
-                                Text(
-                                  groupActivity.messagePublishText ??
-                                      "${groupActivity.fileUploadUrl!.length} pages",
-                                ),
+                                )
                               ],
-                            ),
-                            const SizedBox(
-                              height: 6,
-                            ),
-                            Image.network(
-                              groupActivity.fileUploadUrl![0],
-                              height: 200,
-                              fit: BoxFit.fitHeight,
                             )
                           ],
                         )),
