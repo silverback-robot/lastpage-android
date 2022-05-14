@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:typed_data';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
@@ -44,5 +45,36 @@ class Storage extends ChangeNotifier {
       downloadUrls.add(pageUrl);
     }
     return downloadUrls;
+  }
+
+  Future<List<String>> cloneSharedPage(List<String> downloadUrls) async {
+    List<String> clonedUrls = [];
+    const limit = 1024 * 1024 * 10;
+    for (var url in downloadUrls) {
+      final downloadReference = _storage.refFromURL(url);
+      final uploadReference = _storage
+          .ref()
+          .child("userdata")
+          .child(_uid)
+          .child("lastpage_${DateTime.now().millisecondsSinceEpoch}");
+
+      try {
+        final Uint8List? rawData = await downloadReference.getData(limit);
+        if (rawData != null) {
+          await uploadReference.putData(rawData);
+        } else {
+          throw Exception("Error downloading raw data from URL: $url");
+        }
+      } on firebase_storage.FirebaseException catch (err) {
+        print("${err.code} :: ${err.message}");
+        rethrow;
+      } catch (err) {
+        print(err.toString());
+        rethrow;
+      }
+      var newUrl = await uploadReference.getDownloadURL();
+      clonedUrls.add(newUrl);
+    }
+    return clonedUrls;
   }
 }
