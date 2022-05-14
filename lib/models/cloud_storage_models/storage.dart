@@ -47,7 +47,8 @@ class Storage extends ChangeNotifier {
     return downloadUrls;
   }
 
-  Future<List<String>> cloneSharedPage(List<String> downloadUrls) async {
+  Future<List<String>> cloneSharedPage(
+      List<String> downloadUrls, PagesUploadMetadata? meta) async {
     List<String> clonedUrls = [];
     const limit = 1024 * 1024 * 10;
     for (var url in downloadUrls) {
@@ -58,10 +59,13 @@ class Storage extends ChangeNotifier {
           .child(_uid)
           .child("lastpage_${DateTime.now().millisecondsSinceEpoch}");
 
+      var firebaseMeta = firebase_storage.SettableMetadata(
+          customMetadata: meta?.stringKeyVals());
+
       try {
         final Uint8List? rawData = await downloadReference.getData(limit);
         if (rawData != null) {
-          await uploadReference.putData(rawData);
+          await uploadReference.putData(rawData, firebaseMeta);
         } else {
           throw Exception("Error downloading raw data from URL: $url");
         }

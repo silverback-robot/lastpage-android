@@ -6,10 +6,9 @@ import 'package:lastpage/models/user_profile.dart';
 
 import 'package:lastpage/widgets/groups/group_activity/action_button.dart';
 import 'package:lastpage/widgets/groups/group_activity/expandable_fab.dart';
-import 'package:lastpage/widgets/groups/group_activity/new_post.dart';
+import 'package:lastpage/widgets/groups/group_activity/display_new_post.dart';
 import 'package:lastpage/widgets/groups/group_activity/share_notes_dialog.dart';
 import 'package:provider/provider.dart';
-import 'package:intl/intl.dart';
 
 class ViewGroupActivity extends StatefulWidget {
   const ViewGroupActivity({Key? key}) : super(key: key);
@@ -31,14 +30,6 @@ class _ViewGroupActivityState extends State<ViewGroupActivity> {
       BuildContext context, ga.ActivityType actionType, String groupId) {
     final myUid = Provider.of<UserProfile>(context, listen: false).uid;
     final _formKey = GlobalKey<FormState>();
-
-    // final todayTmp = DateTime.now();
-    // final DateFormat formattedTime = DateFormat('hh:mm a');
-    // final DateFormat formattedDate = DateFormat('d MMMM');
-    // final String formatted =
-    //     formattedDate.format(groupActivity.activityDateTime);
-    // final today = DateTime(todayTmp.year, todayTmp.month, todayTmp.day);
-    // final diff = today.difference(groupActivity.activityDateTime).inDays;
 
     showDialog<void>(
       context: context,
@@ -143,7 +134,7 @@ class _ViewGroupActivityState extends State<ViewGroupActivity> {
                           // Create widgets to display specific user actions
                           .map(
                       (e) {
-                        return NewPost(
+                        return DisplayNewPost(
                           groupActivity: e,
                         );
                       },
