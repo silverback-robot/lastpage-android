@@ -112,7 +112,10 @@ class DisplayFileUpload extends StatelessWidget {
                             await showDialog<PagesUploadMetadata>(
                                 context: context,
                                 builder: (BuildContext context) {
-                                  return CaptureMetadata(context: context);
+                                  return CaptureMetadata(
+                                    context: context,
+                                    groupActivity: groupActivity,
+                                  );
                                 });
                         if (_notesMetadata != null) {
                           try {

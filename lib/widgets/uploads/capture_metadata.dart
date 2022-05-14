@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:lastpage/models/groups/group_activity.dart';
 import 'package:lastpage/models/syllabus_data_models/syllabus_wrapper.dart';
 import 'package:lastpage/models/docscanner_models/pages_upload_metadata.dart';
 import 'package:provider/provider.dart';
 
 class CaptureMetadata extends StatefulWidget {
-  const CaptureMetadata({required this.context, Key? key}) : super(key: key);
+  const CaptureMetadata({required this.context, this.groupActivity, Key? key})
+      : super(key: key);
   final BuildContext context;
+  final GroupActivity? groupActivity;
 
   @override
   State<CaptureMetadata> createState() => _CaptureMetadataState();
@@ -20,11 +23,30 @@ class _CaptureMetadataState extends State<CaptureMetadata> {
   int? selectedSem;
   String? selectedSubCode;
   int? selectedUnitNo;
-  String title = "No title";
+  String? title;
+
+  var ignoreGa = false;
 
   @override
   Widget build(BuildContext context) {
     final userCourse = Provider.of<SyallabusWrapper>(context).course;
+
+    if (!ignoreGa) {
+      final ga = widget.groupActivity;
+      if (ga != null) {
+        selectedSem ??= ga.semesterNo;
+        selectedSubCode ??= ga.subjectCode;
+        selectedUnitNo ??= ga.unitNo;
+        title ??= ga.title ?? "No title";
+      }
+      if (selectedSem != null &&
+          selectedSubCode != null &&
+          selectedUnitNo != null) {
+        isSemSelected = true;
+        isSubjectSelected = true;
+        isUnitSelected = true;
+      }
+    }
     return userCourse != null
         ? Dialog(
             child: SingleChildScrollView(
@@ -49,10 +71,17 @@ class _CaptureMetadataState extends State<CaptureMetadata> {
                     DropdownButton<int>(
                       isExpanded: true,
                       hint: const Text("Semester"),
+                      onTap: () {
+                        ignoreGa = true;
+                      },
                       onChanged: (value) {
                         setState(() {
                           selectedSem = value!;
                           isSemSelected = true;
+                          selectedSubCode = null;
+                          isSubjectSelected = false;
+                          selectedUnitNo = null;
+                          isUnitSelected = false;
                         });
                       },
                       value: selectedSem,
@@ -81,10 +110,15 @@ class _CaptureMetadataState extends State<CaptureMetadata> {
                                 )
                                 .toList()
                             : null,
+                        onTap: () {
+                          ignoreGa = true;
+                        },
                         onChanged: (val) {
                           setState(() {
                             selectedSubCode = val;
                             isSubjectSelected = true;
+                            selectedUnitNo = null;
+                            isUnitSelected = false;
                           });
                         }),
                     DropdownButton<int>(
@@ -108,6 +142,9 @@ class _CaptureMetadataState extends State<CaptureMetadata> {
                                 )
                                 .toList()
                             : null,
+                        onTap: () {
+                          ignoreGa = true;
+                        },
                         onChanged: (val) {
                           setState(() {
                             selectedUnitNo = val;
@@ -120,7 +157,7 @@ class _CaptureMetadataState extends State<CaptureMetadata> {
                             borderRadius: BorderRadius.circular(2),
                           ),
                           enabled: true,
-                          hintText: "Title",
+                          hintText: title != "No title" ? title : "Title",
                         ),
                         textCapitalization: TextCapitalization.words,
                         autocorrect: true,
@@ -128,6 +165,9 @@ class _CaptureMetadataState extends State<CaptureMetadata> {
                         enableSuggestions: true,
                         keyboardType: TextInputType.text,
                         expands: false,
+                        onTap: () {
+                          ignoreGa = true;
+                        },
                         onChanged: (val) {
                           if (val.isNotEmpty) {
                             setState(() {
@@ -147,7 +187,7 @@ class _CaptureMetadataState extends State<CaptureMetadata> {
                                       semesterNo: selectedSem!,
                                       subjectCode: selectedSubCode!,
                                       unitNo: selectedUnitNo!,
-                                      title: title,
+                                      title: title ?? "No title",
                                     );
                                   });
                                   Navigator.pop(context, pagesMetaData);
