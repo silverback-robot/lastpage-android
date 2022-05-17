@@ -5,6 +5,7 @@ import 'package:lastpage/models/groups/group_activity.dart' as ga;
 import 'package:lastpage/models/user_profile.dart';
 
 import 'package:lastpage/widgets/groups/group_activity/action_button.dart';
+import 'package:lastpage/widgets/groups/group_activity/add_user.dart';
 import 'package:lastpage/widgets/groups/group_activity/expandable_fab.dart';
 import 'package:lastpage/widgets/groups/group_activity/display_new_post.dart';
 import 'package:lastpage/widgets/groups/group_activity/share_notes_dialog.dart';
@@ -95,6 +96,10 @@ class _ViewGroupActivityState extends State<ViewGroupActivity> {
           );
         } else if (actionType == ga.ActivityType.fileUpload) {
           return ShareNotesDialog(
+            groupId: groupId,
+          );
+        } else if (actionType == ga.ActivityType.userAdded) {
+          return AddUser(
             groupId: groupId,
           );
         } else {
