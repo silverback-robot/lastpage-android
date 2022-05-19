@@ -1,8 +1,11 @@
 import 'package:flutter/cupertino.dart';
+import 'package:lastpage/models/search_users/search_users_response.dart';
 import 'package:typesense/typesense.dart';
 
 class SearchUsers extends ChangeNotifier {
   late Client _client;
+  List<SearchUsersResponse> _results = [];
+  List<SearchUsersResponse> get results => _results;
 
   SearchUsers() {
     _client = _setupClient();
@@ -14,7 +17,7 @@ class SearchUsers extends ChangeNotifier {
       nodes: {
         Node.withUri(
           Uri.parse(
-            "https://iamharish.dev",
+            'https://iamharish.dev',
           ),
         )
       },
@@ -33,10 +36,19 @@ class SearchUsers extends ChangeNotifier {
     };
 
     var searchResultJson = await _client
-        .collection('lastpag-poc-users')
+        .collection('lastpage-poc-users3')
         .documents
         .search(searchParameters);
 
-    print(searchResultJson.keys.toString());
+    int noResponses = searchResultJson["found"] as int;
+    List responseBody = searchResultJson["hits"];
+
+    if (noResponses > 0) {
+      _results.clear();
+      _results = responseBody
+          .map((resp) => SearchUsersResponse.fromJson(resp["document"]))
+          .toList();
+    }
+    print("Successfully parsed ${_results.length} search results!");
   }
 }
