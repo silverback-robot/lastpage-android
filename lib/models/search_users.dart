@@ -29,7 +29,7 @@ class SearchUsers extends ChangeNotifier {
     return _client;
   }
 
-  searchUsers(String searchQuery) async {
+  Future<List<SearchUsersResponse>> searchUsers(String searchQuery) async {
     final searchParameters = {
       'q': searchQuery.toString(),
       'query_by': 'name, email, phone'
@@ -49,6 +49,8 @@ class SearchUsers extends ChangeNotifier {
           .map((resp) => SearchUsersResponse.fromJson(resp["document"]))
           .toList();
     }
+    notifyListeners();
     print("Successfully parsed ${_results.length} search results!");
+    return _results;
   }
 }

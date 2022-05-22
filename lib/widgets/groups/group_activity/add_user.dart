@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:lastpage/models/search_users.dart';
-import 'package:provider/provider.dart';
+import 'package:lastpage/widgets/groups/add_new_member/user_search_bar.dart';
 
 class AddUser extends StatefulWidget {
   const AddUser({required this.groupId, Key? key}) : super(key: key);
@@ -19,18 +18,8 @@ class _AddUserState extends State<AddUser> {
       title: const Text("Add users to group"),
       content: ListView(
         shrinkWrap: true,
-        children: [
-          TextField(
-            enabled: true,
-            keyboardType: TextInputType.name,
-            enableSuggestions: true,
-            onChanged: (query) {
-              if (query.length > 2) {
-                Provider.of<SearchUsers>(context, listen: false)
-                    .searchUsers(query);
-              }
-            },
-          ),
+        children: const [
+          UserSearchBar(),
         ],
       ),
       actions: [
