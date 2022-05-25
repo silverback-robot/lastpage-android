@@ -98,10 +98,10 @@ class _ViewGroupActivityState extends State<ViewGroupActivity> {
           return ShareNotesDialog(
             groupId: groupId,
           );
-        } else if (actionType == ga.ActivityType.userAdded) {
-          return AddUser(
-            groupId: groupId,
-          );
+          // } else if (actionType == ga.ActivityType.userAdded) {
+          //   return AddUser(
+          //     groupId: groupId,
+          //   );
         } else {
           return const AlertDialog(
             content: Text("No valid actions"),
@@ -182,8 +182,10 @@ class _ViewGroupActivityState extends State<ViewGroupActivity> {
             ),
           ),
           ActionButton(
-            onPressed: () => _showAction(
-                context, ga.ActivityType.userAdded, args.docId as String),
+            // onPressed: () => _showAction(
+            //     context, ga.ActivityType.userAdded, args.docId as String),
+            onPressed: () => Navigator.pushNamed(context, '/add_user_to_group',
+                arguments: args.docId as String),
             icon: const Icon(
               Icons.person_add_alt_outlined,
               color: Colors.white,

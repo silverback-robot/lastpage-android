@@ -51,6 +51,6 @@ class SearchUsers extends ChangeNotifier {
     }
     notifyListeners();
     print("Successfully parsed ${_results.length} search results!");
-    return _results;
+    return results;
   }
 }

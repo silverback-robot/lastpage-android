@@ -33,6 +33,7 @@ dependencies:
   image_cropper: ^1.4.1
   photo_view: ^0.13.0
   typesense: ^0.2.0
+  contacts_service: ^0.6.3
 
 dev_dependencies:
   flutter_test:
