@@ -184,7 +184,7 @@ class _ViewGroupActivityState extends State<ViewGroupActivity> {
           ActionButton(
             // onPressed: () => _showAction(
             //     context, ga.ActivityType.userAdded, args.docId as String),
-            onPressed: () => Navigator.pushNamed(context, '/add_user_to_group',
+            onPressed: () => Navigator.pushNamed(context, '/all_contacts',
                 arguments: args.docId as String),
             icon: const Icon(
               Icons.person_add_alt_outlined,

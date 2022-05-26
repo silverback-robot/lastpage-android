@@ -1,10 +1,10 @@
-import 'package:contacts_service/contacts_service.dart';
 import 'package:flutter/material.dart';
+import 'package:lastpage/models/search_users/search_users_response.dart';
 
 class ContactTile extends StatefulWidget {
   const ContactTile({required this.contact, Key? key}) : super(key: key);
 
-  final Contact contact;
+  final SearchUsersResponse contact;
 
   @override
   State<ContactTile> createState() => _ContactTileState();
@@ -18,16 +18,18 @@ class _ContactTileState extends State<ContactTile> {
     return Card(
       child: ListTile(
         leading: CircleAvatar(
-          backgroundImage: widget.contact.avatar != null
-              ? MemoryImage(widget.contact.avatar!)
+          backgroundImage: widget.contact.avatarUrl != null
+              ? NetworkImage(widget.contact.avatarUrl!)
               : null,
           backgroundColor:
-              widget.contact.avatar == null ? Colors.blue[200] : null,
-          child: widget.contact.avatar == null
-              ? Text(widget.contact.initials())
+              widget.contact.avatarUrl == null ? Colors.blue[200] : null,
+          child: widget.contact.avatarUrl == null
+              ? Text(
+                  widget.contact.name.substring(0, 2).toUpperCase(),
+                )
               : null,
         ),
-        title: Text(widget.contact.displayName ?? widget.contact.givenName!),
+        title: Text(widget.contact.name),
         trailing: Checkbox(
             value: _selected,
             onChanged: (state) {
