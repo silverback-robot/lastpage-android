@@ -15,29 +15,36 @@ class _ContactTileState extends State<ContactTile> {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      child: ListTile(
-        leading: CircleAvatar(
-          backgroundImage: widget.contact.avatarUrl != null
-              ? NetworkImage(widget.contact.avatarUrl!)
-              : null,
-          backgroundColor:
-              widget.contact.avatarUrl == null ? Colors.blue[200] : null,
-          child: widget.contact.avatarUrl == null
-              ? Text(
-                  widget.contact.name.substring(0, 2).toUpperCase(),
-                )
-              : null,
+    return Padding(
+      padding: const EdgeInsets.symmetric(
+        horizontal: 4,
+        vertical: 2,
+      ),
+      child: Card(
+        elevation: 2,
+        child: ListTile(
+          leading: CircleAvatar(
+            backgroundImage: widget.contact.avatarUrl != null
+                ? NetworkImage(widget.contact.avatarUrl!)
+                : null,
+            backgroundColor:
+                widget.contact.avatarUrl == null ? Colors.blue[200] : null,
+            child: widget.contact.avatarUrl == null
+                ? Text(
+                    widget.contact.name.substring(0, 2).toUpperCase(),
+                  )
+                : null,
+          ),
+          title: Text(widget.contact.name),
+          trailing: Checkbox(
+              value: _selected,
+              onChanged: (state) {
+                setState(() {
+                  _selected = state!;
+                  //TODO: Add logic to add contact to parent list (parent widget)
+                });
+              }),
         ),
-        title: Text(widget.contact.name),
-        trailing: Checkbox(
-            value: _selected,
-            onChanged: (state) {
-              setState(() {
-                _selected = state!;
-                //TODO: Add logic to add contact to parent list (parent widget)
-              });
-            }),
       ),
     );
   }

@@ -16,7 +16,7 @@ class SearchUsersResponse {
   });
 
   SearchUsersResponse.fromJson(Map<String, dynamic> json)
-      : uid = json['id'],
+      : uid = json['uid'],
         name = json['name'],
         email = json['email'],
         avatarUrl = json['avatar'],

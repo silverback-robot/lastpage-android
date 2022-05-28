@@ -4,7 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:lastpage/models/search_users/search_users_response.dart';
 
 class LastpageContacts extends ChangeNotifier {
-  List<SearchUsersResponse> _contactsOnLastpage = [];
+  final List<SearchUsersResponse> _contactsOnLastpage = [];
   List<SearchUsersResponse> get contactsOnLastpage => _contactsOnLastpage;
 
   final _db = FirebaseFirestore.instance;
@@ -18,7 +18,7 @@ class LastpageContacts extends ChangeNotifier {
     return deviceContacts;
   }
 
-  List<int> _contactNumbers(List<Contact> lastpageContacts) {
+  List<String> _contactNumbers(List<Contact> lastpageContacts) {
     // Fetch only phone numbers from all contacts
     final allPhoneNumbers = lastpageContacts.map((e) => e.phones);
     // Remove nulls from list
@@ -30,25 +30,26 @@ class LastpageContacts extends ChangeNotifier {
     // Eliminate less-than-10-digit numbers
     cleanListItems.removeWhere(
         (element) => element.value == null || element.value!.length < 10);
-    // Pick only last 10 digits of Indian mobile numbers
-    final cleanListNumbers = cleanListItems
-        .map((e) => e.value?.substring(e.value!.length - 10) as int)
-        .toList();
 
+    // Remove all non-numeric characters
+    final cleanListCharacters = cleanListItems
+        .map((e) => e.value?.replaceAll(RegExp('[^0-9]'), ''))
+        .toList();
+    // Pick only last 10 digits of Indian mobile numbers
+    final cleanListNumbers = cleanListCharacters
+        .map((e) => e?.substring(e.length - 10) as String)
+        .toList();
     return cleanListNumbers;
   }
 
   Future<List<SearchUsersResponse>> _fetchLastpageContacts(
-      List<int> deviceContacts) async {
+      List<String> deviceContacts) async {
     final _contactsCollection = _db.collection("users");
-
     // Query Users collection with last 10 digits of each phone number
     var searchRespQS =
         await _contactsCollection.where("phone", whereIn: deviceContacts).get();
-
     // Parse response and provide UID, Name, Avatar and Phone Number as response
     var contactsOnLastpageJSON = searchRespQS.docs.map((e) => e.data());
-
     var contactsOnLastpage = contactsOnLastpageJSON
         .map((e) => SearchUsersResponse.fromJson(e))
         .toList();
@@ -58,7 +59,17 @@ class LastpageContacts extends ChangeNotifier {
   Future<void> refreshContacts() async {
     var deviceContacts = await _fetchDeviceContacts();
     var deviceContactPhoneNumbers = _contactNumbers(deviceContacts);
-    _contactsOnLastpage =
-        await _fetchLastpageContacts(deviceContactPhoneNumbers);
+    _contactsOnLastpage.clear();
+    for (var i = 0; i < deviceContactPhoneNumbers.length; i += 10) {
+      if (deviceContactPhoneNumbers.length - i > 10) {
+        _contactsOnLastpage.addAll(await _fetchLastpageContacts(
+            deviceContactPhoneNumbers.sublist(i, i + 10)));
+      } else {
+        _contactsOnLastpage.addAll(await _fetchLastpageContacts(
+            deviceContactPhoneNumbers.sublist(
+                i, deviceContactPhoneNumbers.length)));
+      }
+    }
+    notifyListeners();
   }
 }
