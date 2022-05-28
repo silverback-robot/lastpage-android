@@ -5,7 +5,9 @@ import 'package:provider/provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class AllContacts extends StatelessWidget {
-  const AllContacts({Key? key}) : super(key: key);
+  AllContacts({Key? key}) : super(key: key);
+
+  final List<String> selectedUsers = [];
 
   @override
   Widget build(BuildContext context) {
@@ -39,12 +41,26 @@ class AllContacts extends StatelessWidget {
                   ),
                   Column(
                     children: contactsList
-                        .map((e) => ContactTile(contact: e))
+                        .map((e) => ContactTile(
+                              contact: e,
+                              onTap: () {
+                                if (selectedUsers.contains(e.uid)) {
+                                  selectedUsers.remove(e.uid);
+                                } else {
+                                  selectedUsers.add(e.uid);
+                                }
+                              },
+                            ))
                         .toList(),
                   )
                 ]),
                 floatingActionButton: FloatingActionButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    if (selectedUsers.isNotEmpty) {
+                      print(
+                          "Adding users ${selectedUsers.toString()} to group $groupId");
+                    }
+                  },
                   child: const Icon(Icons.group_add_rounded),
                 ),
               );

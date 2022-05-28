@@ -77,7 +77,7 @@ class MyApp extends StatelessWidget {
         '/groups': (context) => const Groups(),
         '/group_activity': (context) => const ViewGroupActivity(),
         '/add_user_to_group': (context) => const AddUsersToGroup(),
-        '/all_contacts': (context) => const AllContacts(),
+        '/all_contacts': (context) => AllContacts(),
       },
     );
   }

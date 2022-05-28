@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:lastpage/models/search_users/search_users_response.dart';
 
 class ContactTile extends StatefulWidget {
-  const ContactTile({required this.contact, Key? key}) : super(key: key);
+  const ContactTile({required this.contact, required this.onTap, Key? key})
+      : super(key: key);
 
   final SearchUsersResponse contact;
+  final VoidCallback onTap;
 
   @override
   State<ContactTile> createState() => _ContactTileState();
@@ -41,7 +43,7 @@ class _ContactTileState extends State<ContactTile> {
               onChanged: (state) {
                 setState(() {
                   _selected = state!;
-                  //TODO: Add logic to add contact to parent list (parent widget)
+                  widget.onTap();
                 });
               }),
         ),
