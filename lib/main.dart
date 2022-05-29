@@ -44,7 +44,7 @@ void main() async {
       providers: [
         ChangeNotifierProvider<pg.Pages>(create: (context) => pg.Pages()),
         ChangeNotifierProvider<SyallabusWrapper>(
-            create: (context) => SyallabusWrapper()),
+            create: (context) => SyallabusWrapper(), lazy: false),
         ChangeNotifierProvider<Storage>(create: (context) => Storage()),
         ChangeNotifierProvider<UserStorage>(create: (context) => UserStorage()),
         ChangeNotifierProvider<AllGroups>(create: (context) => AllGroups()),
