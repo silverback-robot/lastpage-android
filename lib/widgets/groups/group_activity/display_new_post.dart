@@ -3,6 +3,7 @@ import 'package:lastpage/models/groups/group_activity.dart';
 import 'package:lastpage/models/user_profile.dart';
 import 'package:lastpage/widgets/groups/group_activity/display_file_upload.dart';
 import 'package:lastpage/widgets/groups/group_activity/display_message.dart';
+import 'package:lastpage/widgets/groups/group_activity/display_user_added.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 
@@ -89,6 +90,8 @@ class DisplayNewPost extends StatelessWidget {
                 DisplayMessage(groupActivity: groupActivity),
               if (groupActivity.activityType == ActivityType.fileUpload)
                 DisplayFileUpload(groupActivity: groupActivity),
+              if (groupActivity.activityType == ActivityType.userAdded)
+                DisplayUserAdded(groupActivity: groupActivity),
             ]),
           ),
         );

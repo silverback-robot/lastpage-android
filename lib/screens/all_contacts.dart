@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:lastpage/models/groups/new_group.dart';
 import 'package:lastpage/models/search_users/device_contacts.dart';
 import 'package:lastpage/widgets/contacts/contacts_tile.dart';
+import 'package:logging/logging.dart';
 import 'package:provider/provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -9,7 +10,7 @@ class AllContacts extends StatelessWidget {
   AllContacts({Key? key}) : super(key: key);
 
   final List<String> selectedUsers = [];
-
+  static final _log = Logger("AllContacts");
   @override
   Widget build(BuildContext context) {
     final groupInfo = ModalRoute.of(context)!.settings.arguments as UserGroup;
@@ -56,10 +57,13 @@ class AllContacts extends StatelessWidget {
                   )
                 ]),
                 floatingActionButton: FloatingActionButton(
-                  onPressed: () {
+                  onPressed: () async {
                     if (selectedUsers.isNotEmpty) {
-                      print(
+                      _log.info(
                           "Adding users ${selectedUsers.toString()} to group ${groupInfo.docId}");
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                          content: Text("Adding selected users to group.")));
+                      await groupInfo.addMembersToGroup(selectedUsers);
                     }
                   },
                   child: const Icon(Icons.group_add_rounded),

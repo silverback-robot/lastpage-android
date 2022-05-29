@@ -12,7 +12,7 @@ class GroupActivity {
   String? messagePublishText;
   List<String>? fileUploadUrl;
   String? commentAddedText;
-  String? userAddedName;
+  String? userAddedUID;
   String? activityId;
   String? groupId;
   int? semesterNo;
@@ -27,7 +27,7 @@ class GroupActivity {
     this.groupId,
     this.messagePublishText,
     this.fileUploadUrl,
-    this.userAddedName,
+    this.userAddedUID,
     this.semesterNo,
     this.subjectCode,
     this.unitNo,
@@ -48,8 +48,8 @@ class GroupActivity {
         commentAddedText = json.containsKey('commentAddedText')
             ? json['commentAddedText']
             : null,
-        userAddedName =
-            json.containsKey('userAddedName') ? json['userAddedName'] : null,
+        userAddedUID =
+            json.containsKey('userAddedUID') ? json['userAddedName'] : null,
         semesterNo = json.containsKey('semesterNo') ? json['semesterNo'] : null,
         subjectCode =
             json.containsKey('subjectCode') ? json['subjectCode'] : null,
@@ -64,8 +64,7 @@ class GroupActivity {
       if (messagePublishText != null) "messagePublishText": messagePublishText,
       if (fileUploadUrl != null) "fileUploadUrl": fileUploadUrl,
       if (commentAddedText != null) "commentAddedText": commentAddedText,
-      if (userAddedName != null) "userAddedName": userAddedName,
-      if (commentAddedText != null) "commentAddedText": commentAddedText,
+      if (userAddedUID != null) "userAddedUID": userAddedUID,
     };
   }
 }
