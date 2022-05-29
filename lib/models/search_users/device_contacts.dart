@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:contacts_service/contacts_service.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:lastpage/models/search_users/search_users_response.dart';
 
@@ -8,6 +9,7 @@ class LastpageContacts extends ChangeNotifier {
   List<SearchUsersResponse> get contactsOnLastpage => _contactsOnLastpage;
 
   final _db = FirebaseFirestore.instance;
+  final _auth = FirebaseAuth.instance;
 
   LastpageContacts() {
     refreshContacts();
@@ -71,5 +73,22 @@ class LastpageContacts extends ChangeNotifier {
       }
     }
     notifyListeners();
+  }
+
+  List<SearchUsersResponse> relevantContacts(List<String?> currentMembers) {
+    // Returns device contacts on Lastpage minus logged in user and contacts who are
+    // already members of the group
+
+    // Remove logged in user
+    final allLastpageMatches = contactsOnLastpage;
+    final loggedInUserID = _auth.currentUser!.uid;
+
+    allLastpageMatches.removeWhere((contact) => contact.uid == loggedInUserID);
+
+    // Remove current group members
+    for (var member in currentMembers) {
+      allLastpageMatches.removeWhere((contact) => contact.uid == member);
+    }
+    return allLastpageMatches;
   }
 }

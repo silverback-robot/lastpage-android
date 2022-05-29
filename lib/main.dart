@@ -51,7 +51,7 @@ void main() async {
         ChangeNotifierProvider<UserProfile>(create: (context) => UserProfile()),
         ChangeNotifierProvider<SearchUsers>(create: (context) => SearchUsers()),
         ChangeNotifierProvider<LastpageContacts>(
-            create: (context) => LastpageContacts()),
+            create: (context) => LastpageContacts(), lazy: false),
       ],
       child: const MyApp(),
     ),
