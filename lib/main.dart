@@ -22,7 +22,7 @@ import 'package:lastpage/screens/user_profile.dart';
 import 'package:lastpage/screens/single_semester.dart';
 import 'package:provider/provider.dart';
 import 'firebase_options.dart';
-
+import 'package:logging/logging.dart';
 import './widgets/auth/auth_redirect.dart';
 import 'models/docscanner_models/pages.dart' as pg;
 
@@ -31,6 +31,14 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
+  Logger.root.level = Level.ALL; // defaults to Level.INFO
+  Logger.root.onRecord.listen((record) {
+    //TODO: Write logs to file/send for analysis
+    print(
+        '${record.level.name}: ${record.time}: [${record.loggerName}] ${record.message}');
+  });
+
   runApp(
     MultiProvider(
       providers: [
@@ -52,9 +60,12 @@ void main() async {
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
+  static final _log = Logger('MyApp');
 
   @override
   Widget build(BuildContext context) {
+    _log.info("build method called");
+
     return MaterialApp(
       title: 'LastPage',
       theme: ThemeData(
