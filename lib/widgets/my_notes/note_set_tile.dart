@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:lastpage/models/export_pdf.dart';
 
-class NotesetTile extends StatelessWidget {
+enum NotesAction { shareNotes, exportPdf }
+
+class NotesetTile extends StatefulWidget {
   const NotesetTile(
       {required this.title,
       required this.noOfPages,
@@ -16,9 +19,14 @@ class NotesetTile extends StatelessWidget {
   final List<String> downloadUrls;
 
   @override
+  State<NotesetTile> createState() => _NotesetTileState();
+}
+
+class _NotesetTileState extends State<NotesetTile> {
+  @override
   Widget build(BuildContext context) {
     final todayTmp = DateTime.now();
-    final createdDttm = DateTime.fromMillisecondsSinceEpoch(createdDate);
+    final createdDttm = DateTime.fromMillisecondsSinceEpoch(widget.createdDate);
     final createdDay =
         DateTime(createdDttm.year, createdDttm.month, createdDttm.day);
     final DateFormat formatter = DateFormat('d MMMM');
@@ -28,25 +36,61 @@ class NotesetTile extends StatelessWidget {
 
     return GestureDetector(
       onTap: () {
-        downloadUrls.isNotEmpty
+        widget.downloadUrls.isNotEmpty
             ? Navigator.pushNamed(context, '/fullscreen_notes',
-                arguments: downloadUrls)
+                arguments: widget.downloadUrls)
             : null;
       },
       child: Card(
         elevation: 1,
         child: ListTile(
           contentPadding: const EdgeInsets.all(5),
-          title: Text(title),
-          subtitle: Text("$noOfPages ${noOfPages > 1 ? "pages" : "page"}"),
-          trailing: Text(
-              diff == 0
-                  ? "Today"
-                  : diff == 1
-                      ? "Yesterday"
-                      : formatted,
-              style: const TextStyle(
-                  color: Colors.black54, fontStyle: FontStyle.italic)),
+          title: Text(widget.title),
+          subtitle: Text(
+              "${widget.noOfPages} ${widget.noOfPages > 1 ? "pages" : "page"}"),
+          trailing: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                diff == 0
+                    ? "Today"
+                    : diff == 1
+                        ? "Yesterday"
+                        : formatted,
+                style: const TextStyle(
+                  color: Colors.black54,
+                  fontStyle: FontStyle.italic,
+                ),
+              ),
+              const SizedBox(
+                width: 5,
+              ),
+              PopupMenuButton<NotesAction>(
+                  onSelected: (NotesAction item) async {
+                    switch (item) {
+                      case (NotesAction.exportPdf):
+                        final pdf = await ExportPDF.exportPDF(
+                            urls: widget.downloadUrls);
+                        print(pdf.absolute.toString());
+                        break;
+                      case (NotesAction.shareNotes):
+                        print("Share Notes");
+                        break;
+                    }
+                  },
+                  itemBuilder: (BuildContext context) =>
+                      <PopupMenuEntry<NotesAction>>[
+                        const PopupMenuItem<NotesAction>(
+                          value: NotesAction.shareNotes,
+                          child: Text('Share notes'),
+                        ),
+                        const PopupMenuItem<NotesAction>(
+                          value: NotesAction.exportPdf,
+                          child: Text('Export as PDF'),
+                        ),
+                      ]),
+            ],
+          ),
         ),
       ),
     );
