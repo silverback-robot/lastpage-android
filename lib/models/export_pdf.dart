@@ -21,10 +21,12 @@ class ExportPDF {
           build: (pw.Context context) {
             return pageProviders
                 .map(
-                  (e) => pw.Center(
-                    child: pw.Image(
-                      e,
-                      width: double.infinity,
+                  (e) => pw.FittedBox(
+                    fit: pw.BoxFit.contain,
+                    child: pw.Center(
+                      child: pw.Image(
+                        e,
+                      ),
                     ),
                   ),
                 )

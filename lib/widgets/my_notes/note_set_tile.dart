@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:lastpage/models/export_pdf.dart';
+import 'package:lastpage/models/show_notification.dart';
 
 enum NotesAction { shareNotes, exportPdf }
 
@@ -72,6 +73,10 @@ class _NotesetTileState extends State<NotesetTile> {
                         final pdf = await ExportPDF.exportPDF(
                             urls: widget.downloadUrls);
                         print(pdf.absolute.toString());
+                        ShowNotification.showNotification(
+                            title: "PDF Export Complete!",
+                            body: pdf.path.toString(),
+                            payload: "and here's the payload");
                         break;
                       case (NotesAction.shareNotes):
                         print("Share Notes");
