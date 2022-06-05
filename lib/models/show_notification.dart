@@ -28,10 +28,10 @@ class ShowNotification {
     String? payload,
   }) async {
     const AndroidNotificationChannel channel = AndroidNotificationChannel(
-        'high_importance_channel', // id
-        'High Importance Notifications', // title
+        'lastpage-pdf-export-complete', // id
+        'lastpage-pdf-export-complete', // title
         description:
-            'This channel is used for important notifications.', // description
+            'This channel indicates status of PDF export.', // description
         importance: Importance.high,
         playSound: true);
 

@@ -75,8 +75,8 @@ class _NotesetTileState extends State<NotesetTile> {
                         print(pdf.absolute.toString());
                         ShowNotification.showNotification(
                             title: "PDF Export Complete!",
-                            body: pdf.path.toString(),
-                            payload: "and here's the payload");
+                            body: "Tap to open exported PDF.",
+                            payload: pdf.path.toString());
                         break;
                       case (NotesAction.shareNotes):
                         print("Share Notes");

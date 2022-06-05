@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:lastpage/models/groups/all_groups.dart';
 import 'package:lastpage/models/cloud_storage_models/storage.dart';
 import 'package:lastpage/models/search_users.dart';
@@ -20,6 +21,7 @@ import 'package:lastpage/screens/all_semesters.dart';
 import 'package:lastpage/screens/single_subject.dart';
 import 'package:lastpage/screens/user_profile.dart';
 import 'package:lastpage/screens/single_semester.dart';
+import 'package:open_file/open_file.dart';
 import 'package:provider/provider.dart';
 import 'firebase_options.dart';
 import 'package:logging/logging.dart';
@@ -32,11 +34,33 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
+  // Initialize Logger
   Logger.root.level = Level.ALL; // defaults to Level.INFO
   Logger.root.onRecord.listen((record) {
     //TODO: Write logs to file/send for analysis
     print(
         '${record.level.name}: ${record.time}: [${record.loggerName}] ${record.message}');
+  });
+
+  // Initialize Local Notifications
+  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+      FlutterLocalNotificationsPlugin();
+
+  const AndroidInitializationSettings initializationSettingsAndroid =
+      AndroidInitializationSettings('ic_stat_name');
+
+  const InitializationSettings initializationSettings = InitializationSettings(
+    android: initializationSettingsAndroid,
+    iOS: null,
+    macOS: null,
+    linux: null,
+  );
+
+  await flutterLocalNotificationsPlugin.initialize(initializationSettings,
+      onSelectNotification: (String? payload) async {
+    if (payload != null) {
+      OpenFile.open(payload);
+    }
   });
 
   runApp(
