@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lastpage/models/cloud_storage_models/user_storage.dart';
 import 'package:lastpage/models/docscanner_models/pages_upload_metadata.dart';
-import 'package:lastpage/widgets/uploads/upload_info.dart';
+import 'package:lastpage/widgets/my_notes/note_set_tile.dart';
 import 'package:provider/provider.dart';
 
 class MyNotes extends StatelessWidget {
@@ -38,12 +38,12 @@ class MyNotes extends StatelessWidget {
                 List<PagesUploadMetadata> data = snapshot.data;
                 var storageDocTiles = data
                     .map(
-                      (element) => UploadInfo(uploadInfo: element),
+                      (element) => NotesetTile(notesData: element),
                     )
                     .toList();
                 storageDocTiles.sort(
-                  (a, b) => b.uploadInfo.createdDateTime
-                      .compareTo(a.uploadInfo.createdDateTime),
+                  (a, b) => b.notesData.createdDateTime
+                      .compareTo(a.notesData.createdDateTime),
                 );
                 return SingleChildScrollView(
                   child: Column(

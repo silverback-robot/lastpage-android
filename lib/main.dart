@@ -13,6 +13,7 @@ import 'package:lastpage/screens/group_relevant_contacts.dart';
 import 'package:lastpage/screens/auth.dart';
 import 'package:lastpage/screens/dashboard.dart';
 import 'package:lastpage/screens/fullscreen_notes.dart';
+import 'package:lastpage/screens/share_notes_individual.dart';
 import 'package:lastpage/screens/view_group_activity.dart';
 import 'package:lastpage/screens/groups.dart';
 import 'package:lastpage/screens/my_notes.dart';
@@ -113,6 +114,7 @@ class MyApp extends StatelessWidget {
         '/group_activity': (context) => const ViewGroupActivity(),
         '/add_user_to_group': (context) => const AddUsersToGroup(),
         '/all_contacts': (context) => GroupRelevantContacts(),
+        '/share_notes_individual': (context) => const ShareNotesIndividual(),
       },
     );
   }

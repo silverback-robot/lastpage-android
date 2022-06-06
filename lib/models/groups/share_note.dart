@@ -45,4 +45,17 @@ class ShareNote extends ChangeNotifier {
       rethrow;
     }
   }
+
+  Future<void> shareNotesWithDeviceContacts(String recipientUid) async {
+    try {
+      var data = _toFirestore();
+      await _db
+          .collection('oneOnOne')
+          .doc(recipientUid)
+          .collection(_uid)
+          .add(data);
+    } catch (err) {
+      rethrow;
+    }
+  }
 }

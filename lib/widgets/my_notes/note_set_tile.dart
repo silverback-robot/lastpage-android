@@ -1,23 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:lastpage/models/docscanner_models/pages_upload_metadata.dart';
 import 'package:lastpage/models/export_pdf.dart';
 import 'package:lastpage/models/show_notification.dart';
 
 enum NotesAction { shareNotes, exportPdf }
 
 class NotesetTile extends StatefulWidget {
-  const NotesetTile(
-      {required this.title,
-      required this.noOfPages,
-      required this.createdDate,
-      required this.downloadUrls,
-      Key? key})
-      : super(key: key);
-
-  final String title;
-  final int createdDate;
-  final int noOfPages;
-  final List<String> downloadUrls;
+  const NotesetTile({required this.notesData, Key? key}) : super(key: key);
+  final PagesUploadMetadata notesData;
 
   @override
   State<NotesetTile> createState() => _NotesetTileState();
@@ -26,8 +17,12 @@ class NotesetTile extends StatefulWidget {
 class _NotesetTileState extends State<NotesetTile> {
   @override
   Widget build(BuildContext context) {
+    final notesData = widget.notesData;
+    final noOfPages = notesData.downloadUrls.length;
+
     final todayTmp = DateTime.now();
-    final createdDttm = DateTime.fromMillisecondsSinceEpoch(widget.createdDate);
+    final createdDttm =
+        DateTime.fromMillisecondsSinceEpoch(notesData.createdDateTime);
     final createdDay =
         DateTime(createdDttm.year, createdDttm.month, createdDttm.day);
     final DateFormat formatter = DateFormat('d MMMM');
@@ -37,18 +32,18 @@ class _NotesetTileState extends State<NotesetTile> {
 
     return GestureDetector(
       onTap: () {
-        widget.downloadUrls.isNotEmpty
+        notesData.downloadUrls.isNotEmpty
             ? Navigator.pushNamed(context, '/fullscreen_notes',
-                arguments: widget.downloadUrls)
+                arguments: notesData.downloadUrls)
             : null;
       },
       child: Card(
         elevation: 1,
         child: ListTile(
           contentPadding: const EdgeInsets.all(5),
-          title: Text(widget.title),
+          title: Text(notesData.title),
           subtitle: Text(
-              "${widget.noOfPages} ${widget.noOfPages > 1 ? "pages" : "page"}"),
+              "${noOfPages.toString()} ${noOfPages > 1 ? "pages" : "page"}"),
           trailing: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -71,7 +66,7 @@ class _NotesetTileState extends State<NotesetTile> {
                     switch (item) {
                       case (NotesAction.exportPdf):
                         final pdf = await ExportPDF.exportPDF(
-                            urls: widget.downloadUrls);
+                            urls: notesData.downloadUrls);
                         print(pdf.absolute.toString());
                         ShowNotification.showNotification(
                             title: "PDF Export Complete!",
@@ -80,6 +75,8 @@ class _NotesetTileState extends State<NotesetTile> {
                         break;
                       case (NotesAction.shareNotes):
                         print("Share Notes");
+                        Navigator.pushNamed(context, '/share_notes_individual',
+                            arguments: notesData);
                         break;
                     }
                   },
