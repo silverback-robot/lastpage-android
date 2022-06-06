@@ -6,8 +6,8 @@ import 'package:logging/logging.dart';
 import 'package:provider/provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-class AllContacts extends StatelessWidget {
-  AllContacts({Key? key}) : super(key: key);
+class GroupRelevantContacts extends StatelessWidget {
+  GroupRelevantContacts({Key? key}) : super(key: key);
 
   final List<String> selectedUsers = [];
   static final _log = Logger("AllContacts");

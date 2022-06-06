@@ -9,7 +9,7 @@ import 'package:lastpage/models/syllabus_data_models/syllabus_wrapper.dart';
 import 'package:lastpage/models/cloud_storage_models/user_storage.dart';
 import 'package:lastpage/models/user_profile.dart';
 import 'package:lastpage/screens/add_users_to_group.dart';
-import 'package:lastpage/screens/all_contacts.dart';
+import 'package:lastpage/screens/group_relevant_contacts.dart';
 import 'package:lastpage/screens/auth.dart';
 import 'package:lastpage/screens/dashboard.dart';
 import 'package:lastpage/screens/fullscreen_notes.dart';
@@ -112,7 +112,7 @@ class MyApp extends StatelessWidget {
         '/groups': (context) => const Groups(),
         '/group_activity': (context) => const ViewGroupActivity(),
         '/add_user_to_group': (context) => const AddUsersToGroup(),
-        '/all_contacts': (context) => AllContacts(),
+        '/all_contacts': (context) => GroupRelevantContacts(),
       },
     );
   }
