@@ -36,6 +36,9 @@ class ShareNote extends ChangeNotifier {
   Future<void> postInGroup(String groupId) async {
     try {
       var data = _toFirestore();
+      data.addAll({
+        "activityScope": ActivityScope.groupActivity.name,
+      });
       await _db
           .collection('userGroups')
           .doc(groupId)
@@ -49,10 +52,20 @@ class ShareNote extends ChangeNotifier {
   Future<void> shareNotesWithDeviceContacts(String recipientUid) async {
     try {
       var data = _toFirestore();
+      // include participant UIDs for simpler retrieval
+      data.addAll({
+        'participants': [_uid, recipientUid],
+        "activityScope": ActivityScope.groupActivity.name,
+      });
+
+      // Search for a document in oneOnOne collection with just the 2 UIDs in participants array
+      // If 'exists', use the document ID and post the message below under 'conversation' collection of that doc ID
+      // Else, create a new document with 'participants' set to 2 transacting UIDs and then post the message under 'conversation' collection of that doc ID
+
       await _db
           .collection('oneOnOne')
           .doc(recipientUid)
-          .collection(_uid)
+          .collection('conversation')
           .add(data);
     } catch (err) {
       rethrow;

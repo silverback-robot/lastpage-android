@@ -5,6 +5,11 @@ enum ActivityType {
   userAdded,
 }
 
+enum ActivityScope {
+  groupActivity,
+  oneOnOne,
+}
+
 class GroupActivity {
   late ActivityType activityType;
   late String activityOwner;
