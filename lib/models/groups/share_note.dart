@@ -52,21 +52,45 @@ class ShareNote extends ChangeNotifier {
   Future<void> shareNotesWithDeviceContacts(String recipientUid) async {
     try {
       var data = _toFirestore();
+
       // include participant UIDs for simpler retrieval
+      // Ref: https://stackoverflow.com/a/54987884/13297207
+      Map<String, dynamic> participants = {
+        "participants": {
+          _uid: true,
+          recipientUid: true,
+        },
+      };
       data.addAll({
-        'participants': [_uid, recipientUid],
-        "activityScope": ActivityScope.groupActivity.name,
+        "activityScope": ActivityScope.oneOnOne.name,
+        ...participants,
       });
 
-      // Search for a document in oneOnOne collection with just the 2 UIDs in participants array
-      // If 'exists', use the document ID and post the message below under 'conversation' collection of that doc ID
-      // Else, create a new document with 'participants' set to 2 transacting UIDs and then post the message under 'conversation' collection of that doc ID
-
-      await _db
+      var convoRef = _db
           .collection('oneOnOne')
-          .doc(recipientUid)
-          .collection('conversation')
-          .add(data);
+          .where("participants.$_uid", isEqualTo: true)
+          .where("participants.$recipientUid", isEqualTo: true);
+
+      var convoDocId = await convoRef.get().then((QuerySnapshot allDocs) {
+        if (allDocs.docs.length == 1) {
+          return allDocs.docs.first.reference.id;
+        }
+      });
+
+      if (convoDocId != null) {
+        await _db
+            .collection('oneOnOne')
+            .doc(convoDocId)
+            .collection('conversation')
+            .add(data);
+      } else {
+        var convoStarter = await _db.collection('oneOnOne').add(participants);
+        await _db
+            .collection('oneOnOne')
+            .doc(convoStarter.id)
+            .collection('conversation')
+            .add(data);
+      }
     } catch (err) {
       rethrow;
     }
