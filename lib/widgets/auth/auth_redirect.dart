@@ -15,6 +15,7 @@ class AuthRedirect extends StatelessWidget {
   Widget build(BuildContext context) {
     return StreamBuilder(
       stream: _auth.authStateChanges(),
+      initialData: FirebaseAuth.instance.currentUser,
       builder: (ctx, userSnapshot) {
         if (userSnapshot.hasData) {
           return const ProfileRedirect();
