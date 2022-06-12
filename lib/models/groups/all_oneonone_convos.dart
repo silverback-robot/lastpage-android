@@ -9,7 +9,7 @@ class AllConvos extends ChangeNotifier {
   final _uid = FirebaseAuth.instance.currentUser!.uid;
   final _db = FirebaseFirestore.instance;
 
-  Stream<List<OneOnOneConvo>> get participatingGroups {
+  Stream<List<OneOnOneConvo>> get allConversations {
     return _db
         .collection('oneOnOne')
         .where("participants.$_uid", isEqualTo: true)
@@ -27,7 +27,7 @@ class AllConvos extends ChangeNotifier {
         );
   }
 
-  Stream<List<GroupActivity>> groupActivity(String convoId) {
+  Stream<List<GroupActivity>> conversation(String convoId) {
     // Reusing GroupActivity widgets and classes (shortcut)
     return _db
         .collection('oneOnOne')
@@ -37,12 +37,12 @@ class AllConvos extends ChangeNotifier {
         .map(
           (event) => event.docs.map(
             (e) {
-              var groupActivity = GroupActivity.fromJson(
+              var conversation = GroupActivity.fromJson(
                 e.data(),
               );
-              groupActivity.activityId = e.id;
-              groupActivity.groupId = convoId;
-              return groupActivity;
+              conversation.activityId = e.id;
+              conversation.groupId = convoId;
+              return conversation;
             },
           ).toList(),
         );

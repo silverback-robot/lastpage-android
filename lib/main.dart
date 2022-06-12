@@ -3,6 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:lastpage/models/groups/all_groups.dart';
 import 'package:lastpage/models/cloud_storage_models/storage.dart';
+import 'package:lastpage/models/groups/all_oneonone_convos.dart';
 import 'package:lastpage/models/search_users.dart';
 import 'package:lastpage/models/search_users/device_contacts.dart';
 import 'package:lastpage/models/syllabus_data_models/syllabus_wrapper.dart';
@@ -14,6 +15,7 @@ import 'package:lastpage/screens/auth.dart';
 import 'package:lastpage/screens/dashboard.dart';
 import 'package:lastpage/screens/fullscreen_notes.dart';
 import 'package:lastpage/screens/share_notes_individual.dart';
+import 'package:lastpage/screens/view_conversation.dart';
 import 'package:lastpage/screens/view_group_activity.dart';
 import 'package:lastpage/screens/groups.dart';
 import 'package:lastpage/screens/my_notes.dart';
@@ -77,6 +79,7 @@ void main() async {
         ChangeNotifierProvider<SearchUsers>(create: (context) => SearchUsers()),
         ChangeNotifierProvider<LastpageContacts>(
             create: (context) => LastpageContacts()),
+        ChangeNotifierProvider<AllConvos>(create: (context) => AllConvos()),
       ],
       child: const MyApp(),
     ),
@@ -115,6 +118,7 @@ class MyApp extends StatelessWidget {
         '/add_user_to_group': (context) => const AddUsersToGroup(),
         '/all_contacts': (context) => GroupRelevantContacts(),
         '/share_notes_individual': (context) => const ShareNotesIndividual(),
+        '/view_conversation': (context) => const ViewConversation(),
       },
     );
   }
