@@ -72,6 +72,7 @@ class LastpageContacts extends ChangeNotifier {
                 i, deviceContactPhoneNumbers.length)));
       }
     }
+    _contactsOnLastpage.removeWhere((element) => element.uid == _auth.currentUser?.uid,);
     notifyListeners();
   }
 
