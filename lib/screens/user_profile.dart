@@ -140,6 +140,46 @@ class _CreateProfileState extends State<CreateProfile> {
                               _name = val!;
                             },
                           ),
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Container(
+                                margin: const EdgeInsets.all(15.0),
+                                padding: const EdgeInsets.all(5.0),
+                                decoration: BoxDecoration(
+                                    border: Border.all(color: Colors.grey),
+                                    borderRadius: BorderRadius.circular(3.0)),
+                                child: const Text(
+                                  '+91',
+                                  style: TextStyle(
+                                    color: Colors.grey,
+                                  ),
+                                ),
+                              ),
+                              Expanded(
+                                child: TextFormField(
+                                  key: const ValueKey("phone"),
+                                  decoration: const InputDecoration(
+                                    labelText: "Mobile Number",
+                                  ),
+                                  keyboardType: TextInputType.phone,
+                                  validator: (val) {
+                                    if (val == null ||
+                                        val.length != 10 ||
+                                        // Check if val is pure number and invert check result
+                                        !val.contains(RegExp(r'^[0-9]+$'))) {
+                                      return "Please enter a valid 10-digit number";
+                                    }
+                                    return null;
+                                  },
+                                  onSaved: (val) {
+                                    _name = val!;
+                                  },
+                                ),
+                              ),
+                            ],
+                          ),
                           DropdownButtonFormField(
                             hint: const Text("University"),
                             value: _selectedUniv,

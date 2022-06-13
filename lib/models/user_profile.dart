@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 
 class UserProfile extends ChangeNotifier {
   final String? name;
+  final int? phone;
   final String? university;
   final String? department;
   String? avatar;
@@ -22,6 +23,7 @@ class UserProfile extends ChangeNotifier {
 
   UserProfile({
     this.name,
+    this.phone,
     this.university,
     this.department,
   }) {
@@ -32,6 +34,7 @@ class UserProfile extends ChangeNotifier {
   UserProfile.fromJson(Map<String, dynamic> json)
       : uid = json['uid'],
         email = json['email'],
+        phone = json['phone'],
         name = json['name'],
         university = json['university'],
         department = json['department'],
@@ -40,6 +43,7 @@ class UserProfile extends ChangeNotifier {
   Map<String, dynamic> toJson() => {
         'uid': _uid,
         'email': _email,
+        'phone': phone,
         'name': name,
         'university': university,
         'department': department,
