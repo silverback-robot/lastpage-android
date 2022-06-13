@@ -4,7 +4,6 @@ import 'package:flutter/foundation.dart';
 import 'package:lastpage/models/groups/group_activity.dart';
 import 'package:lastpage/models/groups/oneonone_convo.dart';
 
-
 class AllConvos extends ChangeNotifier {
   final _uid = FirebaseAuth.instance.currentUser!.uid;
   final _db = FirebaseFirestore.instance;
@@ -17,10 +16,7 @@ class AllConvos extends ChangeNotifier {
         .map(
           (event) => event.docs.map(
             (e) {
-              var convoInfo = OneOnOneConvo.fromJson(
-                e.data(),
-              e.reference.id
-              );
+              var convoInfo = OneOnOneConvo.fromJson(e.data(), e.reference.id);
               return convoInfo;
             },
           ).toList(),
@@ -48,19 +44,18 @@ class AllConvos extends ChangeNotifier {
         );
   }
 
-  // TODO: Rework 'participate' method for one-on-one conversations
-  // Future<void> participate(GroupActivity activity) async {
-  //   if (activity.activityType == ActivityType.messagePublish) {
-  //     try {
-  //       await _db
-  //           .collection('userGroups')
-  //           .doc(activity.groupId)
-  //           .collection('activity')
-  //           .add(activity.toJson())
-  //           .then((value) => print(value.path));
-  //     } catch (err) {
-  //       rethrow;
-  //     }
-  //   }
-  // }
+  Future<void> participate(GroupActivity activity) async {
+    if (activity.activityType == ActivityType.messagePublish) {
+      try {
+        await _db
+            .collection('oneOnOne')
+            .doc(activity.groupId)
+            .collection('activity')
+            .add(activity.toJson())
+            .then((value) => print(value.path));
+      } catch (err) {
+        rethrow;
+      }
+    }
+  }
 }

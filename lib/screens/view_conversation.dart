@@ -14,13 +14,21 @@ class ViewConversation extends StatefulWidget {
 }
 
 class _ViewConversationState extends State<ViewConversation> {
-  final _formKey = GlobalKey<FormState>();
+  final msgController = TextEditingController();
+
+  @override
+  void dispose() {
+    // Clean up the controller when the widget is disposed.
+    msgController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     final args = ModalRoute.of(context)!.settings.arguments as List;
     final convoId = args[0] as String;
     final oppositeProfile = args[1] as UserProfile;
+    final myUid = args[2] as String;
     final conversationStream =
         Provider.of<AllConvos>(context).conversation(convoId);
     return Scaffold(
@@ -42,7 +50,7 @@ class _ViewConversationState extends State<ViewConversation> {
                       child: Text("Oops... Something went wrong!"),
                     );
                   } else if (snapshot.hasData) {
-                    List<ga.GroupActivity>? allActivity = snapshot.data!;
+                    List<ga.GroupActivity> allActivity = snapshot.data!;
                     return allActivity.isNotEmpty
                         ? ListView(
                             children: allActivity
@@ -75,43 +83,54 @@ class _ViewConversationState extends State<ViewConversation> {
           ), // Message TextField with Send Button
           Container(
             padding: const EdgeInsets.symmetric(vertical: 2.0),
-            child: Form(
-              key: _formKey,
-              child: Row(mainAxisAlignment: MainAxisAlignment.end, children: [
-                Expanded(
-                  child: TextFormField(
-                    autocorrect: false,
-                    decoration: const InputDecoration(
-                      labelText: "Type your message",
-                      labelStyle:
-                          TextStyle(fontSize: 20.0, color: Colors.white),
-                      border: OutlineInputBorder(
-                        // borderRadius:
-                        //     BorderRadius.all(Radius.zero(5.0)),
-                        borderSide: BorderSide(color: Colors.purpleAccent),
-                      ),
+            child: Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+              Expanded(
+                child: TextField(
+                  autocorrect: false,
+                  controller: msgController,
+                  decoration: const InputDecoration(
+                    labelText: "Type your message",
+                    labelStyle: TextStyle(fontSize: 20.0, color: Colors.white),
+                    border: OutlineInputBorder(
+                      // borderRadius:
+                      //     BorderRadius.all(Radius.zero(5.0)),
+                      borderSide: BorderSide(color: Colors.purpleAccent),
                     ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter some text';
-                      }
-                      return null;
-                    },
                   ),
                 ),
-                // Second child is button
-                IconButton(
-                  icon: const Icon(Icons.send),
-                  iconSize: 20.0,
-                  onPressed: () {},
-                ),
-                IconButton(
-                  icon: const Icon(Icons.share),
-                  iconSize: 20.0,
-                  onPressed: () {},
-                ),
-              ]),
-            ),
+              ),
+              // Second child is button
+              IconButton(
+                icon: const Icon(Icons.share),
+                iconSize: 20.0,
+                onPressed: () {},
+              ),
+              IconButton(
+                icon: const Icon(Icons.send),
+                iconSize: 20.0,
+                onPressed: msgController.text.isNotEmpty
+                    ? () async {
+                        var currentActivity = ga.GroupActivity(
+                          activityType: ga.ActivityType.messagePublish,
+                          activityOwner: myUid,
+                          activityDateTime: DateTime.now(),
+                          messagePublishText: msgController.text,
+                        );
+                        try {
+                          await Provider.of<AllConvos>(context, listen: false)
+                              .participate(currentActivity);
+                        } catch (err) {
+                          print(err.toString());
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text("Something went wrong"),
+                            ),
+                          );
+                        }
+                      }
+                    : null,
+              ),
+            ]),
           ),
         ],
       ),

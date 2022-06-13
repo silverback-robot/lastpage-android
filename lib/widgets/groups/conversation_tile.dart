@@ -22,7 +22,11 @@ class ConversationTile extends StatelessWidget {
               leading: Image.network(profile.avatar!),
               trailing: const Icon(Icons.keyboard_arrow_right),
               onTap: () => Navigator.pushNamed(context, '/view_conversation',
-                  arguments: [conversation.convoId, profile]),
+                  arguments: [
+                    conversation.convoId,
+                    profile,
+                    conversation.myUid,
+                  ]),
             );
           }
 
