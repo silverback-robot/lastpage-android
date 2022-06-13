@@ -121,4 +121,8 @@ class UserProfile extends ChangeNotifier {
       return userProfile;
     }
   }
+
+  static Future<void> signOut() async {
+    await _fa.signOut();
+  }
 }
