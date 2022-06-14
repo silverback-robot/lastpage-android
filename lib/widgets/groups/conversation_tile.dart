@@ -19,7 +19,9 @@ class ConversationTile extends StatelessWidget {
             var profile = snapshot.data;
             return ListTile(
               title: Text(profile!.name!),
-              leading: Image.network(profile.avatar!),
+              leading: profile.avatar != null
+                  ? Image.network(profile.avatar!)
+                  : const CircleAvatar(child: Icon(Icons.person)),
               trailing: const Icon(Icons.keyboard_arrow_right),
               onTap: () => Navigator.pushNamed(context, '/view_conversation',
                   arguments: [

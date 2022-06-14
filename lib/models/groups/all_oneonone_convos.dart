@@ -28,7 +28,7 @@ class AllConvos extends ChangeNotifier {
     return _db
         .collection('oneOnOne')
         .doc(convoId)
-        .collection('activity')
+        .collection('conversation')
         .snapshots()
         .map(
           (event) => event.docs.map(
@@ -50,7 +50,7 @@ class AllConvos extends ChangeNotifier {
         await _db
             .collection('oneOnOne')
             .doc(activity.groupId)
-            .collection('activity')
+            .collection('conversation')
             .add(activity.toJson())
             .then((value) => print(value.path));
       } catch (err) {

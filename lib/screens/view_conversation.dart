@@ -83,6 +83,7 @@ class _ViewConversationState extends State<ViewConversation> {
           ), // Message TextField with Send Button
           Container(
             padding: const EdgeInsets.symmetric(vertical: 2.0),
+            margin: const EdgeInsets.all(2.0),
             child: Row(mainAxisAlignment: MainAxisAlignment.end, children: [
               Expanded(
                 child: TextField(
@@ -90,7 +91,6 @@ class _ViewConversationState extends State<ViewConversation> {
                   controller: msgController,
                   decoration: const InputDecoration(
                     labelText: "Type your message",
-                    labelStyle: TextStyle(fontSize: 20.0, color: Colors.white),
                     border: OutlineInputBorder(
                       // borderRadius:
                       //     BorderRadius.all(Radius.zero(5.0)),
@@ -110,7 +110,10 @@ class _ViewConversationState extends State<ViewConversation> {
                 iconSize: 20.0,
                 onPressed: msgController.text.isNotEmpty
                     ? () async {
+                        print(
+                            "msgController.text.isNotEmpty: ${msgController.text.isNotEmpty}");
                         var currentActivity = ga.GroupActivity(
+                          groupId: convoId,
                           activityType: ga.ActivityType.messagePublish,
                           activityOwner: myUid,
                           activityDateTime: DateTime.now(),
@@ -119,6 +122,7 @@ class _ViewConversationState extends State<ViewConversation> {
                         try {
                           await Provider.of<AllConvos>(context, listen: false)
                               .participate(currentActivity);
+                          msgController.clear();
                         } catch (err) {
                           print(err.toString());
                           ScaffoldMessenger.of(context).showSnackBar(
@@ -128,7 +132,10 @@ class _ViewConversationState extends State<ViewConversation> {
                           );
                         }
                       }
-                    : null,
+                    : () {
+                        print(
+                            "msgController.text.isNotEmpty: ${msgController.text.isNotEmpty}");
+                      },
               ),
             ]),
           ),
