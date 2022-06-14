@@ -17,6 +17,7 @@ class _CreateProfileState extends State<CreateProfile> {
   late List<UniversityInfo> _allUnivs;
   List<String>? _allDept;
   late String _name;
+  late int _phone;
   String? _selectedUniv;
   String? _selectedDept;
   File? _avatar;
@@ -62,6 +63,7 @@ class _CreateProfileState extends State<CreateProfile> {
 
       var user = UserProfile(
         name: _name,
+        phone: _phone,
         university: _selectedUniv,
         department: _selectedDept,
         // avatar: avatarUrl
@@ -174,7 +176,7 @@ class _CreateProfileState extends State<CreateProfile> {
                                     return null;
                                   },
                                   onSaved: (val) {
-                                    _name = val!;
+                                    _phone = int.parse(val!);
                                   },
                                 ),
                               ),
