@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lastpage/models/user_profile.dart';
 
 import '../widgets/dashboard/dashboard_cards.dart';
@@ -10,7 +11,13 @@ class UserDashboard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        title: SvgPicture.asset(
+          "assets/logo/lastpage_logo.svg",
+          width: 150,
+        ),
+        centerTitle: true,
+      ),
       drawer: Drawer(
         child: FutureBuilder(
             future: UserProfile.fetchProfile(),

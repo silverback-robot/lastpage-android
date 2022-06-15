@@ -4,6 +4,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:lastpage/models/groups/all_groups.dart';
 import 'package:lastpage/models/cloud_storage_models/storage.dart';
 import 'package:lastpage/models/groups/all_oneonone_convos.dart';
+import 'package:lastpage/models/lastpage_colors.dart';
 import 'package:lastpage/models/search_users.dart';
 import 'package:lastpage/models/search_users/device_contacts.dart';
 import 'package:lastpage/models/syllabus_data_models/syllabus_wrapper.dart';
@@ -98,7 +99,23 @@ class MyApp extends StatelessWidget {
       title: 'LastPage',
       theme: ThemeData(
         // TODO: Setup a theme based on lastpage color palette
-        primarySwatch: Colors.blueGrey,
+        primarySwatch: LastpageColors.white,
+        canvasColor: LastpageColors.lightGrey,
+        appBarTheme: const AppBarTheme(
+          elevation: 1.2,
+          backgroundColor: LastpageColors.white,
+          iconTheme: IconThemeData(color: LastpageColors.darkGrey),
+        ),
+        listTileTheme: const ListTileThemeData(
+          tileColor: LastpageColors.white,
+          iconColor: LastpageColors.darkGrey,
+        ),
+        shadowColor: LastpageColors.lightGrey,
+        primaryColor: LastpageColors.darkGrey,
+        colorScheme: ColorScheme.fromSwatch().copyWith(
+            // primary: LastpageColors.black,
+            secondary: LastpageColors.blue,
+            tertiary: LastpageColors.lightGrey),
       ),
       // home: AuthRedirect(),
       initialRoute: '/',
