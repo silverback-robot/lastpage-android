@@ -52,11 +52,11 @@ class UserProfile extends ChangeNotifier {
 
   static final FirebaseAuth _fa = FirebaseAuth.instance;
 
-  static Future<bool> profileExists() async {
+  static Stream<DocumentSnapshot<Map<String, dynamic>>> get profileExists {
     var _uid = _fa.currentUser!.uid;
     var _profileRef = FirebaseFirestore.instance.collection('users').doc(_uid);
-    var _profile = await _profileRef.get();
-    return _profile.exists;
+    var _profile = _profileRef.snapshots();
+    return _profile;
   }
 
   static Future<UserProfile> fetchProfile() async {
