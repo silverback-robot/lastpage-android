@@ -37,10 +37,14 @@ class _NotesetTileState extends State<NotesetTile> {
                 arguments: notesData.downloadUrls)
             : null;
       },
-      child: Card(
-        elevation: 1,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 3.0, vertical: 2.0),
         child: ListTile(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
           contentPadding: const EdgeInsets.all(5),
+          leading: const Icon(Icons.notes),
           title: Text(notesData.title),
           subtitle: Text(
               "${noOfPages.toString()} ${noOfPages > 1 ? "pages" : "page"}"),

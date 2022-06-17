@@ -55,66 +55,78 @@ class _AuthFormState extends State<AuthForm> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  TextFormField(
-                    key: const ValueKey("email"),
-                    decoration: const InputDecoration(
-                      labelText: "Email",
-                    ),
-                    keyboardType: TextInputType.emailAddress,
-                    validator: (value) {
-                      if (value == null || !value.contains('@')) {
-                        return "Please enter a valid email address";
-                      }
-                      return null;
-                    },
-                    onSaved: (value) {
-                      _userEmail = value!;
-                    },
-                  ),
-                  TextFormField(
-                    key: const ValueKey("password"),
-                    decoration: const InputDecoration(labelText: "Password"),
-                    keyboardType: TextInputType.visiblePassword,
-                    obscureText: true,
-                    onChanged: (value) {
-                      _tmpPassword = value;
-                    },
-                    validator: (value) {
-                      if (value == null || value.length < 7) {
-                        return "Password must be minimum 7 characters long";
-                      }
-                      return null;
-                    },
-                    onSaved: (value) {
-                      _userPassword = value!;
-                    },
-                  ),
-                  if (_signUp)
-                    TextFormField(
-                      key: const ValueKey("confirm_password"),
-                      decoration:
-                          const InputDecoration(labelText: "Confirm Password"),
-                      keyboardType: TextInputType.visiblePassword,
-                      obscureText: true,
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: TextFormField(
+                      key: const ValueKey("email"),
+                      decoration: const InputDecoration(
+                        labelText: "Email",
+                      ),
+                      keyboardType: TextInputType.emailAddress,
                       validator: (value) {
-                        if (value == null || value != _tmpPassword) {
-                          return "Passwords do not match";
+                        if (value == null || !value.contains('@')) {
+                          return "Please enter a valid email address";
                         }
                         return null;
                       },
+                      onSaved: (value) {
+                        _userEmail = value!;
+                      },
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: TextFormField(
+                      key: const ValueKey("password"),
+                      decoration: const InputDecoration(labelText: "Password"),
+                      keyboardType: TextInputType.visiblePassword,
+                      obscureText: true,
+                      onChanged: (value) {
+                        _tmpPassword = value;
+                      },
+                      validator: (value) {
+                        if (value == null || value.length < 7) {
+                          return "Password must be minimum 7 characters long";
+                        }
+                        return null;
+                      },
+                      onSaved: (value) {
+                        _userPassword = value!;
+                      },
+                    ),
+                  ),
+                  if (_signUp)
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: TextFormField(
+                        key: const ValueKey("confirm_password"),
+                        decoration: const InputDecoration(
+                            labelText: "Confirm Password"),
+                        keyboardType: TextInputType.visiblePassword,
+                        obscureText: true,
+                        validator: (value) {
+                          if (value == null || value != _tmpPassword) {
+                            return "Passwords do not match";
+                          }
+                          return null;
+                        },
+                      ),
                     ),
                   const SizedBox(
                     height: 12,
                   ),
-                  ElevatedButton(
-                    onPressed: widget.loading ? null : _submitForm,
-                    child: widget.loading
-                        ? const SizedBox(
-                            width: 25,
-                            height: 25,
-                            child: CircularProgressIndicator(),
-                          )
-                        : Text(_signUp ? "Sign Up" : "Login"),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: ElevatedButton(
+                      onPressed: widget.loading ? null : _submitForm,
+                      child: widget.loading
+                          ? const SizedBox(
+                              width: 25,
+                              height: 25,
+                              child: CircularProgressIndicator(),
+                            )
+                          : Text(_signUp ? "Sign Up" : "Login"),
+                    ),
                   ),
                   widget.loading
                       ? const SizedBox(
@@ -131,6 +143,7 @@ class _AuthFormState extends State<AuthForm> {
                                 setState(
                                   () {
                                     _signUp = !_signUp;
+                                    _formKey.currentState?.reset();
                                   },
                                 );
                               },

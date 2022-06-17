@@ -10,6 +10,9 @@ class MyNotes extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: const Text("My Notes"),
+      ),
       body: StreamBuilder(
           stream: Provider.of<UserStorage>(context).userUploads,
           // future: Provider.of<UserStorage>(context).userUploads.first,
@@ -46,6 +49,8 @@ class MyNotes extends StatelessWidget {
                       .compareTo(a.notesData.createdDateTime),
                 );
                 return SingleChildScrollView(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 3, vertical: 2),
                   child: Column(
                     children: storageDocTiles,
                   ),

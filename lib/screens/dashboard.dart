@@ -91,8 +91,8 @@ class UserDashboard extends StatelessWidget {
       ),
       body: Padding(
         padding: const EdgeInsets.all(12.0),
-        child: ListView(shrinkWrap: true, children: [
-          Column(
+        child: SingleChildScrollView(
+          child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Row(
@@ -134,7 +134,7 @@ class UserDashboard extends StatelessWidget {
               ),
             ],
           ),
-        ]),
+        ),
       ),
     );
   }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lastpage/models/lastpage_colors.dart';
 
 class DashboardCard extends StatelessWidget {
   final IconData icon;
@@ -36,6 +37,7 @@ class DashboardCard extends StatelessWidget {
                 Icon(
                   icon,
                   size: 42,
+                  color: LastpageColors.black,
                 ),
                 Text(
                   title,

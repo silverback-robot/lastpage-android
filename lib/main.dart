@@ -11,7 +11,7 @@ import 'package:lastpage/screens/fullscreen_notes.dart';
 import 'package:lastpage/screens/share_notes_individual.dart';
 import 'package:lastpage/screens/view_conversation.dart';
 import 'package:lastpage/screens/view_group_activity.dart';
-import 'package:lastpage/screens/groups.dart';
+import 'package:lastpage/screens/inbox.dart';
 import 'package:lastpage/screens/my_notes.dart';
 import 'package:lastpage/screens/scan_doc.dart';
 import 'package:lastpage/screens/all_semesters.dart';
@@ -106,6 +106,18 @@ class MyApp extends StatelessWidget {
             elevation: 1.2,
             backgroundColor: LastpageColors.white,
             iconTheme: IconThemeData(color: LastpageColors.darkGrey),
+            titleTextStyle: TextStyle(
+                color: LastpageColors.black,
+                fontWeight: FontWeight.bold,
+                fontSize: 18),
+          ),
+          inputDecorationTheme: const InputDecorationTheme(
+            contentPadding: EdgeInsets.all(8),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.all(
+                Radius.circular(8.0),
+              ),
+            ),
           ),
           listTileTheme: const ListTileThemeData(
             tileColor: LastpageColors.white,
@@ -131,7 +143,7 @@ class MyApp extends StatelessWidget {
           '/single_subject': (context) => const SingleSubject(),
           '/my_notes': (context) => const MyNotes(),
           '/fullscreen_notes': (context) => const FullScreenNotes(),
-          '/groups': (context) => const Groups(),
+          '/groups': (context) => const Inbox(),
           '/group_activity': (context) => const ViewGroupActivity(),
           '/add_user_to_group': (context) => const AddUsersToGroup(),
           '/all_contacts': (context) => GroupRelevantContacts(),

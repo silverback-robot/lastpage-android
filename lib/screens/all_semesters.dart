@@ -25,6 +25,9 @@ class AllSemesters extends StatelessWidget {
       );
     }
     return Scaffold(
+      appBar: AppBar(
+        title: const Text("Select Semester"),
+      ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: ListView.builder(

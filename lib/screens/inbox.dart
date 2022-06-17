@@ -8,12 +8,13 @@ import 'package:lastpage/widgets/groups/create_new_group.dart';
 import 'package:lastpage/widgets/groups/group_tile.dart';
 import 'package:provider/provider.dart';
 
-class Groups extends StatelessWidget {
-  const Groups({Key? key}) : super(key: key);
+class Inbox extends StatelessWidget {
+  const Inbox({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(title: const Text("Inbox")),
       body: SafeArea(
         child: ListView(
           children: [

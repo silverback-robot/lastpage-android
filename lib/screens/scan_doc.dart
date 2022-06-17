@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:lastpage/models/cloud_storage_models/storage.dart';
 import 'package:lastpage/models/docscanner_models/pages_upload_metadata.dart';
 import 'package:lastpage/models/cloud_storage_models/user_storage.dart';
+import 'package:lastpage/models/lastpage_colors.dart';
 import 'package:lastpage/widgets/uploads/capture_metadata.dart';
 import 'package:provider/provider.dart';
 
@@ -20,9 +21,11 @@ class _ScanDocState extends State<ScanDoc> {
   Widget build(BuildContext context) {
     final pagesRef = Provider.of<pg.Pages>(context, listen: false);
     return Scaffold(
+      appBar: AppBar(title: const Text("Scanner")),
       body: Center(
         child: SingleChildScrollView(
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               Container(
                 padding: const EdgeInsets.all(
@@ -41,7 +44,20 @@ class _ScanDocState extends State<ScanDoc> {
                             .toList(),
                       );
                     }
-                    return const Text("Click a picture of a note to be saved.");
+                    return Card(
+                        color: LastpageColors.white,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20)),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(20),
+                          child: const SizedBox(
+                              width: 250,
+                              height: 350,
+                              child: Center(
+                                child: Text("Capture your first note.",
+                                    style: TextStyle(fontSize: 15)),
+                              )),
+                        ));
                   },
                 ),
               ),
