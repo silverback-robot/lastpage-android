@@ -1,8 +1,6 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lastpage/models/user_profile.dart';
-
 import '../widgets/dashboard/dashboard_cards.dart';
 
 class UserDashboard extends StatelessWidget {
@@ -102,14 +100,13 @@ class UserDashboard extends StatelessWidget {
                 children: [
                   DashboardCard(
                     icon: Icons.document_scanner_rounded,
-                    title: "Capture a Note",
-                    description:
-                        "Use your phone's camera to click and upload a note.",
+                    title: "Scanner",
+                    description: "Opens the camera to capture notes.",
                     onTapAction: () => Navigator.pushNamed(context, '/scanDoc'),
                   ),
                   DashboardCard(
-                    icon: Icons.groups,
-                    title: "Groups",
+                    icon: Icons.message_rounded,
+                    title: "Inbox",
                     description:
                         "Upload files from your phone to your account.",
                     onTapAction: () => Navigator.pushNamed(context, '/groups'),
