@@ -38,37 +38,41 @@ class _ShareNotesDialogState extends State<ShareNotesDialog> {
           ),
         ),
         content: currentScreen == ShareNoteWizard.selectNotes
-            ? ListView(
-                shrinkWrap: true,
-                children: userStorageDocs.map((note) {
-                  final createdDttm =
-                      DateTime.fromMillisecondsSinceEpoch(note.createdDateTime);
-                  final diff = todayTmp.difference(createdDttm).inDays;
-                  return ListTile(
-                    title: Text(
-                      note.title,
-                      // maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    subtitle: Text(
-                      diff == 0
-                          ? "Today, ${formattedTime.format(createdDttm)}"
-                          : diff == 1
-                              ? "Yesterday"
-                              : formattedDate.format(createdDttm),
-                    ),
-                    selected: _selected,
-                    selectedTileColor: Colors.grey[400],
-                    onTap: () {
-                      setState(
-                        () {
-                          _selected = !_selected;
-                          selectedNote = note;
-                        },
-                      );
-                    },
-                  );
-                }).toList(),
+            ? SizedBox(
+                width: 300,
+                height: 250,
+                child: ListView(
+                  shrinkWrap: true,
+                  children: userStorageDocs.map((note) {
+                    final createdDttm = DateTime.fromMillisecondsSinceEpoch(
+                        note.createdDateTime);
+                    final diff = todayTmp.difference(createdDttm).inDays;
+                    return ListTile(
+                      title: Text(
+                        note.title,
+                        // maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      subtitle: Text(
+                        diff == 0
+                            ? "Today, ${formattedTime.format(createdDttm)}"
+                            : diff == 1
+                                ? "Yesterday"
+                                : formattedDate.format(createdDttm),
+                      ),
+                      selected: _selected,
+                      selectedTileColor: _selected ? Colors.grey[400] : null,
+                      onTap: () {
+                        setState(
+                          () {
+                            _selected = !_selected;
+                            selectedNote = note;
+                          },
+                        );
+                      },
+                    );
+                  }).toList(),
+                ),
               )
             : TextFormField(
                 autocorrect: true,

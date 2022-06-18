@@ -22,6 +22,7 @@ class _CaptureMetadataState extends State<CaptureMetadata> {
 
   int? selectedSem;
   String? selectedSubCode;
+  String? subjectTitle;
   int? selectedUnitNo;
   String? title;
 
@@ -116,6 +117,15 @@ class _CaptureMetadataState extends State<CaptureMetadata> {
                         onChanged: (val) {
                           setState(() {
                             selectedSubCode = val;
+                            // Horrible; Figure out a better way to handle this!
+                            subjectTitle = userCourse.allSemesters
+                                .firstWhere((element) =>
+                                    element.semesterNumber == selectedSem)
+                                .semesterSubjects
+                                .firstWhere(
+                                  (e) => e.subjectCode == val,
+                                )
+                                .subjectTitle;
                             isSubjectSelected = true;
                             selectedUnitNo = null;
                             isUnitSelected = false;
@@ -186,6 +196,7 @@ class _CaptureMetadataState extends State<CaptureMetadata> {
                                     pagesMetaData = PagesUploadMetadata(
                                       semesterNo: selectedSem!,
                                       subjectCode: selectedSubCode!,
+                                      subjectTitle: subjectTitle!,
                                       unitNo: selectedUnitNo!,
                                       title: title ?? "No title",
                                     );

@@ -3,6 +3,7 @@ import 'package:lastpage/models/cloud_storage_models/storage.dart';
 import 'package:lastpage/models/cloud_storage_models/user_storage.dart';
 import 'package:lastpage/models/docscanner_models/pages_upload_metadata.dart';
 import 'package:lastpage/models/groups/group_activity.dart';
+import 'package:lastpage/models/syllabus_data_models/subject.dart';
 import 'package:lastpage/models/syllabus_data_models/syllabus_wrapper.dart';
 import 'package:lastpage/widgets/uploads/capture_metadata.dart';
 import 'package:provider/provider.dart';
@@ -15,10 +16,6 @@ class DisplayFileUpload extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var subjectInfo = Provider.of<SyallabusWrapper>(context)
-        .subjects
-        .firstWhere(
-            (subject) => subject.subjectCode == groupActivity.subjectCode);
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(10),
@@ -79,7 +76,7 @@ class DisplayFileUpload extends StatelessWidget {
                             ),
                             if (groupActivity.subjectCode != null)
                               Text(
-                                "${subjectInfo.subjectCode} | ${subjectInfo.subjectTitle}",
+                                "${groupActivity.subjectCode} | ${groupActivity.subjectTitle ?? "No title"}",
                                 style: const TextStyle(
                                   fontSize: 14,
                                   // fontWeight: FontWeight.bold,

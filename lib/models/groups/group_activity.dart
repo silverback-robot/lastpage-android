@@ -22,6 +22,7 @@ class GroupActivity {
   String? groupId;
   int? semesterNo;
   String? subjectCode;
+  String? subjectTitle;
   int? unitNo;
   String? title;
 
@@ -35,6 +36,7 @@ class GroupActivity {
     this.userAddedUID,
     this.semesterNo,
     this.subjectCode,
+    this.subjectTitle,
     this.unitNo,
     this.title,
   });
@@ -58,6 +60,9 @@ class GroupActivity {
         semesterNo = json.containsKey('semesterNo') ? json['semesterNo'] : null,
         subjectCode =
             json.containsKey('subjectCode') ? json['subjectCode'] : null,
+        subjectTitle = json.containsKey('subjectTitle')
+            ? json['subjectTitle']
+            : "No subject title",
         unitNo = json.containsKey('unitNo') ? json['unitNo'] : null,
         title = json.containsKey('title') ? json['title'] : null;
 

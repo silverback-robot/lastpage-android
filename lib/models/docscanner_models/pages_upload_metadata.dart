@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 class PagesUploadMetadata {
   late int semesterNo;
   late String subjectCode;
+  late String subjectTitle;
   late int unitNo;
   late String title;
   List<String> downloadUrls = [];
@@ -12,6 +13,7 @@ class PagesUploadMetadata {
   PagesUploadMetadata({
     required this.semesterNo,
     required this.subjectCode,
+    required this.subjectTitle,
     required this.unitNo,
     this.title = "No title",
   });
@@ -20,6 +22,7 @@ class PagesUploadMetadata {
     title = json['title'] ?? "No title";
     semesterNo = json['semesterNo'];
     subjectCode = json['subjectCode'];
+    subjectTitle = json['subjectTitle'] ?? "No title";
     unitNo = json['unitNo'];
     createdDateTime = int.parse(json['createdDateTime']);
     setId = json['setId'];
@@ -31,6 +34,7 @@ class PagesUploadMetadata {
         'setId': setId,
         'semesterNo': semesterNo,
         'subjectCode': subjectCode,
+        'subjectTitle': subjectTitle,
         'unitNo': unitNo,
         'title': title,
         'createdDateTime': createdDateTime.toString(),
@@ -41,6 +45,7 @@ class PagesUploadMetadata {
         'setId': setId,
         'semesterNo': semesterNo.toString(),
         'subjectCode': subjectCode.toString(),
+        'subjectTitle': subjectTitle.toString(),
         'unitNo': unitNo.toString(),
         'createdDateTime': createdDateTime.toString(),
       };

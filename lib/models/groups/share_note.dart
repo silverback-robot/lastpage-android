@@ -25,6 +25,7 @@ class ShareNote extends ChangeNotifier {
       "fileUploadUrl": uploadData.downloadUrls,
       "title": uploadData.title,
       "subjectCode": uploadData.subjectCode,
+      "subjectTitle": uploadData.subjectTitle,
       "unitNo": uploadData.unitNo,
       "semesterNo": uploadData.semesterNo,
       "setId": uploadData.setId,

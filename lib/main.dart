@@ -85,10 +85,9 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider<pg.Pages>(create: (_) => pg.Pages()),
         ChangeNotifierProvider<SyallabusWrapper>(
-            create: (_) => SyallabusWrapper(), lazy: false),
+            create: (_) => SyallabusWrapper()),
         ChangeNotifierProvider<Storage>(create: (_) => Storage()),
-        ChangeNotifierProvider<UserStorage>(
-            create: (_) => UserStorage(), lazy: false),
+        ChangeNotifierProvider<UserStorage>(create: (_) => UserStorage()),
         ChangeNotifierProvider<AllGroups>(create: (_) => AllGroups()),
         ChangeNotifierProvider<UserProfile>(create: (_) => UserProfile()),
         ChangeNotifierProvider<SearchUsers>(create: (_) => SearchUsers()),
