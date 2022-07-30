@@ -4,12 +4,14 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class UserProfile extends ChangeNotifier {
   final String? name;
   final int? phone;
   final String? university;
   final String? department;
+  final String? syllabusYamlUrl;
   String? avatar;
 
   final _auth = FirebaseAuth.instance;
@@ -21,14 +23,15 @@ class UserProfile extends ChangeNotifier {
   String get _uid => _auth.currentUser!.uid;
   String get _email => _auth.currentUser!.email!;
 
-  UserProfile({
-    this.name,
-    this.phone,
-    this.university,
-    this.department,
-  }) {
+  UserProfile(
+      {this.name,
+      this.phone,
+      this.university,
+      this.department,
+      this.syllabusYamlUrl}) {
     uid = _uid;
     email = _email;
+    fetchUserProfile(uid);
   }
 
   UserProfile.fromJson(Map<String, dynamic> json)
@@ -38,6 +41,7 @@ class UserProfile extends ChangeNotifier {
         name = json['name'],
         university = json['university'],
         department = json['department'],
+        syllabusYamlUrl = json['syllabusYamlUrl'],
         avatar = json['avatar'];
 
   Map<String, dynamic> toJson() => {
@@ -47,6 +51,7 @@ class UserProfile extends ChangeNotifier {
         'name': name,
         'university': university,
         'department': department,
+        'syllabusYamlUrl': syllabusYamlUrl,
         'avatar': avatar,
       };
 
@@ -122,11 +127,35 @@ class UserProfile extends ChangeNotifier {
     var profileDoc = await _db.collection('users').doc(fetchId).get();
     if (profileDoc.exists) {
       var userProfile = UserProfile.fromJson(profileDoc.data()!);
+      print(userProfile.syllabusYamlUrl);
+      print("Saving profile to SharedPreferences");
+      await _saveLocalProfile(userProfile);
       return userProfile;
     }
   }
 
   static Future<void> signOut() async {
     await _fa.signOut();
+  }
+
+  Future<void> _saveLocalProfile(UserProfile profile) async {
+    final prefs = await SharedPreferences.getInstance();
+
+    await prefs.setString('uid', profile.uid);
+    await prefs.setString('email', profile.email);
+    await prefs.setInt('phone', profile.phone ?? 0);
+    await prefs.setString('name', profile.name ?? "No name");
+    await prefs.setString('university', profile.university ?? "UNAVAILABLE");
+    await prefs.setString('department', profile.department ?? "UNAVAILABLE");
+    await prefs.setString('avatar', profile.avatar ?? "UNAVAILABLE");
+    await prefs.setBool('syllabusYamlUrlChanged', false); // initial value
+
+    // update syllabus change flag before updating syllabus URL
+    if (prefs.getKeys().contains('syllabusYamlUrl') &&
+        prefs.getString('syllabusYamlUrl') != profile.syllabusYamlUrl) {
+      await prefs.setBool('syllabusYamlUrlChanged', true);
+    }
+    await prefs.setString(
+        'syllabusYamlUrl', profile.syllabusYamlUrl ?? "UNAVAILABLE");
   }
 }

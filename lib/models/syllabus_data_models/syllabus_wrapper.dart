@@ -1,10 +1,16 @@
+import 'dart:io';
+
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:lastpage/models/syllabus_data_models/course.dart';
 import 'package:lastpage/models/syllabus_data_models/subject.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SyallabusWrapper extends ChangeNotifier {
   SyallabusWrapper() {
     fetchSyllabus();
+    fetchSyllabusYaml();
   }
   Course? _course;
   final List<Subject> _subjects = [];
@@ -32,6 +38,29 @@ class SyallabusWrapper extends ChangeNotifier {
     await _populateCourse();
     if (course != null) {
       await _populateSubjects();
+    }
+  }
+
+  Future<void> fetchSyllabusYaml() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final syllabusYamlUrl =
+          prefs.getString('syllabusYamlUrl') ?? 'UNAVAILABLE';
+      print(prefs.getKeys().toString());
+      print("$syllabusYamlUrl :: ${prefs.getBool('syllabusYamlUrlChanged')}");
+      if (syllabusYamlUrl != 'UNAVAILABLE' &&
+          (prefs.getBool('syllabusYamlUrlChanged') ?? false)) {
+        final appDir = await getApplicationSupportDirectory();
+        final syllabusYaml = File("${appDir.absolute.path}/syllabus.yaml");
+        print(syllabusYaml.absolute.path);
+        final httpsReference =
+            FirebaseStorage.instance.refFromURL(syllabusYamlUrl);
+        final downloadSyllabus = httpsReference.writeToFile(syllabusYaml);
+        downloadSyllabus.then(
+            (p0) => print("Syllabus Download Task Status: ${p0.state.name}"));
+      }
+    } catch (err) {
+      print(err.toString());
     }
   }
 }
