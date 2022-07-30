@@ -17,18 +17,28 @@ class ConversationTile extends StatelessWidget {
         builder: (context, AsyncSnapshot<UserProfile?> snapshot) {
           if (snapshot.hasData) {
             var profile = snapshot.data;
-            return ListTile(
-              title: Text(profile!.name!),
-              leading: profile.avatar != null
-                  ? Image.network(profile.avatar!)
-                  : const CircleAvatar(child: Icon(Icons.person)),
-              trailing: const Icon(Icons.keyboard_arrow_right),
-              onTap: () => Navigator.pushNamed(context, '/view_conversation',
-                  arguments: [
-                    conversation.convoId,
-                    profile,
-                    conversation.myUid,
-                  ]),
+            return Padding(
+              padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 5),
+              child: ListTile(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10.0)),
+                contentPadding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                title: Text(profile!.name!),
+                leading: profile.avatar != null
+                    ? CircleAvatar(
+                        backgroundImage: NetworkImage(profile.avatar!),
+                        radius: 24,
+                      )
+                    : const CircleAvatar(child: Icon(Icons.person)),
+                trailing: const Icon(Icons.keyboard_arrow_right),
+                onTap: () => Navigator.pushNamed(context, '/view_conversation',
+                    arguments: [
+                      conversation.convoId,
+                      profile,
+                      conversation.myUid,
+                    ]),
+              ),
             );
           }
 

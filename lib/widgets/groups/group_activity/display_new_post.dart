@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lastpage/models/groups/group_activity.dart';
+import 'package:lastpage/models/lastpage_colors.dart';
 import 'package:lastpage/models/user_profile.dart';
 import 'package:lastpage/widgets/groups/group_activity/display_file_upload.dart';
 import 'package:lastpage/widgets/groups/group_activity/display_message.dart';
@@ -46,14 +47,19 @@ class DisplayNewPost extends StatelessWidget {
           margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
-          elevation: 2,
+          elevation: 1.5,
           child: Container(
-            color: Colors.grey[200],
+            decoration: const BoxDecoration(
+              color: LastpageColors.lightGrey,
+              borderRadius: BorderRadius.all(Radius.circular(10)),
+            ),
             width: double.infinity * 0.8,
             child:
                 Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               senderProfile != null
                   ? ListTile(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10.0)),
                       dense: true,
                       leading: senderProfile!.avatar != null
                           ? CircleAvatar(
@@ -62,7 +68,7 @@ class DisplayNewPost extends StatelessWidget {
                                   NetworkImage(senderProfile!.avatar!),
                               backgroundColor: Colors.transparent,
                             )
-                          : const Icon(Icons.account_circle),
+                          : const Icon(Icons.account_circle, size: 40),
                       title: Row(
                         children: [
                           Text(

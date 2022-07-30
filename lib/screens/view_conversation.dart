@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lastpage/models/groups/all_oneonone_convos.dart';
 import 'package:lastpage/models/groups/group_activity.dart' as ga;
+import 'package:lastpage/models/lastpage_colors.dart';
 import 'package:lastpage/models/user_profile.dart';
 import 'package:lastpage/widgets/groups/group_activity/display_new_post.dart';
 import 'package:provider/provider.dart';
@@ -32,6 +33,25 @@ class _ViewConversationState extends State<ViewConversation> {
     final conversationStream =
         Provider.of<AllConvos>(context).conversation(convoId);
     return Scaffold(
+      backgroundColor: LastpageColors.white,
+      appBar: AppBar(
+        leadingWidth: 40,
+        title: Row(
+          children: [
+            CircleAvatar(
+              radius: 20,
+              backgroundImage: oppositeProfile.avatar != null
+                  ? NetworkImage(oppositeProfile.avatar!)
+                  : null,
+              child: oppositeProfile.avatar != null
+                  ? null
+                  : const Icon(Icons.person),
+            ),
+            const SizedBox(width: 20),
+            Text(oppositeProfile.name ?? "Conversation"),
+          ],
+        ),
+      ),
       body: Column(
         children: [
           Expanded(
@@ -53,15 +73,17 @@ class _ViewConversationState extends State<ViewConversation> {
                     List<ga.GroupActivity> allActivity = snapshot.data!;
                     return allActivity.isNotEmpty
                         ? ListView(
+                            padding: const EdgeInsets.all(4),
+                            primary: true,
                             children: allActivity
                                 // Create widgets to display specific user actions
                                 .map(
-                            (e) {
-                              return DisplayNewPost(
-                                groupActivity: e,
-                              );
-                            },
-                          ).toList())
+                              (e) {
+                                return DisplayNewPost(
+                                  groupActivity: e,
+                                );
+                              },
+                            ).toList())
                         : const Center(
                             child: Text("No activity here..."),
                           );

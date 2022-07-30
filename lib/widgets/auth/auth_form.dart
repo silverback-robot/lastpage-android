@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class AuthForm extends StatefulWidget {
   const AuthForm({required this.submitFn, required this.loading, Key? key})
@@ -46,6 +47,9 @@ class _AuthFormState extends State<AuthForm> {
   Widget build(BuildContext context) {
     return Center(
       child: Card(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8.0),
+        ),
         margin: const EdgeInsets.all(20.0),
         child: SingleChildScrollView(
           child: Padding(
@@ -55,6 +59,14 @@ class _AuthFormState extends State<AuthForm> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: SvgPicture.asset("assets/logo/lastpage_logo.svg",
+                        alignment: Alignment.center, height: 40.0),
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: TextFormField(
