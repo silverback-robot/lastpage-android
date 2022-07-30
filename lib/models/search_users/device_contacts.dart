@@ -3,6 +3,7 @@ import 'package:contacts_service/contacts_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:lastpage/models/search_users/search_users_response.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class LastpageContacts extends ChangeNotifier {
   final List<SearchUsersResponse> _contactsOnLastpage = [];
@@ -59,21 +60,25 @@ class LastpageContacts extends ChangeNotifier {
   }
 
   Future<void> refreshContacts() async {
-    var deviceContacts = await _fetchDeviceContacts();
-    var deviceContactPhoneNumbers = _contactNumbers(deviceContacts);
-    _contactsOnLastpage.clear();
-    for (var i = 0; i < deviceContactPhoneNumbers.length; i += 10) {
-      if (deviceContactPhoneNumbers.length - i > 10) {
-        _contactsOnLastpage.addAll(await _fetchLastpageContacts(
-            deviceContactPhoneNumbers.sublist(i, i + 10)));
-      } else {
-        _contactsOnLastpage.addAll(await _fetchLastpageContacts(
-            deviceContactPhoneNumbers.sublist(
-                i, deviceContactPhoneNumbers.length)));
+    if (await Permission.contacts.request().isGranted) {
+      var deviceContacts = await _fetchDeviceContacts();
+      var deviceContactPhoneNumbers = _contactNumbers(deviceContacts);
+      _contactsOnLastpage.clear();
+      for (var i = 0; i < deviceContactPhoneNumbers.length; i += 10) {
+        if (deviceContactPhoneNumbers.length - i > 10) {
+          _contactsOnLastpage.addAll(await _fetchLastpageContacts(
+              deviceContactPhoneNumbers.sublist(i, i + 10)));
+        } else {
+          _contactsOnLastpage.addAll(await _fetchLastpageContacts(
+              deviceContactPhoneNumbers.sublist(
+                  i, deviceContactPhoneNumbers.length)));
+        }
       }
+      _contactsOnLastpage.removeWhere(
+        (element) => element.uid == _auth.currentUser?.uid,
+      );
+      notifyListeners();
     }
-    _contactsOnLastpage.removeWhere((element) => element.uid == _auth.currentUser?.uid,);
-    notifyListeners();
   }
 
   List<SearchUsersResponse> relevantContacts(List<String?> currentMembers) {
