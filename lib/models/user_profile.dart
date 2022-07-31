@@ -9,7 +9,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 class UserProfile extends ChangeNotifier {
   final String? name;
   final int? phone;
-  final String? university;
+  final String?
+      university; // This should actually be `universityId`. university's documentId is stored here to uniquely identify the university (avoiding ambiguity)
   final String? department;
   final String? syllabusYamlUrl;
   String? avatar;
