@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:lastpage/models/lastpage_colors.dart';
+import 'package:lastpage/models/syllabus/syllabus_provider.dart';
 import 'package:lastpage/models/user_profile.dart';
 import 'package:lastpage/screens/add_users_to_group.dart';
 import 'package:lastpage/screens/group_relevant_contacts.dart';
@@ -29,7 +30,6 @@ import 'package:lastpage/models/cloud_storage_models/storage.dart';
 import 'package:lastpage/models/groups/all_oneonone_convos.dart';
 import 'package:lastpage/models/search_users.dart';
 import 'package:lastpage/models/search_users/device_contacts.dart';
-import 'package:lastpage/models/syllabus_data_models/syllabus_wrapper.dart';
 import 'package:lastpage/models/cloud_storage_models/user_storage.dart';
 import 'package:lastpage/models/docscanner_models/pages.dart' as pg;
 
@@ -84,8 +84,8 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider<pg.Pages>(create: (_) => pg.Pages()),
-        ChangeNotifierProvider<SyallabusWrapper>(
-            create: (_) => SyallabusWrapper()),
+        ChangeNotifierProvider<SyllabusProvider>(
+            create: (_) => SyllabusProvider()),
         ChangeNotifierProvider<Storage>(create: (_) => Storage()),
         ChangeNotifierProvider<UserStorage>(create: (_) => UserStorage()),
         ChangeNotifierProvider<AllGroups>(create: (_) => AllGroups()),

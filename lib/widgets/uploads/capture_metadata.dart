@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lastpage/models/groups/group_activity.dart';
-import 'package:lastpage/models/syllabus_data_models/syllabus_wrapper.dart';
+import 'package:lastpage/models/syllabus/syllabus_provider.dart';
 import 'package:lastpage/models/docscanner_models/pages_upload_metadata.dart';
 import 'package:provider/provider.dart';
 
@@ -24,13 +24,14 @@ class _CaptureMetadataState extends State<CaptureMetadata> {
   String? selectedSubCode;
   String? subjectTitle;
   int? selectedUnitNo;
+  String? selectedUnitNoString;
   String? title;
 
   var ignoreGa = false;
 
   @override
   Widget build(BuildContext context) {
-    final userCourse = Provider.of<SyallabusWrapper>(context).course;
+    final syllabus = Provider.of<SyllabusProvider>(context).syllabus;
 
     if (!ignoreGa) {
       final ga = widget.groupActivity;
@@ -48,7 +49,7 @@ class _CaptureMetadataState extends State<CaptureMetadata> {
         isUnitSelected = true;
       }
     }
-    return userCourse != null
+    return syllabus != null
         ? Dialog(
             child: SingleChildScrollView(
               child: Container(
@@ -86,10 +87,10 @@ class _CaptureMetadataState extends State<CaptureMetadata> {
                         });
                       },
                       value: selectedSem,
-                      items: userCourse.allSemesters
+                      items: syllabus.semesters
                           .map((e) => DropdownMenuItem(
-                                child: Text("Semester ${e.semesterNumber}"),
-                                value: e.semesterNumber,
+                                child: Text("Semester ${e.semesterNo}"),
+                                value: e.semesterNo,
                               ))
                           .toList(),
                     ),
@@ -98,15 +99,19 @@ class _CaptureMetadataState extends State<CaptureMetadata> {
                         isExpanded: true,
                         value: selectedSubCode,
                         items: isSemSelected
-                            ? userCourse.allSemesters
+                            ? syllabus.semesters
                                 .firstWhere((element) =>
-                                    element.semesterNumber == selectedSem)
+                                    element.semesterNo == selectedSem)
                                 .semesterSubjects
                                 .map(
                                   (e) => DropdownMenuItem(
-                                    child: Text(e.subjectTitle,
+                                    child: Text(
+                                        syllabus.subjects
+                                            .firstWhere((element) =>
+                                                element.subjectCode == e)
+                                            .subjectTitle,
                                         overflow: TextOverflow.ellipsis),
-                                    value: e.subjectCode,
+                                    value: e,
                                   ),
                                 )
                                 .toList()
@@ -117,35 +122,27 @@ class _CaptureMetadataState extends State<CaptureMetadata> {
                         onChanged: (val) {
                           setState(() {
                             selectedSubCode = val;
-                            // Horrible; Figure out a better way to handle this!
-                            subjectTitle = userCourse.allSemesters
+                            subjectTitle = syllabus.subjects
                                 .firstWhere((element) =>
-                                    element.semesterNumber == selectedSem)
-                                .semesterSubjects
-                                .firstWhere(
-                                  (e) => e.subjectCode == val,
-                                )
+                                    element.subjectCode == selectedSubCode)
                                 .subjectTitle;
                             isSubjectSelected = true;
                             selectedUnitNo = null;
                             isUnitSelected = false;
                           });
                         }),
-                    DropdownButton<int>(
+                    DropdownButton<String>(
                         isExpanded: true,
                         hint: const Text("Select Unit"),
-                        value: selectedUnitNo,
+                        value: selectedUnitNoString,
                         items: isSubjectSelected
-                            ? userCourse.allSemesters
-                                .firstWhere((element) =>
-                                    element.semesterNumber == selectedSem)
-                                .semesterSubjects
+                            ? syllabus.subjects
                                 .firstWhere((element) =>
                                     element.subjectCode == selectedSubCode)
-                                .units
+                                .subjectUnits!
                                 .map(
                                   (e) => DropdownMenuItem(
-                                    child: Text(e.unitNumber.toString(),
+                                    child: Text(e.unitNumber,
                                         overflow: TextOverflow.ellipsis),
                                     value: e.unitNumber,
                                   ),
@@ -157,7 +154,7 @@ class _CaptureMetadataState extends State<CaptureMetadata> {
                         },
                         onChanged: (val) {
                           setState(() {
-                            selectedUnitNo = val;
+                            selectedUnitNoString = val;
                             isUnitSelected = true;
                           });
                         }),
@@ -193,6 +190,8 @@ class _CaptureMetadataState extends State<CaptureMetadata> {
                           isSemSelected && isSubjectSelected && isUnitSelected
                               ? () {
                                   setState(() {
+                                    selectedUnitNo =
+                                        _getUnitNumber(selectedUnitNoString!);
                                     pagesMetaData = PagesUploadMetadata(
                                       semesterNo: selectedSem!,
                                       subjectCode: selectedSubCode!,
@@ -231,4 +230,31 @@ class _CaptureMetadataState extends State<CaptureMetadata> {
             ),
           );
   }
+}
+
+// TEMPORARY: Helper to convert unit number strings in syllabus YAML into ints
+int _getUnitNumber(String stringUnitNo) {
+  late int intUnitNo;
+  switch (stringUnitNo.replaceAll(' ', '').toUpperCase()) {
+    case ('UNITI'):
+      intUnitNo = 1;
+      break;
+    case ('UNITII'):
+      intUnitNo = 2;
+      break;
+    case ('UNITIII'):
+      intUnitNo = 3;
+      break;
+    case ('UNITIV'):
+      intUnitNo = 4;
+      break;
+    case ('UNITV'):
+      intUnitNo = 5;
+      break;
+    default:
+      intUnitNo = 1;
+      break;
+  }
+
+  return intUnitNo;
 }

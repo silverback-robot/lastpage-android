@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:lastpage/models/syllabus/syllabus_provider.dart';
 import 'package:provider/provider.dart';
-import '../models/syllabus_data_models/syllabus_wrapper.dart';
 
 class AllSemesters extends StatelessWidget {
   const AllSemesters({Key? key}) : super(key: key);
@@ -8,7 +8,8 @@ class AllSemesters extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final _dataState =
-        Provider.of<SyallabusWrapper>(context).subjects.isNotEmpty;
+        Provider.of<SyllabusProvider>(context).syllabus?.subjects.isNotEmpty ??
+            false;
     if (!_dataState) {
       return Scaffold(
         body: Center(
@@ -31,20 +32,19 @@ class AllSemesters extends StatelessWidget {
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: ListView.builder(
-            itemCount: Provider.of<SyallabusWrapper>(context)
-                .course!
-                .allSemesters
+            itemCount: Provider.of<SyllabusProvider>(context)
+                .syllabus!
+                .semesters
                 .length,
             itemBuilder: (context, index) {
-              var userCourse = Provider.of<SyallabusWrapper>(context)
-                  .course!
-                  .allSemesters[index];
+              var userCourse = Provider.of<SyllabusProvider>(context)
+                  .syllabus!
+                  .semesters[index];
               return Card(
                 child: ListTile(
-                  title:
-                      Text("Semester ${userCourse.semesterNumber.toString()}"),
+                  title: Text("Semester ${userCourse.semesterNo.toString()}"),
                   subtitle: Text(
-                      "${userCourse.semesterSubjectCodes.length.toString()} subjects"),
+                      "${userCourse.semesterSubjects.length.toString()} subjects"),
                   onTap: () => Navigator.pushNamed(context, '/single_semester',
                       arguments: userCourse.semesterSubjects),
                 ),

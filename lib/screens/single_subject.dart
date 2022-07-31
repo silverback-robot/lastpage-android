@@ -1,13 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:lastpage/models/syllabus_data_models/subject.dart';
+import 'package:lastpage/models/syllabus/syllabus_provider.dart';
 import 'package:lastpage/widgets/syllabus/chapter_card.dart';
+import 'package:provider/provider.dart';
 
 class SingleSubject extends StatelessWidget {
   const SingleSubject({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final args = ModalRoute.of(context)!.settings.arguments as Subject;
+    final args = ModalRoute.of(context)!.settings.arguments as String;
+    final subject = Provider.of<SyllabusProvider>(context)
+        .syllabus!
+        .subjects
+        .firstWhere((element) => element.subjectCode == args);
+    var ltpc = subject.LTPC!.replaceAll(' ', '').toUpperCase();
+    var credits =
+        ltpc.length == 8 ? "${ltpc[7].toString()} Credits" : "No info";
     return Scaffold(
       body: SafeArea(
           child: SingleChildScrollView(
@@ -18,7 +26,7 @@ class SingleSubject extends StatelessWidget {
             title: Padding(
               padding: const EdgeInsets.only(top: 12, bottom: 12),
               child: Text(
-                args.subjectTitle,
+                subject.subjectTitle,
                 style:
                     const TextStyle(fontWeight: FontWeight.bold, fontSize: 32),
               ),
@@ -28,16 +36,16 @@ class SingleSubject extends StatelessWidget {
               children: [
                 Row(
                   children: [
-                    Text(args.subjectCode.padRight(10)),
-                    Text("${args.credits!.toString()} Credits"),
+                    Text(subject.subjectCode.padRight(10)),
+                    Text(credits),
                   ],
                 ),
-                Text(args.category!),
               ],
             ),
           ),
           Column(
-            children: args.units.map((e) => ChapterCard(e)).toList(),
+            children:
+                subject.subjectUnits?.map((e) => ChapterCard(e)).toList() ?? [],
           ),
         ],
       ))),

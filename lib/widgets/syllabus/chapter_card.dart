@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:lastpage/models/syllabus_data_models/subject_unit.dart';
+import 'package:lastpage/models/syllabus/subject.dart';
 
 class ChapterCard extends StatelessWidget {
   const ChapterCard(this.chapter, {Key? key}) : super(key: key);
@@ -22,7 +22,7 @@ class ChapterCard extends StatelessWidget {
                 Row(
                   children: [
                     Text(
-                      "Unit ${chapter.unitNumber.toString()}",
+                      chapter.unitNumber.toString(),
                       style: const TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
@@ -31,11 +31,11 @@ class ChapterCard extends StatelessWidget {
                     const SizedBox(
                       width: 10.0,
                     ),
-                    if (chapter.title != null)
+                    if (chapter.unitTitle != null)
                       Flexible(
                         child: SizedBox(
                           child: Text(
-                            chapter.title!,
+                            chapter.unitTitle!,
                             style: const TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 16,
@@ -49,25 +49,7 @@ class ChapterCard extends StatelessWidget {
                 const SizedBox(
                   height: 12,
                 ),
-                if (chapter.unitContents.isNotEmpty)
-                  Wrap(
-                      alignment: WrapAlignment.start,
-                      children: chapter.unitContents
-                          .map(
-                            (topic) => Container(
-                              margin: const EdgeInsets.all(2.0),
-                              padding: const EdgeInsets.all(4.0),
-                              decoration: BoxDecoration(
-                                border:
-                                    Border.all(width: 1, color: Colors.black54),
-                                borderRadius: const BorderRadius.all(
-                                  Radius.circular(8),
-                                ),
-                              ),
-                              child: Text(topic),
-                            ),
-                          )
-                          .toList()),
+                if (chapter.unitContents != null) Text(chapter.unitContents!),
               ],
             )),
       ),

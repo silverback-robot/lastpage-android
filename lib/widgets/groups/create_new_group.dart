@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:lastpage/models/groups/new_group.dart';
-import 'package:lastpage/models/syllabus_data_models/subject.dart';
+import 'package:lastpage/models/syllabus/syllabus_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-
-import 'package:lastpage/models/syllabus_data_models/syllabus_wrapper.dart';
 
 class CreateNewGroup extends StatefulWidget {
   const CreateNewGroup({required this.context, Key? key}) : super(key: key);
@@ -26,13 +24,12 @@ class _CreateNewGroupState extends State<CreateNewGroup> {
 
   int? selectedSem;
   String? subjectCode;
-  Subject? subject;
 
   final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
-    final userCourse = Provider.of<SyallabusWrapper>(context).course;
+    final syllabus = Provider.of<SyllabusProvider>(context).syllabus!;
 
     return Form(
       key: _formKey,
@@ -101,29 +98,35 @@ class _CreateNewGroupState extends State<CreateNewGroup> {
                         setState(() {
                           selectedSem = value!;
                           isSemSelected = true;
+                          isSubjectSelected = false;
+                          subjectCode = null;
                         });
                       },
                       value: selectedSem,
-                      items: userCourse!.allSemesters
+                      items: syllabus.semesters
                           .map((e) => DropdownMenuItem(
-                                child: Text("Semester ${e.semesterNumber}"),
-                                value: e.semesterNumber,
+                                child: Text("Semester ${e.semesterNo}"),
+                                value: e.semesterNo,
                               ))
                           .toList(),
                     ),
                   if (subjectGroup)
-                    DropdownButton<Subject>(
+                    DropdownButton<String>(
                         hint: const Text("Subject"),
                         isExpanded: true,
-                        value: subject,
+                        value: subjectCode,
                         items: isSemSelected
-                            ? userCourse!.allSemesters
+                            ? syllabus.semesters
                                 .firstWhere((element) =>
-                                    element.semesterNumber == selectedSem)
+                                    element.semesterNo == selectedSem)
                                 .semesterSubjects
                                 .map(
                                   (e) => DropdownMenuItem(
-                                    child: Text(e.subjectTitle,
+                                    child: Text(
+                                        syllabus.subjects
+                                            .firstWhere((element) =>
+                                                element.subjectCode == e)
+                                            .subjectTitle,
                                         overflow: TextOverflow.ellipsis),
                                     value: e,
                                   ),
@@ -132,7 +135,7 @@ class _CreateNewGroupState extends State<CreateNewGroup> {
                             : null,
                         onChanged: (val) {
                           setState(() {
-                            subject = val;
+                            subjectCode = val;
                             isSubjectSelected = true;
                           });
                         }),
@@ -143,10 +146,12 @@ class _CreateNewGroupState extends State<CreateNewGroup> {
                         // you'd often call a server or save the information in a database.
 
                         newGroup = UserGroup(
-                            groupName: groupName,
-                            owner: owner,
-                            subjectGroup: subjectGroup,
-                            subject: subject);
+                          groupName: groupName,
+                          owner: owner,
+                          subjectGroup: subjectGroup,
+                          subjectCode: subjectCode,
+                          // subjectTitle:
+                        );
                         try {
                           await newGroup.createNewGroup();
                         } catch (err) {

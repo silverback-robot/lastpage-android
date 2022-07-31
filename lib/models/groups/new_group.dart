@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:lastpage/models/groups/group_activity.dart';
-import 'package:lastpage/models/syllabus_data_models/subject.dart';
 import 'package:logging/logging.dart';
 
 class UserGroup {
@@ -11,7 +10,6 @@ class UserGroup {
   List<String> admins = [];
   List<String> members = [];
   bool subjectGroup;
-  Subject? subject;
   String? subjectCode;
   String? subjectTitle;
   String? docId;
@@ -20,11 +18,13 @@ class UserGroup {
 
   static final _log = Logger("UserGroup");
 
-  UserGroup(
-      {required this.groupName,
-      required this.owner,
-      required this.subjectGroup,
-      this.subject});
+  UserGroup({
+    required this.groupName,
+    required this.owner,
+    required this.subjectGroup,
+    this.subjectCode,
+    this.subjectTitle,
+  });
 
   UserGroup.fromJson(Map<String, dynamic> json)
       : groupName = json['groupName'],
@@ -44,8 +44,8 @@ class UserGroup {
           owner,
         ],
         'subjectGroup': subjectGroup,
-        'subjectCode': subjectGroup ? subject?.subjectCode : null,
-        'subjectTitle': subjectGroup ? subject?.subjectTitle : null,
+        'subjectCode': subjectGroup ? subjectCode : null,
+        'subjectTitle': subjectGroup ? subjectTitle : null,
       };
 
   Future<void> createNewGroup() async {
