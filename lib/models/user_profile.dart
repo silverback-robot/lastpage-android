@@ -128,8 +128,6 @@ class UserProfile extends ChangeNotifier {
     var profileDoc = await _db.collection('users').doc(fetchId).get();
     if (profileDoc.exists) {
       var userProfile = UserProfile.fromJson(profileDoc.data()!);
-      print(userProfile.syllabusYamlUrl);
-      print("Saving profile to SharedPreferences");
       await _saveLocalProfile(userProfile);
       return userProfile;
     }
@@ -154,6 +152,9 @@ class UserProfile extends ChangeNotifier {
     // update syllabus change flag before updating syllabus URL
     if (prefs.getKeys().contains('syllabusYamlUrl') &&
         prefs.getString('syllabusYamlUrl') != profile.syllabusYamlUrl) {
+      await prefs.setBool('syllabusYamlUrlChanged', true);
+    } else if (!prefs.getKeys().contains('syllabusYamlUrl')) {
+      // First login - sharedPrefs won't contain the key and hence previous condition won't be satisfied
       await prefs.setBool('syllabusYamlUrlChanged', true);
     }
     await prefs.setString(

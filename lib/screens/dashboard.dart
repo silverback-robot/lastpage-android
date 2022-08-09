@@ -1,13 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lastpage/models/user_profile.dart';
+import 'package:provider/provider.dart';
 import '../widgets/dashboard/dashboard_cards.dart';
 
 class UserDashboard extends StatelessWidget {
   const UserDashboard({Key? key}) : super(key: key);
 
+  void refreshUserProfile(BuildContext context) {
+    // TODO: Dirtiest cover-up for poorly planned UserProfile class and provider implementation - REDO
+    Provider.of<UserProfile>(context, listen: false).fetchUserProfile(null);
+  }
+
   @override
   Widget build(BuildContext context) {
+    refreshUserProfile(context);
     return Scaffold(
       appBar: AppBar(
         title: SvgPicture.asset(
