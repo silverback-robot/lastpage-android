@@ -125,14 +125,14 @@ class UserDashboard extends StatelessWidget {
                 children: [
                   DashboardCard(
                     icon: Icons.file_copy_sharp,
-                    title: "My Notes",
+                    title: "Library",
                     description: "View notes saved in your lastpage account.",
                     onTapAction: () =>
                         Navigator.pushNamed(context, '/my_notes'),
                   ),
                   DashboardCard(
                     icon: Icons.school,
-                    title: "My Syllabus",
+                    title: "Syllabus",
                     description: "A quick view of your course syllabus.",
                     onTapAction: () =>
                         Navigator.pushNamed(context, '/all_semesters'),
