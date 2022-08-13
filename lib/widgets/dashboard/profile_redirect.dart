@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../../screens/dashboard.dart';
 import '../../models/user_profile.dart';
@@ -11,7 +12,7 @@ class ProfileRedirect extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
-      stream: UserProfile.profileExists,
+      stream: Provider.of<UserProfile>(context).checkProfile(),
       builder: (context, AsyncSnapshot<DocumentSnapshot> profileSnapshot) {
         if (profileSnapshot.hasData) {
           if (profileSnapshot.data!.exists) {

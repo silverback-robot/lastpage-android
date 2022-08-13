@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
+import 'package:lastpage/models/user_profile.dart';
+import 'package:provider/provider.dart';
 
 import '../widgets/auth/auth_form.dart';
-
-FirebaseAuth _auth = FirebaseAuth.instance;
 
 class AuthScreen extends StatefulWidget {
   const AuthScreen({Key? key}) : super(key: key);
@@ -27,15 +27,19 @@ class _AuthScreenState extends State<AuthScreen> {
     });
     try {
       if (signUp) {
-        var _authResult = await _auth.createUserWithEmailAndPassword(
-          email: email,
-          password: password,
-        );
+        await Provider.of<UserProfile>(context, listen: false)
+            .auth
+            .createUserWithEmailAndPassword(
+              email: email,
+              password: password,
+            );
       } else {
-        var _authResult = await _auth.signInWithEmailAndPassword(
-          email: email,
-          password: password,
-        );
+        await Provider.of<UserProfile>(context, listen: false)
+            .auth
+            .signInWithEmailAndPassword(
+              email: email,
+              password: password,
+            );
       }
     } on PlatformException catch (err) {
       var errMsg =

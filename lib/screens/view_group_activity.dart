@@ -10,6 +10,7 @@ import 'package:lastpage/widgets/groups/group_activity/expandable_fab.dart';
 import 'package:lastpage/widgets/groups/group_activity/display_new_post.dart';
 import 'package:lastpage/widgets/groups/group_activity/share_notes_dialog.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ViewGroupActivity extends StatefulWidget {
   const ViewGroupActivity({Key? key}) : super(key: key);
@@ -28,8 +29,9 @@ class _ViewGroupActivityState extends State<ViewGroupActivity> {
   );
 
   void _showAction(
-      BuildContext context, ga.ActivityType actionType, String groupId) {
-    final myUid = Provider.of<UserProfile>(context, listen: false).uid;
+      BuildContext context, ga.ActivityType actionType, String groupId) async {
+    final prefs = await SharedPreferences.getInstance();
+    final myUid = prefs.getString('uid') ?? 'NO_UID_IN_PREFS';
     final _formKey = GlobalKey<FormState>();
 
     showDialog<void>(

@@ -16,13 +16,16 @@ class UserProfile extends ChangeNotifier {
   String? avatar;
 
   final _auth = FirebaseAuth.instance;
+  FirebaseAuth get auth => FirebaseAuth.instance;
+
   final _db = FirebaseFirestore.instance;
+  FirebaseFirestore get db => _db;
 
-  late String uid;
-  late String email;
+  late String? uid;
+  late String? email;
 
-  String get _uid => _auth.currentUser!.uid;
-  String get _email => _auth.currentUser!.email!;
+  String? get _uid => _auth.currentUser?.uid;
+  String? get _email => _auth.currentUser?.email;
 
   UserProfile(
       {this.name,
@@ -58,16 +61,15 @@ class UserProfile extends ChangeNotifier {
 
   static final FirebaseAuth _fa = FirebaseAuth.instance;
 
-  static Stream<DocumentSnapshot<Map<String, dynamic>>> get profileExists {
-    var _uid = _fa.currentUser!.uid;
-    var _profileRef = FirebaseFirestore.instance.collection('users').doc(_uid);
+  Stream<DocumentSnapshot<Map<String, dynamic>>> checkProfile() {
+    var _uid = _auth.currentUser!.uid;
+    var _profileRef = _db.collection('users').doc(_uid);
     var _profile = _profileRef.snapshots();
     return _profile;
   }
 
-  static Future<UserProfile> fetchProfile() async {
-    var _uid = _fa.currentUser!.uid;
-    var _profileRef = FirebaseFirestore.instance.collection('users').doc(_uid);
+  Future<UserProfile> fetchProfile() async {
+    var _profileRef = _db.collection('users').doc(_uid);
     var _profile = await _profileRef.get();
     return UserProfile.fromJson(_profile.data()!);
   }
@@ -140,8 +142,8 @@ class UserProfile extends ChangeNotifier {
   Future<void> _saveLocalProfile(UserProfile profile) async {
     final prefs = await SharedPreferences.getInstance();
 
-    await prefs.setString('uid', profile.uid);
-    await prefs.setString('email', profile.email);
+    await prefs.setString('uid', profile.uid!);
+    await prefs.setString('email', profile.email!);
     await prefs.setInt('phone', profile.phone ?? 0);
     await prefs.setString('name', profile.name ?? "No name");
     await prefs.setString('university', profile.university ?? "UNAVAILABLE");

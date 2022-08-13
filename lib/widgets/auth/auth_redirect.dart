@@ -1,21 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:lastpage/models/user_profile.dart';
+import 'package:provider/provider.dart';
 
 import '../../screens/auth.dart';
 import '../../widgets/dashboard/profile_redirect.dart';
 
 class AuthRedirect extends StatelessWidget {
-  AuthRedirect({
+  const AuthRedirect({
     Key? key,
   }) : super(key: key);
 
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-
   @override
   Widget build(BuildContext context) {
+    final auth = Provider.of<UserProfile>(context).auth;
     return StreamBuilder(
-      stream: _auth.authStateChanges(),
-      initialData: FirebaseAuth.instance.currentUser,
+      stream: auth.authStateChanges(),
+      initialData: auth.currentUser,
       builder: (BuildContext ctx, AsyncSnapshot<User?> userSnapshot) {
         if (userSnapshot.hasData && userSnapshot.data != null) {
           return const ProfileRedirect();

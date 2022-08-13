@@ -9,7 +9,7 @@ class UserDashboard extends StatelessWidget {
 
   void refreshUserProfile(BuildContext context) {
     // TODO: Dirtiest cover-up for poorly planned UserProfile class and provider implementation - REDO
-    Provider.of<UserProfile>(context, listen: false).fetchUserProfile(null);
+    Provider.of<UserProfile>(context, listen: false).fetchProfile();
   }
 
   @override
@@ -25,7 +25,7 @@ class UserDashboard extends StatelessWidget {
       ),
       drawer: Drawer(
         child: FutureBuilder(
-            future: UserProfile.fetchProfile(),
+            future: Provider.of<UserProfile>(context).fetchProfile(),
             builder: (context, AsyncSnapshot<UserProfile> snapshot) {
               if ((snapshot.connectionState == ConnectionState.active ||
                       snapshot.connectionState == ConnectionState.done) &&
