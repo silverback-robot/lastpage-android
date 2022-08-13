@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:lastpage/models/lastpage_colors.dart';
 import 'package:lastpage/models/user_profile.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../widgets/dashboard/dashboard_cards.dart';
 
 class UserDashboard extends StatelessWidget {
@@ -14,6 +16,8 @@ class UserDashboard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final privacyPolicy =
+        Uri(scheme: "https", host: "lastpage.app", path: "privacy_policy.html");
     refreshUserProfile(context);
     return Scaffold(
       appBar: AppBar(
@@ -83,7 +87,30 @@ class UserDashboard extends StatelessWidget {
                                   UserProfile.signOut();
                                 },
                                 icon: const Icon(Icons.logout),
-                                label: const Text("Sign Out"))
+                                label: const Text("Sign Out")),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                const Text(
+                                  "\u00a9 Lastpage Student Services.",
+                                  style: TextStyle(
+                                    color: LastpageColors.darkGrey,
+                                    fontSize: 12,
+                                  ),
+                                ),
+                                TextButton(
+                                  onPressed: () async {
+                                    await launchUrl(privacyPolicy);
+                                  },
+                                  child: const Text(
+                                    "Privacy policy.",
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
                           ],
                         ),
                       ],

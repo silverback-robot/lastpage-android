@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:lastpage/models/lastpage_colors.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class AuthForm extends StatefulWidget {
   const AuthForm({required this.submitFn, required this.loading, Key? key})
@@ -27,6 +29,9 @@ class _AuthFormState extends State<AuthForm> {
   late String _userPassword;
 
   String? _tmpPassword;
+
+  final privacyPolicy =
+      Uri(scheme: "https", host: "lastpage.app", path: "privacy_policy.html");
 
   void _submitForm() {
     final validForm = _formKey.currentState!.validate();
@@ -164,7 +169,33 @@ class _AuthFormState extends State<AuthForm> {
                               ),
                             ),
                           ],
-                        )
+                        ),
+                  const SizedBox(
+                    height: 12,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text(
+                        "\u00a9 Lastpage Student Services.",
+                        style: TextStyle(
+                          color: LastpageColors.darkGrey,
+                          fontSize: 12,
+                        ),
+                      ),
+                      TextButton(
+                        onPressed: () async {
+                          await launchUrl(privacyPolicy);
+                        },
+                        child: const Text(
+                          "Privacy policy.",
+                          style: TextStyle(
+                            fontSize: 12,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ],
               ),
             ),
