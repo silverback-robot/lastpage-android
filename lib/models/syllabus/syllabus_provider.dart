@@ -12,20 +12,19 @@ import 'dart:io' as io;
 class SyllabusProvider extends ChangeNotifier {
   Syllabus? syllabus;
 
-  SyllabusProvider() {
-    _processSyllabusYaml();
-    notifyListeners();
-  }
-
   Future<bool> refreshSyllabus() async {
     // Download and override existing syllabus YAML (syllabus change detected during sync)
     final prefs = await SharedPreferences.getInstance();
-    var syllabusYamlUrl = prefs.getString('syllabusYamlUrl')!;
-    await _downloadSyllabus(syllabusYamlUrl);
-    var status = await _processSyllabusYaml();
-    if (status) {
-      notifyListeners();
-      return status;
+    var syllabusYamlUrl = prefs.getString('syllabusYamlUrl');
+    if (syllabusYamlUrl != null) {
+      await _downloadSyllabus(syllabusYamlUrl);
+      var status = await _processSyllabusYaml();
+      if (status) {
+        notifyListeners();
+        return status;
+      } else {
+        return false;
+      }
     } else {
       return false;
     }

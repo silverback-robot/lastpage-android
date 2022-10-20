@@ -9,16 +9,10 @@ import '../widgets/dashboard/dashboard_cards.dart';
 class UserDashboard extends StatelessWidget {
   const UserDashboard({Key? key}) : super(key: key);
 
-  void refreshUserProfile(BuildContext context) {
-    // TODO: Dirtiest cover-up for poorly planned UserProfile class and provider implementation - REDO
-    Provider.of<UserProfile>(context, listen: false).fetchProfile();
-  }
-
   @override
   Widget build(BuildContext context) {
     final privacyPolicy =
         Uri(scheme: "https", host: "lastpage.app", path: "privacy_policy.html");
-    refreshUserProfile(context);
     return Scaffold(
       appBar: AppBar(
         title: SvgPicture.asset(
