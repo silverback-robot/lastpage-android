@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:lastpage/screens/initialize_lastpage.dart';
 import 'package:provider/provider.dart';
 
 import '../../screens/dashboard.dart';
@@ -16,7 +17,7 @@ class ProfileRedirect extends StatelessWidget {
       builder: (context, AsyncSnapshot<DocumentSnapshot> profileSnapshot) {
         if (profileSnapshot.hasData) {
           if (profileSnapshot.data!.exists) {
-            return const UserDashboard();
+            return const InitializeLastpage();
           } else {
             return const CreateProfile();
           }

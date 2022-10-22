@@ -3,22 +3,26 @@ import 'package:flutter/foundation.dart';
 import 'package:lastpage/models/syllabus/semester.dart';
 import 'package:lastpage/models/syllabus/subject.dart';
 import 'package:lastpage/models/syllabus/syllabus.dart';
+import 'package:logging/logging.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:yaml/yaml.dart';
 import 'package:path_provider/path_provider.dart';
 import 'dart:io' as io;
 
-//TODO: CRITICAL: Set `syllabusYamlUrl` in userProfile document at the time of profile creation
 class SyllabusProvider extends ChangeNotifier {
   Syllabus? syllabus;
+  static final _log = Logger('SyllabusProvider');
 
   Future<bool> refreshSyllabus() async {
+    _log.info('refreshSyllabus method called');
     // Download and override existing syllabus YAML (syllabus change detected during sync)
     final prefs = await SharedPreferences.getInstance();
     var syllabusYamlUrl = prefs.getString('syllabusYamlUrl');
+    _log.info('syllabusYamlUrl: $syllabusYamlUrl');
     if (syllabusYamlUrl != null) {
       await _downloadSyllabus(syllabusYamlUrl);
       var status = await _processSyllabusYaml();
+      _log.info('Syllabus YAML processed: $status');
       if (status) {
         notifyListeners();
         return status;
@@ -32,42 +36,52 @@ class SyllabusProvider extends ChangeNotifier {
 
   //Check whether syllabus YAML exists
   Future<String> _getSyllabusPath() async {
+    _log.info('_getSyllabusPath method called');
     var appDir = await getApplicationSupportDirectory();
     var syllabusPath = io.File('${appDir.path}\\syllabus.yaml');
     var syllabusExists = syllabusPath.existsSync();
+    _log.info('syllabusExists: $syllabusExists');
     if (!syllabusExists) {
       // Get user's syllabus URL from userProfile
       final prefs = await SharedPreferences.getInstance();
       var syllabusYamlUrl = prefs.getString('syllabusYamlUrl')!;
+      _log.info('Syllabus does not exist locally. Downloading...');
+      _log.info('syllabusYamlUrl: $syllabusYamlUrl');
       // Download and rename syllabus yaml as `syllabus.yaml`
       var syllabusYamlPath = await _downloadSyllabus(syllabusYamlUrl);
+      _log.info('syllabusYamlPath: $syllabusYamlPath');
       return syllabusYamlPath;
     } else {
+      _log.info('Syllabus exists locally at ${syllabusPath.path}');
       return syllabusPath.path;
     }
   }
 
   // Download syllabus YAML and set proper name
   Future<String> _downloadSyllabus(String url) async {
+    _log.info('_downloadSyllabus method called');
     try {
       var saveDir = await getApplicationSupportDirectory();
       String filename = "syllabus.yaml";
       String savePath = "${saveDir.path}/$filename";
 
       io.File file = io.File(savePath);
+      _log.info('Downloading Syllabus to $savePath');
       final httpsReference = FirebaseStorage.instance.refFromURL(url);
       final downloadSyllabus = httpsReference.writeToFile(file);
       await downloadSyllabus.then(
-          (p0) => print("Syllabus Download Task Status: ${p0.state.name}"));
+          (p0) => _log.info('Syllabus Download Task Status: ${p0.state.name}'));
       return savePath;
     } catch (e) {
-      print(e);
+      _log.severe(e.toString());
       rethrow;
     }
   }
 
   Future<bool> _processSyllabusYaml() async {
+    _log.info('_processSyllabusYaml method called');
     var syllabusPath = await _getSyllabusPath();
+    _log.info('syllabusPath: $syllabusPath');
     final data = await io.File(syllabusPath).readAsString();
     final mapData = loadYaml(data);
 
@@ -83,6 +97,7 @@ class SyllabusProvider extends ChangeNotifier {
       semesters.add(
           Semester(semesterNo: semesterNo, semesterSubjects: semesterSubjects));
     }
+    _log.info('No. of Semesters loaded: ${semesters.length}');
     List<Subject> subjects = [];
     for (var subject in subjectsList) {
       var subjectCode = subject['subjectCode'] as String;
@@ -104,6 +119,7 @@ class SyllabusProvider extends ChangeNotifier {
           LTPC: LTPC,
           subjectUnits: subjectUnits);
       subjects.add(subjectInfo);
+      _log.info('No. of Subjects loaded: ${subjects.length}');
     }
     syllabus = Syllabus(
       university: university,
@@ -112,6 +128,7 @@ class SyllabusProvider extends ChangeNotifier {
       subjects: subjects,
       semesters: semesters,
     );
+    _log.info('${syllabus?.semesters.length}');
     notifyListeners();
     return true;
   }

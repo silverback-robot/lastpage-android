@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:logging/logging.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class UserProfile extends ChangeNotifier {
@@ -14,6 +15,8 @@ class UserProfile extends ChangeNotifier {
   final String? department;
   final String? syllabusYamlUrl;
   String? avatar;
+
+  static final _log = Logger('UserProfile');
 
   final _auth = FirebaseAuth.instance;
   FirebaseAuth get auth => FirebaseAuth.instance;
@@ -33,9 +36,14 @@ class UserProfile extends ChangeNotifier {
       this.university,
       this.department,
       this.syllabusYamlUrl}) {
+    _log.info('Constructor called');
     uid = _uid;
     email = _email;
-    fetchUserProfile(uid);
+    if (uid != null) {
+      _log.info("Retrieved last logged in UID from cache: $uid");
+      _log.info('Calling method fetchUserProfile with UID: $uid');
+      fetchUserProfile(uid);
+    }
   }
 
   UserProfile.fromJson(Map<String, dynamic> json)
@@ -127,11 +135,17 @@ class UserProfile extends ChangeNotifier {
 
   Future<UserProfile?> fetchUserProfile(String? uid) async {
     var fetchId = uid ?? _uid;
+    _log.info('Querying DB for user: $uid');
     var profileDoc = await _db.collection('users').doc(fetchId).get();
     if (profileDoc.exists) {
+      _log.info('Profile found for: $uid');
       var userProfile = UserProfile.fromJson(profileDoc.data()!);
+      _log.info('Profile Data for: $uid');
+      _log.info(userProfile.toString());
       await _saveLocalProfile(userProfile);
       return userProfile;
+    } else {
+      throw Exception("Unable to fetch UserProfile for $uid");
     }
   }
 
@@ -140,6 +154,7 @@ class UserProfile extends ChangeNotifier {
   }
 
   Future<void> _saveLocalProfile(UserProfile profile) async {
+    _log.info('_saveLocalProfile called');
     final prefs = await SharedPreferences.getInstance();
 
     await prefs.setString('uid', profile.uid!);
@@ -154,12 +169,21 @@ class UserProfile extends ChangeNotifier {
     // update syllabus change flag before updating syllabus URL
     if (prefs.getKeys().contains('syllabusYamlUrl') &&
         prefs.getString('syllabusYamlUrl') != profile.syllabusYamlUrl) {
+      _log.info(
+          "SharedPrefs already contains 'syllabusYamlUrl' and current value differs from DB response");
+      _log.info(
+          "Setting 'syllabusYamlUrlChanged' flag to true (indicates re-download of local syllabus required)");
       await prefs.setBool('syllabusYamlUrlChanged', true);
     } else if (!prefs.getKeys().contains('syllabusYamlUrl')) {
+      _log.info(
+          "SharedPrefs does not contain key 'syllabusYamlUrl'. Indicates first login.");
       // First login - sharedPrefs won't contain the key and hence previous condition won't be satisfied
+      _log.info("Setting 'syllabusYamlUrlChanged' to true");
       await prefs.setBool('syllabusYamlUrlChanged', true);
     }
+    _log.info("Set 'syllabusYamlUrl' each time profile is saved locally");
     await prefs.setString(
         'syllabusYamlUrl', profile.syllabusYamlUrl ?? "UNAVAILABLE");
+    _log.info("'syllabusYamlUrl' ${profile.syllabusYamlUrl}");
   }
 }
