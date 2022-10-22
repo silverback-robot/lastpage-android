@@ -18,8 +18,15 @@ class SyllabusProvider extends ChangeNotifier {
     // Download and override existing syllabus YAML (syllabus change detected during sync)
     final prefs = await SharedPreferences.getInstance();
     var syllabusYamlUrl = prefs.getString('syllabusYamlUrl');
+    var syllabusYamlUrlChanged =
+        prefs.getBool('syllabusYamlUrlChanged') ?? true;
+
     _log.info('syllabusYamlUrl: $syllabusYamlUrl');
-    if (syllabusYamlUrl != null) {
+    _log.info('syllabusYamlUrl: $syllabusYamlUrlChanged');
+    _log.info('No change in Syllabus YAML URL. Skipping download...');
+
+    // Download and Process YAML only if syllabusYamlUrlChanged is set to true (when refreshing userProfile)
+    if (syllabusYamlUrlChanged && syllabusYamlUrl != null) {
       await _downloadSyllabus(syllabusYamlUrl);
       var status = await _processSyllabusYaml();
       _log.info('Syllabus YAML processed: $status');
