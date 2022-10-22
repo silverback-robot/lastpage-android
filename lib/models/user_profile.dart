@@ -135,13 +135,11 @@ class UserProfile extends ChangeNotifier {
 
   Future<UserProfile?> fetchUserProfile(String? uid) async {
     var fetchId = uid ?? _uid;
-    _log.info('Querying DB for user: $uid');
+    _log.info('Querying DB for user: $fetchId');
     var profileDoc = await _db.collection('users').doc(fetchId).get();
     if (profileDoc.exists) {
-      _log.info('Profile found for: $uid');
+      _log.info('Profile found for: $fetchId');
       var userProfile = UserProfile.fromJson(profileDoc.data()!);
-      _log.info('Profile Data for: $uid');
-      _log.info(userProfile.toString());
       await _saveLocalProfile(userProfile);
       return userProfile;
     } else {
@@ -185,5 +183,22 @@ class UserProfile extends ChangeNotifier {
     await prefs.setString(
         'syllabusYamlUrl', profile.syllabusYamlUrl ?? "UNAVAILABLE");
     _log.info("'syllabusYamlUrl' ${profile.syllabusYamlUrl}");
+  }
+
+  Future<bool> checkLocalProfile() async {
+    _log.info('checkLocalProfile method called');
+
+    final prefs = await SharedPreferences.getInstance();
+    final prefsUid = prefs.getString('uid');
+    final prefsYamlUrl = prefs.getString('syllabusYamlUrl');
+
+    if (prefsUid != null && prefsYamlUrl != null) {
+      _log.info(
+          'Values from SharedPrefs: \n\nUID $prefsUid; \n$prefsYamlUrl\n');
+      return true;
+    } else {
+      _log.info('UID/Yaml URL not found in SharedPrefs');
+      return false;
+    }
   }
 }

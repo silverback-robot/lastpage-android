@@ -23,10 +23,15 @@ class SyllabusProvider extends ChangeNotifier {
 
     _log.info('syllabusYamlUrl: $syllabusYamlUrl');
     _log.info('syllabusYamlUrl: $syllabusYamlUrlChanged');
-    _log.info('No change in Syllabus YAML URL. Skipping download...');
+    _log.info('No change in Syllabus YAML URL. Checking local syllabus...');
+
+    var localSyllabusAvailable = await checkLocalSyllabus();
+    _log.info('localSyllabusAvailable: $localSyllabusAvailable');
 
     // Download and Process YAML only if syllabusYamlUrlChanged is set to true (when refreshing userProfile)
-    if (syllabusYamlUrlChanged && syllabusYamlUrl != null) {
+    // or if local syllabus YAML file does not exist
+    if ((syllabusYamlUrlChanged || !localSyllabusAvailable) &&
+        syllabusYamlUrl != null) {
       await _downloadSyllabus(syllabusYamlUrl);
       var status = await _processSyllabusYaml();
       _log.info('Syllabus YAML processed: $status');
@@ -45,7 +50,7 @@ class SyllabusProvider extends ChangeNotifier {
   Future<String> _getSyllabusPath() async {
     _log.info('_getSyllabusPath method called');
     var appDir = await getApplicationSupportDirectory();
-    var syllabusPath = io.File('${appDir.path}\\syllabus.yaml');
+    var syllabusPath = io.File('${appDir.path}/syllabus.yaml');
     var syllabusExists = syllabusPath.existsSync();
     _log.info('syllabusExists: $syllabusExists');
     if (!syllabusExists) {
@@ -138,5 +143,13 @@ class SyllabusProvider extends ChangeNotifier {
     _log.info('${syllabus?.semesters.length}');
     notifyListeners();
     return true;
+  }
+
+  Future<bool> checkLocalSyllabus() async {
+    var appDir = await getApplicationSupportDirectory();
+    var syllabusPath = io.File('${appDir.path}/syllabus.yaml');
+    var syllabusExists = await syllabusPath.exists();
+    _log.info('syllabusExists: $syllabusExists');
+    return syllabusExists;
   }
 }

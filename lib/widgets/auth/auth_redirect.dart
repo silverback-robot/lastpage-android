@@ -19,7 +19,7 @@ class AuthRedirect extends StatelessWidget {
       initialData: auth.currentUser,
       builder: (BuildContext ctx, AsyncSnapshot<User?> userSnapshot) {
         if (userSnapshot.hasData && userSnapshot.data != null) {
-          return const ProfileRedirect();
+          return ProfileRedirect();
         }
         return const AuthScreen();
       },

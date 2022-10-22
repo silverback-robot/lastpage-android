@@ -7,9 +7,11 @@ class AllSemesters extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final _dataState =
-        Provider.of<SyllabusProvider>(context).syllabus?.subjects.isNotEmpty ??
-            false;
+    final _dataState = Provider.of<SyllabusProvider>(context, listen: false)
+            .syllabus
+            ?.subjects
+            .isNotEmpty ??
+        false;
     if (!_dataState) {
       return Scaffold(
         body: Center(
