@@ -9,6 +9,7 @@ import 'package:yaml/yaml.dart';
 import 'package:path_provider/path_provider.dart';
 import 'dart:io' as io;
 
+//TODO: Refactor methods to do one action per method (single responsibility)
 class SyllabusProvider extends ChangeNotifier {
   Syllabus? syllabus;
   static final _log = Logger('SyllabusProvider');
@@ -151,5 +152,25 @@ class SyllabusProvider extends ChangeNotifier {
     var syllabusExists = await syllabusPath.exists();
     _log.info('syllabusExists: $syllabusExists');
     return syllabusExists;
+  }
+
+  Future<Syllabus> populateSyllabus() async {
+    if (syllabus != null) {
+      return syllabus!;
+    } else {
+      var appDir = await getApplicationSupportDirectory();
+      var syllabusPath = io.File('${appDir.path}/syllabus.yaml');
+      var syllabusExists = await syllabusPath.exists();
+      if (syllabusExists) {
+        var processingStatus = await _processSyllabusYaml();
+        if (processingStatus && syllabus != null) {
+          return syllabus!;
+        } else {
+          throw Exception('Error processing syllabus...');
+        }
+      } else {
+        throw Exception('Syllabus unavailable locally...');
+      }
+    }
   }
 }
