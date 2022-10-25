@@ -77,8 +77,10 @@ class UserDashboard extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             OutlinedButton.icon(
-                                onPressed: () {
-                                  UserProfile.signOut();
+                                onPressed: () async {
+                                  await Provider.of<UserProfile>(context,
+                                          listen: false)
+                                      .signOut();
                                 },
                                 icon: const Icon(Icons.logout),
                                 label: const Text("Sign Out")),

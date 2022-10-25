@@ -4,14 +4,14 @@ import 'package:lastpage/models/docscanner_models/pages_upload_metadata.dart';
 import 'package:lastpage/widgets/my_notes/note_set_tile.dart';
 import 'package:provider/provider.dart';
 
-class MyNotes extends StatelessWidget {
-  const MyNotes({Key? key}) : super(key: key);
+class Library extends StatelessWidget {
+  const Library({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("My Notes"),
+        title: const Text("Library"),
       ),
       body: StreamBuilder(
           stream: Provider.of<UserStorage>(context).userUploads,
@@ -49,10 +49,13 @@ class MyNotes extends StatelessWidget {
                       .compareTo(a.notesData.createdDateTime),
                 );
                 return SingleChildScrollView(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 3, vertical: 2),
-                  child: Column(
-                    children: storageDocTiles,
+                  padding: const EdgeInsets.symmetric(vertical: 8),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 2.0, horizontal: 10),
+                    child: Column(
+                      children: storageDocTiles,
+                    ),
                   ),
                 );
               } else {

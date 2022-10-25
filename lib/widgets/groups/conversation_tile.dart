@@ -18,7 +18,8 @@ class ConversationTile extends StatelessWidget {
           if (snapshot.hasData) {
             var profile = snapshot.data;
             return Padding(
-              padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 5),
+              padding:
+                  const EdgeInsets.symmetric(vertical: 1.0, horizontal: 10),
               child: ListTile(
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10.0)),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lastpage/models/syllabus/syllabus.dart';
 import 'package:lastpage/models/syllabus/syllabus_provider.dart';
 import 'package:logging/logging.dart';
 import 'package:provider/provider.dart';
@@ -16,23 +17,25 @@ class AllSemesters extends StatelessWidget {
         title: const Text("Select Semester"),
       ),
       body: FutureBuilder(
-          future: Provider.of<SyllabusProvider>(context).populateSyllabus(),
-          builder: (BuildContext context, AsyncSnapshot snapshot) {
+          future: Provider.of<SyllabusProvider>(context).getSyllabusData(),
+          builder: (BuildContext context, AsyncSnapshot<Syllabus> snapshot) {
             if (snapshot.connectionState == ConnectionState.done &&
                 snapshot.hasData) {
+              Syllabus syllabus = snapshot.data!;
               return Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: const EdgeInsets.symmetric(vertical: 8.0),
                 child: ListView.builder(
-                    itemCount: Provider.of<SyllabusProvider>(context)
-                        .syllabus!
-                        .semesters
-                        .length,
+                    itemCount: syllabus.semesters.length,
                     itemBuilder: (context, index) {
-                      var userCourse = Provider.of<SyllabusProvider>(context)
-                          .syllabus!
-                          .semesters[index];
-                      return Card(
+                      var userCourse = syllabus.semesters[index];
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 2.0, horizontal: 10),
                         child: ListTile(
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10.0)),
+                          contentPadding: const EdgeInsets.symmetric(
+                              horizontal: 16, vertical: 5),
                           title: Text(
                               "Semester ${userCourse.semesterNo.toString()}"),
                           subtitle: Text(

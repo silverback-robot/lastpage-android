@@ -13,7 +13,7 @@ import 'package:lastpage/screens/share_notes_individual.dart';
 import 'package:lastpage/screens/view_conversation.dart';
 import 'package:lastpage/screens/view_group_activity.dart';
 import 'package:lastpage/screens/inbox.dart';
-import 'package:lastpage/screens/my_notes.dart';
+import 'package:lastpage/screens/library.dart';
 import 'package:lastpage/screens/scan_doc.dart';
 import 'package:lastpage/screens/all_semesters.dart';
 import 'package:lastpage/screens/single_subject.dart';
@@ -140,7 +140,7 @@ class MyApp extends StatelessWidget {
           '/all_semesters': (context) => AllSemesters(),
           '/single_semester': (context) => const SingleSemester(),
           '/single_subject': (context) => const SingleSubject(),
-          '/my_notes': (context) => const MyNotes(),
+          '/my_notes': (context) => const Library(),
           '/fullscreen_notes': (context) => const FullScreenNotes(),
           '/groups': (context) => const Inbox(),
           '/group_activity': (context) => const ViewGroupActivity(),

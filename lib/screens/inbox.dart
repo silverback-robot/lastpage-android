@@ -22,19 +22,7 @@ class Inbox extends StatelessWidget {
                 stream: Provider.of<AllGroups>(context).participatingGroups,
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        mainAxisSize: MainAxisSize.min,
-                        children: const [
-                          CircularProgressIndicator(),
-                          SizedBox(
-                            height: 20,
-                          ),
-                          Text("Checking your Groups..."),
-                        ],
-                      ),
-                    );
+                    return const SizedBox();
                   } else if (snapshot.connectionState ==
                           ConnectionState.active ||
                       snapshot.connectionState == ConnectionState.done) {
@@ -49,10 +37,26 @@ class Inbox extends StatelessWidget {
                           .map((e) => GroupTile(info: e))
                           .toList();
                       return Column(
-                        children: ListTile.divideTiles(
-                          context: context,
-                          tiles: groupTiles,
-                        ).toList(),
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Padding(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 8.0, vertical: 12),
+                            child: Text(
+                              'Groups',
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                          Column(
+                            children: ListTile.divideTiles(
+                              context: context,
+                              tiles: groupTiles,
+                            ).toList(),
+                          ),
+                        ],
                       );
                     } else {
                       return Center(
@@ -80,19 +84,7 @@ class Inbox extends StatelessWidget {
               stream: Provider.of<AllConvos>(context).allConversations,
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      mainAxisSize: MainAxisSize.min,
-                      children: const [
-                        CircularProgressIndicator(),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        Text("Checking your Conversations..."),
-                      ],
-                    ),
-                  );
+                  return const SizedBox();
                 } else if (snapshot.connectionState == ConnectionState.active ||
                     snapshot.connectionState == ConnectionState.done) {
                   if (snapshot.hasError) {
@@ -106,10 +98,26 @@ class Inbox extends StatelessWidget {
                         .map((e) => ConversationTile(conversation: e))
                         .toList();
                     return Column(
-                      children: ListTile.divideTiles(
-                        context: context,
-                        tiles: convoTiles,
-                      ).toList(),
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Padding(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 8.0, vertical: 12),
+                          child: Text(
+                            'Conversations',
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                        Column(
+                          children: ListTile.divideTiles(
+                            context: context,
+                            tiles: convoTiles,
+                          ).toList(),
+                        ),
+                      ],
                     );
                   } else {
                     return Center(

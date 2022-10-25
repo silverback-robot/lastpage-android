@@ -10,15 +10,22 @@ class SingleSemester extends StatelessWidget {
     final args = ModalRoute.of(context)!.settings.arguments as List<String>;
     final subjects = Provider.of<SyllabusProvider>(context).syllabus!.subjects;
     return Scaffold(
+      appBar: AppBar(title: const Text('Select Subject')),
       body: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.symmetric(vertical: 8.0),
         child: ListView.builder(
             itemCount: args.length,
             itemBuilder: (context, index) {
               var subject = subjects
                   .firstWhere((element) => element.subjectCode == args[index]);
-              return Card(
+              return Padding(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 2.0, horizontal: 10),
                 child: ListTile(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10.0)),
+                  contentPadding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 5),
                   title: Text(subject.subjectTitle),
                   subtitle: Text(subject.subjectCode),
                   onTap: () => Navigator.pushNamed(context, '/single_subject',

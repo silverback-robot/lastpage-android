@@ -11,7 +11,8 @@ import 'dart:io' as io;
 
 //TODO: Refactor methods to do one action per method (single responsibility)
 class SyllabusProvider extends ChangeNotifier {
-  Syllabus? syllabus;
+  Syllabus? _syllabus;
+  Syllabus? get syllabus => _syllabus;
   static final _log = Logger('SyllabusProvider');
 
   Future<bool> refreshSyllabus() async {
@@ -134,7 +135,7 @@ class SyllabusProvider extends ChangeNotifier {
       subjects.add(subjectInfo);
       _log.info('No. of Subjects loaded: ${subjects.length}');
     }
-    syllabus = Syllabus(
+    _syllabus = Syllabus(
       university: university,
       course: course,
       syllabusVersion: syllabusVersion,
@@ -154,7 +155,7 @@ class SyllabusProvider extends ChangeNotifier {
     return syllabusExists;
   }
 
-  Future<Syllabus> populateSyllabus() async {
+  Future<Syllabus> getSyllabusData() async {
     if (syllabus != null) {
       return syllabus!;
     } else {
